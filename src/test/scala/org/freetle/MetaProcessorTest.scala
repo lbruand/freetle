@@ -1,6 +1,6 @@
 package org.freetle
 
-import meta.RecursiveMetaProcessor
+import meta.{SpaceSkipingMetaProcessor, RecursiveMetaProcessor}
 import org.junit._
 import Assert._
 import org.freetle.transform._
@@ -21,13 +21,8 @@ class MetaProcessorTest {
     val o = new RepeatUntilNoResultOperator(t)
     val oElem = o.clone(tElem)
     
-    val m = new RecursiveMetaProcessor() {
-      def map(in: BaseTransform) = {
-        val takeSpc = new RepeatUntilNoResultOperator(new TakeSpace())
-        new SequenceOperator(new SequenceOperator(takeSpc, in), takeSpc)
-      }
-    }
-
+    val m = new SpaceSkipingMetaProcessor()
+    println(m(o))
     assertEquals(t, m(o))
   }
 }
