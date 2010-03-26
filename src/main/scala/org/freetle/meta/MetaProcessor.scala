@@ -21,7 +21,7 @@ abstract class RecursiveMetaProcessor extends MetaProcessor {
     in match {
 
       case transfo : BaseTransform => map(transfo)
-      case unary : UnaryOperator => unary.clone(this(unary.underlying))
+      case unary @ UnaryOperator(underlying) => unary.clone(this(underlying))
       case binary : BinaryOperator => binary.clone(this(binary.left), this(binary.right))
     }
   }

@@ -72,12 +72,12 @@ object transform {
  
 	abstract class Operator extends CFilterBase
  
-	abstract class UnaryOperator(val underlying : CFilterBase) extends
+	abstract case class UnaryOperator(val underlying : CFilterBase) extends
         Operator {
     def clone(underlying : CFilterBase) : UnaryOperator  
   }
  
-  class RepeatUntilNoResultOperator(override val underlying : CFilterBase) extends
+  case class RepeatUntilNoResultOperator(override val underlying : CFilterBase) extends
         UnaryOperator(underlying : CFilterBase) {
     def clone(underlying: CFilterBase) = new RepeatUntilNoResultOperator(underlying)
 
