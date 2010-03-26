@@ -278,15 +278,17 @@ object transform {
  	class IdTransform extends BaseTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream = in map (_.toResult)
 	}  
+
+  abstract class PushTransform extends BaseTransform
   
 	// Add helpers to build events simply.
-	class PushEvent(event :XMLEvent) extends BaseTransform {
+	class PushEvent(event :XMLEvent) extends PushTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream = {
 			Stream.cons(Result(event), new ZeroTransform().apply(in))
 		}
 	}
 
-  class PushNode(nodeSeq: NodeSeq) extends BaseTransform {
+  class PushNode(nodeSeq: NodeSeq) extends PushTransform {
 
     def serializeXML(nodeSeq : NodeSeq) : XMLResultStream = {
       nodeSeq.foldLeft[XMLResultStream](Stream.empty)((x :XMLResultStream, y :Node) => Stream.concat(serializeXML(y), x))
@@ -305,7 +307,10 @@ object transform {
 
     override def apply(in : XMLResultStream) : XMLResultStream =
       Stream.concat(serializeXML(nodeSeq), in)
-  }  
+  }
+
+
+  
  
 	class TakeStartElement(name :String) extends BaseTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream =
