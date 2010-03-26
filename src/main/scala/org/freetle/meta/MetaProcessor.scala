@@ -1,6 +1,6 @@
 package org.freetle.meta
 
-import org.freetle.transform.{TakeSpace, UnaryOperator, CFilterBase}
+import org.freetle.transform._
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,16 +12,17 @@ import org.freetle.transform.{TakeSpace, UnaryOperator, CFilterBase}
 
 abstract class MetaProcessor extends (CFilterBase => CFilterBase)
 
-class RecursiveMetaProcessor extends MetaProcessor {
+abstract class RecursiveMetaProcessor extends MetaProcessor {
+
+  def map(in: BaseTransform) : BaseTransform
+  
   def apply(in: CFilterBase) : CFilterBase = {
-    if (in.isInstanceOf[UnaryOperator]) {
-      new TakeSpace()
-    } else {
-      null
+
+    in match {
+
+      case transfo : BaseTransform => map(transfo)
+      //case unary : UnaryOperator => unary.clone(this(unary.underlying))
+      //case binary : BinaryOperator => binary.clone(this(binary.left), this(binary.right))
     }
-    //in match {
-      //case UnaryOperator(underlying : CFilterBase)
-       // => null
-    //}
   }
 }
