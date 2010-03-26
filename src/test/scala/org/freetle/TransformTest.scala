@@ -75,7 +75,9 @@ class TransformTest {
           new EvElemEnd("p", "body")
       )
       val s = Stream.fromIterator(in.elements) map (Tail(_))
-      val t = new ConcatOperator(new ConcatOperator(new TakeStartElement("body"), new TakeStartElement("body")), new DeepFilter())
+      val t = new ConcatOperator(
+        new ConcatOperator(new TakeStartElement("body"), new TakeStartElement("body")),
+        new DeepFilter())
       val r = t(s)
       assertEquals(9, r.filter(_.isInstanceOf[Result]).length)
       val t2 = new ConcatOperator(new ConcatOperator(new TakeStartElement("body"), new ConcatOperator(new TakeStartElement("body"), new TakeStartElement("a"))), new DeepFilter())

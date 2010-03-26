@@ -65,16 +65,16 @@ object transform {
     // ============ End of Model ==============	                             
  
  
-	type CFilter = 
-		XMLResultStream => XMLResultStream
+	//type CFilter =
+	//	XMLResultStream => XMLResultStream
  
-	
+	abstract class CFilterBase extends (XMLResultStream => XMLResultStream)
  
-	abstract class Operator extends CFilter
+	abstract class Operator extends CFilterBase
  
-	abstract class UnaryOperator(underlying : CFilter) extends Operator
+	abstract class UnaryOperator(underlying : CFilterBase) extends Operator
  
-   	class RepeatUntilNoResultOperator(underlying : CFilter) extends UnaryOperator(underlying : CFilter) {
+   	class RepeatUntilNoResultOperator(underlying : CFilterBase) extends UnaryOperator(underlying : CFilterBase) {
 			def recurse(in : XMLResultStream, applied : Boolean) : XMLResultStream = {
 			  val result = if (applied) underlying(in) else in
 			  if (result.isEmpty) 
@@ -116,12 +116,12 @@ object transform {
 		}
 	}
  
- 	abstract class BinaryOperator(left : CFilter, right :CFilter) extends Operator
+ 	abstract class BinaryOperator(left : CFilterBase, right :CFilterBase) extends Operator
   
   /**
    * This is a concat operator. 
    */
-   	class ConcatOperator(left : CFilter, right :CFilter) extends BinaryOperator(left : CFilter, right :CFilter) {
+   	class ConcatOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
 		def recurse(in : XMLResultStream) : XMLResultStream = {
 		  if (in.isEmpty)
 			  Stream.empty
@@ -145,7 +145,7 @@ object transform {
     /**
      * We execute in sequence left and then right if left has returned a result.
      */
-    class SequenceOperator(left : CFilter, right :CFilter) extends BinaryOperator(left : CFilter, right :CFilter) {
+    class SequenceOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
 		def recurse(in : XMLResultStream, hasResult : Boolean) : XMLResultStream = {
 		  if (in.isEmpty)
 			  Stream.empty
@@ -171,14 +171,14 @@ object transform {
     /**
      * A compose operator where the left operator can consumme the tail from the right operator's result.
      */
-    class SimpleComposeOperator(left : CFilter, right :CFilter) extends BinaryOperator(left : CFilter, right :CFilter) {
+    class SimpleComposeOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
 		override def apply(in : XMLResultStream) : XMLResultStream = left(right(in))
  	}
     
     /**
      * A compose operator where the left operator cannot consumme the tail from the right operator's result.
      */
-    class ComposeOperator(left : CFilter, right :CFilter) extends BinaryOperator(left : CFilter, right :CFilter) {
+    class ComposeOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
       
     	def recurseKeepResult(in : XMLResultStream) : XMLResultStream = {
     	  if (in.isEmpty)
@@ -208,7 +208,7 @@ object transform {
 		}	 				
  	}
     
- 	class ChoiceOperator(left : CFilter, right :CFilter) extends BinaryOperator(left : CFilter, right :CFilter) {
+ 	class ChoiceOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
 		override def apply(in : XMLResultStream) : XMLResultStream = {
 			val leftResult = left(in)
 		  	if (!leftResult.isEmpty)
@@ -224,28 +224,28 @@ object transform {
   
 
 
- 	abstract class BaseTransform extends CFilter {
-	  def concat(right : CFilter) = { 
+ 	abstract class BaseTransform extends CFilterBase {
+	  def concat(right : CFilterBase) = {
 	    new ConcatOperator(this, right)
     }
 
-    def sequence(right : CFilter) = {
+    def sequence(right : CFilterBase) = {
       new SequenceOperator(this, right)
     }
 
-    def simpleCompose(right : CFilter) = {
+    def simpleCompose(right : CFilterBase) = {
       new SimpleComposeOperator(this, right)
     }
    
-	  def compose(right : CFilter) = {
+	  def compose(right : CFilterBase) = {
 	    new ComposeOperator(this, right)
 	  }
    
-	  def andThen(right : CFilter) = {
+	  def andThen(right : CFilterBase) = {
 	    new ComposeOperator(right, this)
 	  }
    
-	  def choice(right : CFilter) = {
+	  def choice(right : CFilterBase) = {
 	    new ChoiceOperator(this, right)
 	  } 	  
  	}
