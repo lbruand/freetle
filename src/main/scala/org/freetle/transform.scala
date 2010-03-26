@@ -72,11 +72,13 @@ object transform {
  
 	abstract class Operator extends CFilterBase
  
-	abstract class UnaryOperator(val underlying : CFilterBase) extends Operator {
+	abstract class UnaryOperator(val underlying : CFilterBase) extends
+        Operator {
     def clone(underlying : CFilterBase) : UnaryOperator  
   }
  
-  class RepeatUntilNoResultOperator(override val underlying : CFilterBase) extends UnaryOperator(underlying : CFilterBase) {
+  class RepeatUntilNoResultOperator(override val underlying : CFilterBase) extends
+        UnaryOperator(underlying : CFilterBase) {
     def clone(underlying: CFilterBase) = new RepeatUntilNoResultOperator(underlying)
 
     def recurse(in : XMLResultStream, applied : Boolean) : XMLResultStream = {
@@ -98,14 +100,16 @@ object transform {
 			}
  	}  
  
- 	abstract class BinaryOperator(left : CFilterBase, right :CFilterBase) extends Operator {
+ 	abstract class BinaryOperator(val left : CFilterBase, val right :CFilterBase) extends
+        Operator {
      def clone(left : CFilterBase, right :CFilterBase) : BinaryOperator
    }
   
   /**
    * This is a concat operator. 
    */
-  class ConcatOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
+  class ConcatOperator(override val left : CFilterBase, override val right :CFilterBase) extends
+        BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = new ConcatOperator(left, right)
 
     def recurse(in : XMLResultStream) : XMLResultStream = {
@@ -131,7 +135,8 @@ object transform {
   /**
      * We execute in sequence left and then right if left has returned a result.
      */
-  class SequenceOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
+  class SequenceOperator(override val left : CFilterBase, override val right :CFilterBase) extends
+        BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = new SequenceOperator(left, right)
 		def recurse(in : XMLResultStream, hasResult : Boolean) : XMLResultStream = {
 		  if (in.isEmpty)
@@ -158,7 +163,8 @@ object transform {
   /**
      * A compose operator where the left operator can consumme the tail from the right operator's result.
      */
-  class SimpleComposeOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
+  class SimpleComposeOperator(override val left : CFilterBase, override val right :CFilterBase) extends
+        BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = new SimpleComposeOperator(left, right)
 		override def apply(in : XMLResultStream) : XMLResultStream = left(right(in))
  	}
@@ -166,7 +172,8 @@ object transform {
   /**
      * A compose operator where the left operator cannot consumme the tail from the right operator's result.
      */
-  class ComposeOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
+  class ComposeOperator(override val left : CFilterBase, override val right :CFilterBase) extends
+        BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = new ComposeOperator(left, right)
     def recurseKeepResult(in : XMLResultStream) : XMLResultStream = {
     	  if (in.isEmpty)
@@ -196,7 +203,8 @@ object transform {
 		}	 				
  	}
     
- 	class ChoiceOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
+ 	class ChoiceOperator(override val left : CFilterBase, override val right :CFilterBase) extends
+        BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = new ChoiceOperator(left, right)
 		override def apply(in : XMLResultStream) : XMLResultStream = {
 			val leftResult = left(in)
