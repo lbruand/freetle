@@ -221,7 +221,7 @@ object transform {
   
 
 
- 	abstract class BaseTransform extends CFilterBase {
+ 	abstract case class BaseTransform extends CFilterBase {
 	  def concat(right : CFilterBase) = {
 	    new ConcatOperator(this, right)
     }
@@ -252,16 +252,16 @@ object transform {
   /**
    * Base class for all transformations that only output events.
    */
-  abstract class PushTransform extends BaseTransform
+  abstract case class PushTransform extends BaseTransform
   
 	// Add helpers to build events simply.
-	class PushEvent(event :XMLEvent) extends PushTransform {
+	case class PushEvent(event :XMLEvent) extends PushTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream = {
 			Stream.cons(Result(event), new ZeroTransform().apply(in))
 		}
 	}
 
-  class PushNode(nodeSeq: NodeSeq) extends PushTransform {
+  case class PushNode(nodeSeq: NodeSeq) extends PushTransform {
 
     def serializeXML(nodeSeq : NodeSeq) : XMLResultStream = {
       nodeSeq.foldLeft[XMLResultStream](Stream.empty)((x :XMLResultStream, y :Node) => Stream.concat(serializeXML(y), x))
@@ -286,9 +286,9 @@ object transform {
   /**
    * base transform for all transformations that only take stuff.
    */
-  abstract class TakeTransform extends BaseTransform
+  abstract case class TakeTransform extends BaseTransform
 
-  class ZeroTransform extends TakeTransform {
+  case class ZeroTransform extends TakeTransform {
 		override final def apply(in : XMLResultStream) : XMLResultStream = { // Simplier but much more expansive code = ( in map (x => Tail(x.sub)) )
 		  if (in.isEmpty)
 			Stream.empty
@@ -304,7 +304,7 @@ object transform {
 	}
 
   //  The deepfilter does return the matching end bracket.
- class DeepFilter extends TakeTransform {
+  case class DeepFilter extends TakeTransform {
   def recurseDeep(in : XMLResultStream, depth :Int) : XMLResultStream = {
       if (in.isEmpty)
         Stream.empty
@@ -328,11 +328,11 @@ object transform {
 
 
 
- 	class IdTransform extends TakeTransform {
+ 	case class IdTransform extends TakeTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream = in map (_.toResult)
 	}
 
-  class OnceTransform extends TakeTransform {
+  case class OnceTransform extends TakeTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream =
 		  if (in.isEmpty)
 			Stream.empty
@@ -341,7 +341,7 @@ object transform {
 		  }
 	}
 
-	class TakeStartElement(name :String) extends TakeTransform {
+	case class TakeStartElement(name :String) extends TakeTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream =
 			if (in.isEmpty) 
 				Stream.empty
@@ -353,7 +353,7 @@ object transform {
 		  		} 
 	}
 
-	class TakeEndElement(name :String) extends TakeTransform {
+	case class TakeEndElement(name :String) extends TakeTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream =
 			if (in.isEmpty)
 				Stream.empty
@@ -365,7 +365,7 @@ object transform {
 		  		}
 	}
 
-  class TakeSpace extends TakeTransform {
+  case class TakeSpace extends TakeTransform {
     def apply(in : XMLResultStream) : XMLResultStream = {
 			if (in.isEmpty)
 				Stream.empty
