@@ -331,6 +331,7 @@ object transform {
 		  		  case _ => new ZeroTransform().apply(in)
 		  		} 
 	}
+
 	class TakeEndElement(name :String) extends TakeTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream =
 			if (in.isEmpty)
@@ -341,7 +342,22 @@ object transform {
 		  			  	 => Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
 		  		  case _ => new ZeroTransform().apply(in)
 		  		}
-	}   
+	}
+
+  class TakeSpace extends TakeTransform {
+    def apply(in : XMLResultStream) : XMLResultStream = {
+			if (in.isEmpty)
+				Stream.empty
+			else
+		  		in.head.sub match {		  		  
+            case EvComment(text : String)
+                  => Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
+            case EvText(text : String) if ("".equals(text.trim()))
+                  => Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail)) 
+		  		  case _ => new ZeroTransform().apply(in)
+		  		}
+    }
+  }
  
 
 }
