@@ -65,10 +65,10 @@ object transform {
     // ============ End of Model ==============	                             
  
  
-	//type CFilter =
-	//	XMLResultStream => XMLResultStream
+	type CFilter =
+		XMLResultStream => XMLResultStream
  
-	abstract class CFilterBase extends (XMLResultStream => XMLResultStream)
+	abstract class CFilterBase extends CFilter
  
 	abstract class Operator extends CFilterBase
  
