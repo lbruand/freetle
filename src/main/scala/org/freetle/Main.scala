@@ -5,8 +5,7 @@ import scala._
 import scala.Stream
 import scala.io.Source
 import org.freetle.transform._
-import util.{EvElemStart, XMLEventStream}
-
+import util.{StreamSource, EvElemStart, XMLEventStream}
 
 object Main {
   
