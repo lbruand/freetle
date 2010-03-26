@@ -72,10 +72,14 @@ object transform {
  
 	abstract class Operator extends CFilterBase
  
-	abstract class UnaryOperator(underlying : CFilterBase) extends Operator
+	abstract class UnaryOperator(underlying : CFilterBase) extends Operator {
+    def clone(underlying : CFilterBase) : UnaryOperator  
+  }
  
-   	class RepeatUntilNoResultOperator(underlying : CFilterBase) extends UnaryOperator(underlying : CFilterBase) {
-			def recurse(in : XMLResultStream, applied : Boolean) : XMLResultStream = {
+  class RepeatUntilNoResultOperator(underlying : CFilterBase) extends UnaryOperator(underlying : CFilterBase) {
+    def clone(underlying: CFilterBase) = new RepeatUntilNoResultOperator(underlying)
+
+    def recurse(in : XMLResultStream, applied : Boolean) : XMLResultStream = {
 			  val result = if (applied) underlying(in) else in
 			  if (result.isEmpty) 
 				  Stream.empty
@@ -93,36 +97,18 @@ object transform {
 			  recurse(in, true)
 			}
  	}  
-
-    //  The deepfilter does return the matching end bracket.
- 	class DeepFilter extends BaseTransform {
-		def recurseDeep(in : XMLResultStream, depth :Int) : XMLResultStream = {
-		  	if (in.isEmpty)
-		  		Stream.empty
-		  	else
-		  		if (depth < 0)
-		  			in
-		  		else {
-		  			val acc = in.head.sub match {
-		  					case EvElemStart(_, _, _, _) => +1
-							case EvElemEnd(_, _) 		 => -1
-							case _ 						 =>  0		  			  
-		  			}
-		  			Stream.cons(in.head.toResult(), recurseDeep(in.tail, depth + acc))
-		  		}
-		}
-		override def apply(in : XMLResultStream) : XMLResultStream = {
-		  	recurseDeep(in, 0)
-		}
-	}
  
- 	abstract class BinaryOperator(left : CFilterBase, right :CFilterBase) extends Operator
+ 	abstract class BinaryOperator(left : CFilterBase, right :CFilterBase) extends Operator {
+     def clone(left : CFilterBase, right :CFilterBase) : BinaryOperator
+   }
   
   /**
    * This is a concat operator. 
    */
-   	class ConcatOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
-		def recurse(in : XMLResultStream) : XMLResultStream = {
+  class ConcatOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
+    def clone(left : CFilterBase, right :CFilterBase) = new ConcatOperator(left, right)
+
+    def recurse(in : XMLResultStream) : XMLResultStream = {
 		  if (in.isEmpty)
 			  Stream.empty
 		  else {
@@ -142,10 +128,11 @@ object transform {
 		}
  	}
     
-    /**
+  /**
      * We execute in sequence left and then right if left has returned a result.
      */
-    class SequenceOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
+  class SequenceOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
+    def clone(left : CFilterBase, right :CFilterBase) = new SequenceOperator(left, right)
 		def recurse(in : XMLResultStream, hasResult : Boolean) : XMLResultStream = {
 		  if (in.isEmpty)
 			  Stream.empty
@@ -168,19 +155,20 @@ object transform {
 		  }
 		}
  	}
-    /**
+  /**
      * A compose operator where the left operator can consumme the tail from the right operator's result.
      */
-    class SimpleComposeOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
+  class SimpleComposeOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
+    def clone(left : CFilterBase, right :CFilterBase) = new SimpleComposeOperator(left, right)
 		override def apply(in : XMLResultStream) : XMLResultStream = left(right(in))
  	}
     
-    /**
+  /**
      * A compose operator where the left operator cannot consumme the tail from the right operator's result.
      */
-    class ComposeOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
-      
-    	def recurseKeepResult(in : XMLResultStream) : XMLResultStream = {
+  class ComposeOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
+    def clone(left : CFilterBase, right :CFilterBase) = new ComposeOperator(left, right)
+    def recurseKeepResult(in : XMLResultStream) : XMLResultStream = {
     	  if (in.isEmpty)
 			  Stream.empty
 		  else {
@@ -191,7 +179,7 @@ object transform {
           }
     	}
      
-    	def recurseKeepTail(in : XMLResultStream) : XMLResultStream = {
+    def recurseKeepTail(in : XMLResultStream) : XMLResultStream = {
     	  if (in.isEmpty)
 			  Stream.empty
 		  else {
@@ -209,6 +197,7 @@ object transform {
  	}
     
  	class ChoiceOperator(left : CFilterBase, right :CFilterBase) extends BinaryOperator(left : CFilterBase, right :CFilterBase) {
+    def clone(left : CFilterBase, right :CFilterBase) = new ChoiceOperator(left, right)
 		override def apply(in : XMLResultStream) : XMLResultStream = {
 			val leftResult = left(in)
 		  	if (!leftResult.isEmpty)
@@ -251,26 +240,6 @@ object transform {
  	}
 
    
-	class ZeroTransform extends BaseTransform {	   
-		override final def apply(in : XMLResultStream) : XMLResultStream = { // Simplier but much more expansive code = ( in map (x => Tail(x.sub)) )
-		  if (in.isEmpty) 
-			Stream.empty 
-		  else {
-			  in.head match {
-			    case Result(_) => Stream.cons(in.head.toTail(), this.apply(in.tail))
-			    case Tail(_) => in // When we have reached the first Tail, the recursion is over.
-			  }
-				 
-		  }
-		  	
-		}
-	}
- 
-
-  
- 	class IdTransform extends BaseTransform {
-		override def apply(in : XMLResultStream) : XMLResultStream = in map (_.toResult)
-	}
 
   /**
    * Base class for all transformations that only output events.
@@ -310,6 +279,50 @@ object transform {
    * base transform for all transformations that only take stuff.
    */
   abstract class TakeTransform extends BaseTransform
+
+  class ZeroTransform extends TakeTransform {
+		override final def apply(in : XMLResultStream) : XMLResultStream = { // Simplier but much more expansive code = ( in map (x => Tail(x.sub)) )
+		  if (in.isEmpty)
+			Stream.empty
+		  else {
+			  in.head match {
+			    case Result(_) => Stream.cons(in.head.toTail(), this.apply(in.tail))
+			    case Tail(_) => in // When we have reached the first Tail, the recursion is over.
+			  }
+
+		  }
+
+		}
+	}
+
+  //  The deepfilter does return the matching end bracket.
+ class DeepFilter extends TakeTransform {
+  def recurseDeep(in : XMLResultStream, depth :Int) : XMLResultStream = {
+      if (in.isEmpty)
+        Stream.empty
+      else
+        if (depth < 0)
+          in
+        else {
+          val acc = in.head.sub match {
+              case EvElemStart(_, _, _, _) => +1
+            case EvElemEnd(_, _) 		 => -1
+            case _ 						 =>  0
+          }
+          Stream.cons(in.head.toResult(), recurseDeep(in.tail, depth + acc))
+        }
+  }
+  override def apply(in : XMLResultStream) : XMLResultStream = {
+      recurseDeep(in, 0)
+  }
+}
+
+
+
+
+ 	class IdTransform extends TakeTransform {
+		override def apply(in : XMLResultStream) : XMLResultStream = in map (_.toResult)
+	}
 
   class OnceTransform extends TakeTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream =
