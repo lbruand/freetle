@@ -266,19 +266,15 @@ object transform {
 		}
 	}
  
- 	class OnceTransform extends BaseTransform {
-		override def apply(in : XMLResultStream) : XMLResultStream =
-		  if (in.isEmpty) 
-			Stream.empty 
-		  else {
-				Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail)) 
-		  } 	
-	}
+
   
  	class IdTransform extends BaseTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream = in map (_.toResult)
-	}  
+	}
 
+  /**
+   * Base class for all transformations that only output events.
+   */
   abstract class PushTransform extends BaseTransform
   
 	// Add helpers to build events simply.
@@ -310,9 +306,21 @@ object transform {
   }
 
 
-  
- 
-	class TakeStartElement(name :String) extends BaseTransform {
+  /**
+   * base transform for all transformations that only take stuff.
+   */
+  abstract class TakeTransform extends BaseTransform
+
+  class OnceTransform extends TakeTransform {
+		override def apply(in : XMLResultStream) : XMLResultStream =
+		  if (in.isEmpty)
+			Stream.empty
+		  else {
+				Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
+		  }
+	}
+
+	class TakeStartElement(name :String) extends TakeTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream =
 			if (in.isEmpty) 
 				Stream.empty
@@ -323,7 +331,7 @@ object transform {
 		  		  case _ => new ZeroTransform().apply(in)
 		  		} 
 	}
-	class TakeEndElement(name :String) extends BaseTransform {
+	class TakeEndElement(name :String) extends TakeTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream =
 			if (in.isEmpty)
 				Stream.empty
