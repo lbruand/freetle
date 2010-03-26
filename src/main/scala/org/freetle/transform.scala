@@ -2,7 +2,8 @@ package org.freetle
 import scala._
 import scala.Stream
 import scala.io.Source
-import util.{EvElemEnd, EvElemStart, XMLEvent}
+import util._
+import xml._
 // RAF :
 
 //  Model
@@ -284,6 +285,27 @@ object transform {
 			Stream.cons(Result(event), new ZeroTransform().apply(in))
 		}
 	}
+
+  class PushNode(nodeSeq: NodeSeq) extends BaseTransform {
+
+    def serializeXML(nodeSeq : NodeSeq) : XMLResultStream = {
+      nodeSeq.foldLeft[XMLResultStream](Stream.empty)((x :XMLResultStream, y :Node) => Stream.concat(serializeXML(y), x))
+    }
+
+    def serializeXML(node : Node) : XMLResultStream = node match {
+      case Elem(prefix, label, attributes, scope, child)
+            => Stream.cons( Result(new EvElemStart(prefix, label, attributes, scope)),
+                          Stream.concat(serializeXML(child), Stream(Result(new EvElemEnd(prefix, label)))))
+      case Text(text) => Stream(Result(new EvText(text)))
+      case Comment(text) => Stream(Result(new EvComment(text)))
+      case ProcInstr(target, procText) => Stream(Result(new EvProcInstr(target, procText)))
+      case EntityRef(entityRef) => Stream(Result(new EvEntityRef(entityRef)))
+      case node : Node => Stream(Result(new EvText(node.text)))
+    }
+
+    override def apply(in : XMLResultStream) : XMLResultStream =
+      Stream.concat(serializeXML(nodeSeq), in)
+  }  
  
 	class TakeStartElement(name :String) extends BaseTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream =

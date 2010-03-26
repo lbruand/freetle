@@ -2,20 +2,16 @@ package org.freetle
 
 import org.junit._
 import Assert._
-import scala.xml.{Node,NodeSeq}
-import scala.xml.PrettyPrinter
-import util.{EvElemEnd, EvElemStart}
-import java.io.InputStreamReader
 import io.Source
-import org.freetle.util.XMLEventStream
 import org.freetle.transform._
+import util.{XMLEventStream, EvEntityRef, EvProcInstr, EvComment, EvText, EvElemEnd, EvElemStart}
+import scala.xml.{Atom, Unparsed, PCData, PrettyPrinter, EntityRef, ProcInstr, Comment, Text, Elem, Node, NodeSeq}
 
 @Test
 class TransformTest {
-	// Because we want to test on arbitrary long length of Stream,
-    // We introduce this parameter to be set arbitrarily.
+	// Because we want to test an arbitrary long length of Stream,
+  // We introduce this parameter to be set arbitrarily.
  
-	val depthTest = 40000
 	@Test
 	def testTakeElem() = {
 	  val s = Stream(new EvElemStart("p", "body", null, null)) map (Tail(_))
@@ -40,7 +36,9 @@ class TransformTest {
 
     /** This class is used to count the number of objects in the counter */
     class Counter(val countTotal : Int, val countResult : Int)
-    
+  
+    val depthTest = 40000
+  
     @Test
     def testRepeatUntilNoResultOperator() = {
       def runForIteration(depthTest :Int) = {
@@ -84,14 +82,14 @@ class TransformTest {
       val r2 = t2(s)
       assertEquals(6, r2.filter(_.isInstanceOf[Result]).length)
     }
-    
+
+     
+
     @Test
     def testXMLExp() = {
       val f : (String => Node) = hello => <message>{hello}</message>
-      val pp = new PrettyPrinter(80, 5);
-
-      val r = pp.format(f("h"))
-      assertEquals("<message>h</message>", r)     
+      val t = new PushNode(f("hello"))
+      assertEquals(3, t(Stream.empty).length)
     }
 
     @Test
@@ -103,8 +101,7 @@ class TransformTest {
         new SequenceOperator(new PushEvent(new EvElemStart("p", "a", null, null)), new PushEvent(new EvElemEnd("p", "a")))),
           new SequenceOperator(new DeepFilter(),new TakeEndElement("message")))), new TakeEndElement("input")))
       val r = t(evStream)
-      r.foreach(println)
-      
+      assertEquals(20, r.length)
     }
 
 }
