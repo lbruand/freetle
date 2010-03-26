@@ -100,7 +100,7 @@ object transform {
 			}
  	}  
  
- 	abstract class BinaryOperator(val left : CFilterBase, val right :CFilterBase) extends
+ 	abstract case class BinaryOperator(val left : CFilterBase, val right :CFilterBase) extends
         Operator {
      def clone(left : CFilterBase, right :CFilterBase) : BinaryOperator
    }
@@ -108,7 +108,7 @@ object transform {
   /**
    * This is a concat operator. 
    */
-  class ConcatOperator(override val left : CFilterBase, override val right :CFilterBase) extends
+  case class ConcatOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = new ConcatOperator(left, right)
 
@@ -135,7 +135,7 @@ object transform {
   /**
      * We execute in sequence left and then right if left has returned a result.
      */
-  class SequenceOperator(override val left : CFilterBase, override val right :CFilterBase) extends
+  case class SequenceOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = new SequenceOperator(left, right)
 		def recurse(in : XMLResultStream, hasResult : Boolean) : XMLResultStream = {
@@ -163,7 +163,7 @@ object transform {
   /**
      * A compose operator where the left operator can consumme the tail from the right operator's result.
      */
-  class SimpleComposeOperator(override val left : CFilterBase, override val right :CFilterBase) extends
+  case class SimpleComposeOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = new SimpleComposeOperator(left, right)
 		override def apply(in : XMLResultStream) : XMLResultStream = left(right(in))
@@ -172,7 +172,7 @@ object transform {
   /**
      * A compose operator where the left operator cannot consumme the tail from the right operator's result.
      */
-  class ComposeOperator(override val left : CFilterBase, override val right :CFilterBase) extends
+  case class ComposeOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = new ComposeOperator(left, right)
     def recurseKeepResult(in : XMLResultStream) : XMLResultStream = {
@@ -203,7 +203,7 @@ object transform {
 		}	 				
  	}
     
- 	class ChoiceOperator(override val left : CFilterBase, override val right :CFilterBase) extends
+ 	case class ChoiceOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = new ChoiceOperator(left, right)
 		override def apply(in : XMLResultStream) : XMLResultStream = {
