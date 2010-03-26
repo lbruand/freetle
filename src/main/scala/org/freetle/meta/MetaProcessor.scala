@@ -19,10 +19,9 @@ abstract class RecursiveMetaProcessor extends MetaProcessor {
   def apply(in: CFilterBase) : CFilterBase = {
 
     in match {
-
-      case transfo : BaseTransform => map(transfo)
       case unary @ UnaryOperator(underlying) => unary.clone(this(underlying))
       case binary @ BinaryOperator(left, right) => binary.clone(this(left), this(right))
+      case transfo : BaseTransform => map(transfo)
     }
   }
 }
