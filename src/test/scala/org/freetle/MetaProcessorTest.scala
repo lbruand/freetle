@@ -3,7 +3,7 @@ package org.freetle
 import meta.RecursiveMetaProcessor
 import org.junit._
 import Assert._
-import org.freetle.transform.{TakeStartElement, TakeSpace, RepeatUntilNoResultOperator}
+import org.freetle.transform._
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,7 +21,12 @@ class MetaProcessorTest {
     val o = new RepeatUntilNoResultOperator(t)
     val oElem = o.clone(tElem)
     
-    val m = new RecursiveMetaProcessor()
+    val m = new RecursiveMetaProcessor() {
+      def map(in: BaseTransform) = {
+        val takeSpc = new RepeatUntilNoResultOperator(new TakeSpace())
+        new SequenceOperator(new SequenceOperator(takeSpc, in), takeSpc)
+      }
+    }
 
     assertEquals(t, m(o))
   }

@@ -72,11 +72,11 @@ object transform {
  
 	abstract class Operator extends CFilterBase
  
-	abstract class UnaryOperator(underlying : CFilterBase) extends Operator {
+	abstract class UnaryOperator(val underlying : CFilterBase) extends Operator {
     def clone(underlying : CFilterBase) : UnaryOperator  
   }
  
-  class RepeatUntilNoResultOperator(underlying : CFilterBase) extends UnaryOperator(underlying : CFilterBase) {
+  class RepeatUntilNoResultOperator(override val underlying : CFilterBase) extends UnaryOperator(underlying : CFilterBase) {
     def clone(underlying: CFilterBase) = new RepeatUntilNoResultOperator(underlying)
 
     def recurse(in : XMLResultStream, applied : Boolean) : XMLResultStream = {
