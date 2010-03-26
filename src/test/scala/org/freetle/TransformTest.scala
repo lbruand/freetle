@@ -114,7 +114,7 @@ class TransformTest {
               .filter(_.isInstanceOf[Result]).length)
       assertEquals(0, t(Stream(Tail(new EvText("p"))))
               .filter(_.isInstanceOf[Result]).length)
-      assertEquals(1, t(Stream(Tail(new EvText("                "))))
+      assertEquals(1, t(Stream(Tail(new EvText("        \t        "))))
               .filter(_.isInstanceOf[Result]).length)
     }
 
