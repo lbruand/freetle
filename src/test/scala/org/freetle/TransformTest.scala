@@ -110,9 +110,9 @@ class TransformTest {
     def testTakeSpace() {
       val t = new TakeSpace()
       
-      assertEquals(0, t(Stream(Tail(new EvElemStart("p", "a", null, null))))
+      assertEquals(1, t(Stream(Tail(new EvElemStart("p", "a", null, null))))
               .filter(_.isInstanceOf[Result]).length)
-      assertEquals(0, t(Stream(Tail(new EvText("p"))))
+      assertEquals(1, t(Stream(Tail(new EvText("p"))))
               .filter(_.isInstanceOf[Result]).length)
       assertEquals(1, t(Stream(Tail(new EvText("        \t        "))))
               .filter(_.isInstanceOf[Result]).length)
