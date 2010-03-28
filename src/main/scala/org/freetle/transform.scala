@@ -24,6 +24,7 @@ import xml._
 //			(idea) : We could use a element counting Stream                                                                      
 //  * Solve the template output problem : Sometimes it is necessary to reorder/sort a bit element. How to deal with that nicely.
 //			Use context definition ?
+//  * Add a offset and size system .
 //
 //	Optimizer
 //  =========
