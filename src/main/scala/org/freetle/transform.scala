@@ -376,7 +376,7 @@ object transform {
             case EvComment(text : String)
                   => Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
             case EvText(text : String) if ("".equals(text.trim()))
-                  => new ZeroTransform().apply(in.tail)
+                  => Stream.cons(Result(EvText(text)), new ZeroTransform().apply(in.tail))
             case EvText(text : String)
                   => Stream.cons(Result(EvText(text.trim())), new ZeroTransform().apply(in.tail))
 		  		  case _ => new ZeroTransform().apply(in)
