@@ -42,23 +42,24 @@ import xml._
 object transform {
   
 	// ============ Model =====================
+  type event = XMLEvent
 
-    abstract class TransformResult(val sub : XMLEvent) {
-      def toTail() : TransformResult = {
-        this match {
-          case Result(sub) => new Tail(sub)
-          case _ => this
-        }
-      }
-      def toResult() : TransformResult = {
-        this match {
-          case Tail(sub) => new Result(sub)
-          case _ => this
-        }
+  abstract class TransformResult(val sub : event) {
+    def toTail() : TransformResult = {
+      this match {
+        case Result(sub) => new Tail(sub)
+        case _ => this
       }
     }
-    case class Result(override val sub : XMLEvent) extends TransformResult(sub : XMLEvent)
-    case class Tail(override val sub : XMLEvent) extends TransformResult(sub : XMLEvent)    
+    def toResult() : TransformResult = {
+      this match {
+        case Tail(sub) => new Result(sub)
+        case _ => this
+      }
+    }
+  }
+  case class Result(override val sub : event) extends TransformResult(sub : event)
+  case class Tail(override val sub : event) extends TransformResult(sub : event)
       
     // TODO Find a way to add a constraint on the Stream. (Useful ? ) 
     //		The constraint being : We have Results until a certain rank and then we have Tails. 
@@ -256,7 +257,7 @@ object transform {
   abstract case class PushTransform extends BaseTransform
   
 	// Add helpers to build events simply.
-	case class PushEvent(event :XMLEvent) extends PushTransform {
+	case class PushEvent(event :event) extends PushTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream = {
 			Stream.cons(Result(event), new ZeroTransform().apply(in))
 		}
