@@ -1,13 +1,16 @@
 package org.freetle.util
 
 import scala.xml.{MetaData, NamespaceBinding}
+import javax.xml.stream.Location
 
 /** This class represents an XML event for pull parsing.
  *  Pull parsing means that during the traversal of the XML
  *  tree we are parsing, each "event" is returned to the caller
  *  and the traversal is suspended.
  */
-trait XMLEvent
+trait XMLEvent {
+  var location : Location = null
+}
 
 /** An element is encountered the first time */
 case class EvElemStart(pre: String, label: String, attrs: MetaData, scope: NamespaceBinding) extends XMLEvent
