@@ -38,6 +38,7 @@ class SourceReader(src: Source) extends Reader {
 /**
  * 
  * NB: You can create a stream from this using Stream.fromIterator()
+ * TODO Should add other constructors.
  */
 class XMLEventStream(src: Source) extends Iterator[XMLEvent] {
   lazy val factory = XMLInputFactory.newInstance();
