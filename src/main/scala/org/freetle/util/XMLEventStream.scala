@@ -3,8 +3,8 @@ import scala.io.Source
 import javax.xml.stream.XMLInputFactory
 import javax.xml.stream.XMLStreamReader
 import javax.xml.stream.XMLStreamConstants
-import java.io.Reader
 import scala.xml.{MetaData, NamespaceBinding}
+import java.io.{InputStream, Reader}
 
 class SourceReader(src: Source) extends Reader {
   override def read(arr : Array[Char], start : Int, sz : Int) : Int = {
@@ -40,9 +40,12 @@ class SourceReader(src: Source) extends Reader {
  * NB: You can create a stream from this using Stream.fromIterator()
  * TODO Should add other constructors.
  */
-class XMLEventStream(src: Source) extends Iterator[XMLEvent] {
-  lazy val factory = XMLInputFactory.newInstance();
-  lazy val input : XMLStreamReader = factory.createXMLStreamReader("hello.xml", new SourceReader(src));
+class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
+  lazy val factory = XMLInputFactory.newInstance()
+  lazy val input : XMLStreamReader = src match {
+      case src :Source => factory.createXMLStreamReader("hello.xml", new SourceReader(src))
+      case in : InputStream => factory.createXMLEventReader(in)
+  }
   def buildEvent(input:XMLStreamReader) : XMLEvent = {
     val eventType = input.getEventType
 	  
