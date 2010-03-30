@@ -104,6 +104,7 @@ class TransformTest {
           new SequenceOperator(new DeepFilter(),new TakeEndElement("message")))), new TakeEndElement("input")))
       val r = t(evStream)
       assertEquals(20, r.length)
+      assertEquals(0, r.tail.head.sub.location.getCharacterOffset())
     }
 
     @Test

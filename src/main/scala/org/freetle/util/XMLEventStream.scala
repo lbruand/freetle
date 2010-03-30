@@ -43,8 +43,8 @@ class SourceReader(src: Source) extends Reader {
 class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
   lazy val factory = XMLInputFactory.newInstance()
   lazy val input : XMLStreamReader = src match {
-      case src :Source => factory.createXMLStreamReader("hello.xml", new SourceReader(src))
       case in : InputStream => factory.createXMLStreamReader(in)
+      case src :Source => factory.createXMLStreamReader("hello.xml", new SourceReader(src))
   }
   def buildEvent(input:XMLStreamReader) : XMLEvent = {
     val eventType = input.getEventType
