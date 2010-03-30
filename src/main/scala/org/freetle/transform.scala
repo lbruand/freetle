@@ -368,24 +368,7 @@ object transform {
 	}
 
   case class TakeSpace extends TakeTransform {
-    def stripWhiteSpace(str : String) : List[String] = {
-      if (str == null || str.length == 0) {
-        List(null, null, null)
-      } else {
-        var start = 0
-        while (Character.isWhitespace(str.charAt(start))) {
-          start += 1
-        }
-        var end = str.length() - 1
-        while (Character.isWhitespace(str.charAt(end))) {
-          end -= 1
-        }
-        
-        List(str.substring(0, start),
-         str.substring(start, end + 1),
-         str.substring(end +1))
-      }
-    }
+    
     // TODO : There is still a big problem : A text token can be split in many.
     //        And by comments which we might not get every whitespace.
     def apply(in : XMLResultStream) : XMLResultStream = {
@@ -396,17 +379,7 @@ object transform {
             case EvComment(text : String)
                   => Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
             case EvText(text : String) if ("".equals(text.trim()))
-                  => Stream.cons(Result(EvText(text)), new ZeroTransform().apply(in.tail))
-            case EvText(text : String)
-                  => {
-                        Stream.concat(
-                          stripWhiteSpace(text).toStream
-                            filter ("".equals(_))
-                            map (x => Result(EvText(x))), // <- Pas bon.
-                          new ZeroTransform().apply(in.tail)
-                        )
-                        
-                      }
+                  => Stream.cons(Result(EvText(text)), new ZeroTransform().apply(in.tail))        
 		  		  case _ => new ZeroTransform().apply(in)
 		  		}
     }

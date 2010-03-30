@@ -96,7 +96,7 @@ class TransformTest {
 
     @Test
     def testLoadXML() = {
-      val src = Source.fromInputStream(this.getClass().getResourceAsStream("/org/freetle/input.xml"))
+      val src = this.getClass().getResourceAsStream("/org/freetle/input.xml")
       val evStream = Stream.fromIterator( new XMLEventStream(src) map (Tail(_)) )
       val t = new SequenceOperator(new TakeStartElement("input"), new SequenceOperator(
       new RepeatUntilNoResultOperator(new SequenceOperator(new SequenceOperator(new TakeStartElement("message"),
@@ -109,11 +109,10 @@ class TransformTest {
     @Test
     def testTakeSpace() {
       val t = new TakeSpace()
-      assertEquals( ("    ", "abc", "    "), t.stripWhiteSpace("    abc    ") )
-      assertEquals( ("", "abc", "    "), t.stripWhiteSpace("abc    ") )
-      assertEquals(1, t(Stream(Tail(new EvElemStart("p", "a", null, null))))
+      
+      assertEquals(0, t(Stream(Tail(new EvElemStart("p", "a", null, null))))
               .filter(_.isInstanceOf[Result]).length)
-      assertEquals(1, t(Stream(Tail(new EvText("p"))))
+      assertEquals(0, t(Stream(Tail(new EvText("p"))))
               .filter(_.isInstanceOf[Result]).length)
       assertEquals(1, t(Stream(Tail(new EvText("        \t        "))))
               .filter(_.isInstanceOf[Result]).length)
