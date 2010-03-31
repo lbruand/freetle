@@ -29,6 +29,6 @@ abstract class RecursiveMetaProcessor extends MetaProcessor {
 class SpaceSkipingMetaProcessor extends RecursiveMetaProcessor {
   def map(in: BaseTransform) = {
     val takeSpc = new RepeatUntilNoResultOperator(new TakeSpace())
-    new SequenceOperator(new SequenceOperator(takeSpc, in), takeSpc)
+    new ConcatOperator(takeSpc, new SequenceOperator(in, takeSpc) )
   }
 }

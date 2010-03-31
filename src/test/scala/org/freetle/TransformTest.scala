@@ -1,5 +1,6 @@
 package org.freetle
 
+import meta.SpaceSkipingMetaProcessor
 import org.junit._
 import Assert._
 import io.Source
@@ -102,9 +103,8 @@ class TransformTest {
       new RepeatUntilNoResultOperator(new SequenceOperator(new SequenceOperator(new TakeStartElement("message"),
         new SequenceOperator(new PushEvent(new EvElemStart("p", "a", null, null)), new PushEvent(new EvElemEnd("p", "a")))),
           new SequenceOperator(new DeepFilter(),new TakeEndElement("message")))), new TakeEndElement("input")))
-      val r = t(evStream)
-      assertEquals(20, r.length)
-      assertEquals(0, r.tail.head.sub.location.getCharacterOffset())
+      val r = (new SpaceSkipingMetaProcessor())(t)(evStream)
+      assertEquals(0, r.filter (_.isInstanceOf[Tail]).length)
     }
 
     @Test
