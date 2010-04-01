@@ -10,7 +10,8 @@ import xml._
 //  =====
 //  * there is no possibility of having an empty positive-result since
 //		 Since failure is an empty result. 
-// 		We might need a special token that helps with empty positive-result.  
+// 		We might need a special token that helps with empty positive-result.
+//    =>  There is a need for a Repeat which always succeed...
 //  Functionalities
 //  ===============
 //  * Stax Parser fuck up the bad way... Understand why.
@@ -78,7 +79,7 @@ object transform {
         Operator {
     def clone(underlying : CFilterBase) : UnaryOperator  
   }
- 
+
   case class RepeatUntilNoResultOperator(override val underlying : CFilterBase) extends
         UnaryOperator(underlying : CFilterBase) {
     def clone(underlying: CFilterBase) = new RepeatUntilNoResultOperator(underlying)
