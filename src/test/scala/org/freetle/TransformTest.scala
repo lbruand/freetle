@@ -10,6 +10,21 @@ import scala.xml.{Atom, Unparsed, PCData, PrettyPrinter, EntityRef, ProcInstr, C
 
 @Test
 class TransformTest {
+  // Utility methods used to test XMLResultStream
+  def assertAllResult(r : XMLResultStream) :Unit = r.foreach(x => assertTrue(x.isInstanceOf[Result]))
+
+  def assertAllTail(r : XMLResultStream) :Unit = r.foreach(x => assertTrue(x.isInstanceOf[Tail]))
+
+  def findFirstTail(r : XMLResultStream) : XMLResultStream = r.head match {
+    case result : Result => findFirstTail(r.tail)
+    case tail : Tail => r
+  }
+
+  def constraintResultsThenTails(x : XMLResultStream) : Unit = assertAllTail(findFirstTail(x))
+
+  def lengthResult(r : XMLResultStream) : Int = r.filter(_.isInstanceOf[Result]).length
+
+  def lengthTail(r : XMLResultStream) : Int = r.filter(_.isInstanceOf[Result]).length
 	// Because we want to test an arbitrary long length of Stream,
   // We introduce this parameter to be set arbitrarily.
  
@@ -104,9 +119,12 @@ class TransformTest {
         new SequenceOperator(new PushEvent(new EvElemStart("p", "a", null, null)), new PushEvent(new EvElemEnd("p", "a")))),
           new SequenceOperator(new DeepFilter(),new TakeEndElement("message")))), new TakeEndElement("input")))
       val r = (new SpaceSkipingMetaProcessor())(t)(evStream)
-      assertEquals(0, r.filter (_.isInstanceOf[Tail]).length)
+      assertAllResult(r)
     }
 
+
+
+  
     @Test
     def testTakeSpace() {
       val t = new TakeSpace()
