@@ -34,8 +34,14 @@ class TransformTest {
    */
   def constraintResultsThenTails(x : XMLResultStream) : Unit = assertAllTail(findFirstTail(x))
 
+  /**
+   * Number of Results in the Stream.
+   */
   def lengthResult(r : XMLResultStream) : Int = r.filter(_.isInstanceOf[Result]).length
 
+  /**
+   * Number of Tails in the Stream.
+   */
   def lengthTail(r : XMLResultStream) : Int = r.filter(_.isInstanceOf[Result]).length
 
  
