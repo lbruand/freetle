@@ -14,7 +14,6 @@ import xml._
 //    =>  There is a need for a Repeat which always succeed...
 //  Functionalities
 //  ===============
-//  * Stax Parser fuck up the bad way... Understand why.
 //  * Add the operators on the Transform class
 //  * Add multi unary operator
 //  * Check that the Compose Operator (i.d. irish composition) works properly. (tail  of the first function)
