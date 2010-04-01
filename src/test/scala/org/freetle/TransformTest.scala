@@ -25,8 +25,7 @@ class TransformTest {
   def lengthResult(r : XMLResultStream) : Int = r.filter(_.isInstanceOf[Result]).length
 
   def lengthTail(r : XMLResultStream) : Int = r.filter(_.isInstanceOf[Result]).length
-	// Because we want to test an arbitrary long length of Stream,
-  // We introduce this parameter to be set arbitrarily.
+
  
 	@Test
 	def testTakeElem() = {
@@ -52,7 +51,10 @@ class TransformTest {
 
     /** This class is used to count the number of objects in the counter */
     class Counter(val countTotal : Int, val countResult : Int)
+
   
+	  // Because we want to test an arbitrary long length of Stream,
+    // We introduce this parameter to be set arbitrarily.
     val depthTest = 40000
   
     @Test
