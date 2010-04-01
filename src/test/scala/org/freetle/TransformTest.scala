@@ -33,7 +33,7 @@ class TransformTest {
 	  val trans = new TakeStartElement("body")
 	  val r = trans(s)
 	  assertEquals(1, r.length)
-	  assertEquals(1, r.filter(_.isInstanceOf[Result]).length)
+	  assertEquals(1, lengthResult(r))
 	  assertTrue("body", r.head.sub match {
 	    case EvElemStart(_, "body", _, _) => true
 	    case _ => false
@@ -46,7 +46,7 @@ class TransformTest {
           val trans = new ConcatOperator(new TakeStartElement("body"), new TakeStartElement("message"))
           val result = trans(input)
       assertEquals(2, result.length)
-      assertEquals(2, result.filter(_.isInstanceOf[Result]).length)
+      assertEquals(2, lengthResult(result))
     }
 
     /** This class is used to count the number of objects in the counter */
@@ -97,10 +97,10 @@ class TransformTest {
         new ConcatOperator(new TakeStartElement("body"), new TakeStartElement("body")),
         new DeepFilter())
       val r = t(s)
-      assertEquals(9, r.filter(_.isInstanceOf[Result]).length)
+      assertEquals(9, lengthResult(r))
       val t2 = new ConcatOperator(new ConcatOperator(new TakeStartElement("body"), new ConcatOperator(new TakeStartElement("body"), new TakeStartElement("a"))), new DeepFilter())
       val r2 = t2(s)
-      assertEquals(6, r2.filter(_.isInstanceOf[Result]).length)
+      assertEquals(6, lengthResult(r2))
     }
 
      
@@ -131,12 +131,12 @@ class TransformTest {
     def testTakeSpace() {
       val t = new TakeSpace()
       
-      assertEquals(0, t(Stream(Tail(new EvElemStart("p", "a", null, null))))
-              .filter(_.isInstanceOf[Result]).length)
-      assertEquals(0, t(Stream(Tail(new EvText("p"))))
-              .filter(_.isInstanceOf[Result]).length)
-      assertEquals(1, t(Stream(Tail(new EvText("        \t        "))))
-              .filter(_.isInstanceOf[Result]).length)
+      assertEquals(0, lengthResult(t(Stream(Tail(new EvElemStart("p", "a", null, null))))))
+              
+      assertEquals(0, lengthResult(t(Stream(Tail(new EvText("p"))))))
+
+      assertEquals(1, lengthResult(t(Stream(Tail(new EvText("        \t        "))))))
+              
     }
 
 }
