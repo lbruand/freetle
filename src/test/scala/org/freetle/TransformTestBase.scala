@@ -4,7 +4,7 @@ import org.junit._
 import Assert._
 
 
-class TransformTestBase[Context] extends Transform[Context] {
+class TransformTestBase[Context] extends FreetleBaseModel[Context] {
   // Utility methods used to test XMLResultStream
   /**
    * Asserts that there are only Results in the stream.
