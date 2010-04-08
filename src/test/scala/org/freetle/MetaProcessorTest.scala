@@ -14,10 +14,10 @@ import Assert._
  * To change this template use File | Settings | File Templates.
  */
 
-class MyContext
+class MetaProcessorTestContext
 
 @Test
-class MetaProcessorTest extends Meta[MyContext] {
+class MetaProcessorTest extends Meta[MetaProcessorTestContext] {
   @Test
   def testRunRecursive() {
     val t = new TakeSpace()

@@ -46,7 +46,7 @@ class TransformTestBase[Context] extends Meta[Context] {
   
 }
 @Test
-class TransformTest extends TransformTestBase[MyContext] {
+class TransformTest extends TransformTestBase[MetaProcessorTestContext] {
 
  
 	@Test

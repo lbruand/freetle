@@ -5,9 +5,9 @@ import scala._
 import scala.Stream
 import util.{StreamSource, EvElemStart}
 
-class MyContext
+class MainContext
 
-object Main extends Transform[MyContext] {
+object Main extends Transform[MainContext] {
 
    
 
