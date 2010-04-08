@@ -45,8 +45,10 @@ class TransformTestBase[Context] extends Meta[Context] {
   def lengthTail(r : XMLResultStream) : Int = r.filter(_.isInstanceOf[Result]).length
   
 }
+
+class TransformTestContext
 @Test
-class TransformTest extends TransformTestBase[MetaProcessorTestContext] {
+class TransformTest extends TransformTestBase[TransformTestContext] {
 
  
 	@Test
@@ -157,6 +159,10 @@ class TransformTest extends TransformTestBase[MetaProcessorTestContext] {
 
       assertEquals(1, lengthResult(t(Stream(Tail(new EvText("        \t        "), null)))))
               
+    }
+
+    def testContext() {
+      
     }
 
 }
