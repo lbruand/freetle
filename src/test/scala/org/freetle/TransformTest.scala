@@ -12,7 +12,7 @@ import scala.xml.{Atom, Unparsed, PCData, PrettyPrinter, EntityRef, ProcInstr, C
 
 class TransformTestContext
 @Test
-class TransformTest extends TransformTestBase[TransformTestContext] {
+class TransformTest extends TransformTestBase[TransformTestContext] with Meta[TransformTestContext] {
 
  
 	@Test

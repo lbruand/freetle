@@ -1,11 +1,10 @@
 package org.freetle
 
-import meta.Meta
 import org.junit._
 import Assert._
 
 
-class TransformTestBase[Context] extends Meta[Context] {
+class TransformTestBase[Context] extends Transform[Context] {
   // Utility methods used to test XMLResultStream
   /**
    * Asserts that there are only Results in the stream.
