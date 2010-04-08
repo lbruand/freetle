@@ -39,27 +39,30 @@ import xml._
 //			Which is promisingly faster.
   
 
-object transform {
-  
+trait Transform[Context] {
+
+
 	// ============ Model =====================
   type event = XMLEvent
 
-  abstract class TransformResult(val sub : event) {
+  abstract class TransformResult(val sub : event, val context : Option[Context]) {
     def toTail() : TransformResult = {
       this match {
-        case Result(sub) => new Tail(sub)
+        case Result(sub, context) => new Tail(sub, context)
         case _ => this
       }
     }
     def toResult() : TransformResult = {
       this match {
-        case Tail(sub) => new Result(sub)
+        case Tail(sub, context) => new Result(sub, context)
         case _ => this
       }
     }
   }
-  case class Result(override val sub : event) extends TransformResult(sub : event)
-  case class Tail(override val sub : event) extends TransformResult(sub : event)
+  case class Result(override val sub : event, override val context : Option[Context])
+          extends TransformResult(sub : event, context : Option[Context])
+  case class Tail(override val sub : event, override val context : Option[Context])
+          extends TransformResult(sub : event, context : Option[Context])
       
     // TODO Find a way to add a constraint on the Stream. (Useful ? ) 
     //		The constraint being : We have Results until a certain rank and then we have Tails. 
@@ -89,8 +92,8 @@ object transform {
 				  Stream.empty
 			  else {
 				  (result.head) match {
-				    case Result(_) => Stream.cons(result.head, this.recurse(result.tail, false)) // /!\ not tail recursive ?
-				    case Tail(_) => if (applied)
+				    case Result(_, _) => Stream.cons(result.head, this.recurse(result.tail, false)) // /!\ not tail recursive ?
+				    case Tail(_, _) => if (applied)
 				    					  result // Repeating is over since underlying was applied and we have a Tail in the head.
 				    				  else 
 				    					  this.recurse(result, true) // Go on recursing. 
@@ -119,8 +122,8 @@ object transform {
 			  Stream.empty
 		  else {
 			  (in.head) match {
-			    case Result(_) => Stream.cons(in.head, this.recurse(in.tail))
-			    case Tail(_) => right(in)
+			    case Result(_, _) => Stream.cons(in.head, this.recurse(in.tail))
+			    case Tail(_, _) => right(in)
 			  }
           }
 		}
@@ -145,8 +148,8 @@ object transform {
 			  Stream.empty
 		  else {
 			  (in.head) match {
-			    case Result(_) => Stream.cons(in.head, this.recurse(in.tail, true))
-			    case Tail(_) => if (hasResult) 
+			    case Result(_, _) => Stream.cons(in.head, this.recurse(in.tail, true))
+			    case Tail(_, _) => if (hasResult) 
 			    					right(in) 
 			    				else 
 			    					in
@@ -182,8 +185,8 @@ object transform {
 			  Stream.empty
 		  else {
 			  (in.head) match {
-			    case Result(_) => Stream.cons(in.head, recurseKeepResult(in.tail))
-			    case Tail(_) => Stream.empty
+			    case Result(_, _) => Stream.cons(in.head, recurseKeepResult(in.tail))
+			    case Tail(_, _) => Stream.empty
 			  }
           }
     	}
@@ -193,8 +196,8 @@ object transform {
 			  Stream.empty
 		  else {
 			  (in.head) match {
-			    case Result(_) => recurseKeepTail(in.tail)
-			    case Tail(_) => in
+			    case Result(_, _) => recurseKeepTail(in.tail)
+			    case Tail(_, _) => in
 			  }
           }
     	}
@@ -212,8 +215,8 @@ object transform {
 			val leftResult = left(in)
 		  	if (!leftResult.isEmpty)
 		       leftResult.head match {
-		         case Tail(_) => right(in)
-		         case Result(_) => leftResult		         
+		         case Tail(_, _) => right(in)
+		         case Result(_, _) => leftResult		         
 		       } 
 		    else {
 		    	right(in) // Sure this is right if the leftResult stream is empty ?
@@ -259,29 +262,34 @@ object transform {
 	// Add helpers to build events simply.
 	case class PushEvent(event :event) extends PushTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream = {
-			Stream.cons(Result(event), new ZeroTransform().apply(in))
+      val context = if (in.isEmpty) None else in.head.context
+			Stream.cons(Result(event, context), new ZeroTransform().apply(in))
 		}
 	}
 
   case class PushNode(nodeSeq: NodeSeq) extends PushTransform {
 
-    def serializeXML(nodeSeq : NodeSeq) : XMLResultStream = {
-      nodeSeq.foldLeft[XMLResultStream](Stream.empty)((x :XMLResultStream, y :Node) => Stream.concat(serializeXML(y), x))
+    def serializeXML(nodeSeq : NodeSeq, context : Option[Context]) : XMLResultStream = {
+      nodeSeq.foldLeft[XMLResultStream](Stream.empty)(
+        (x : XMLResultStream, y : Node) => Stream.concat(serializeXML(y, context), x))
     }
 
-    def serializeXML(node : Node) : XMLResultStream = node match {
+    def serializeXML(node : Node, context : Option[Context]) : XMLResultStream = node match {
       case Elem(prefix, label, attributes, scope, child)
-            => Stream.cons( Result(new EvElemStart(prefix, label, attributes, scope)),
-                          Stream.concat(serializeXML(child), Stream(Result(new EvElemEnd(prefix, label)))))
-      case Text(text) => Stream(Result(new EvText(text)))
-      case Comment(text) => Stream(Result(new EvComment(text)))
-      case ProcInstr(target, procText) => Stream(Result(new EvProcInstr(target, procText)))
-      case EntityRef(entityRef) => Stream(Result(new EvEntityRef(entityRef)))
-      case node : Node => Stream(Result(new EvText(node.text)))
+            => Stream.cons( Result(new EvElemStart(prefix, label, attributes, scope), context),
+                          Stream.concat(serializeXML(child, context),
+                            Stream(Result(new EvElemEnd(prefix, label), context))))
+      case Text(text) => Stream(Result(new EvText(text), context))
+      case Comment(text) => Stream(Result(new EvComment(text), context))
+      case ProcInstr(target, procText) => Stream(Result(new EvProcInstr(target, procText), context))
+      case EntityRef(entityRef) => Stream(Result(new EvEntityRef(entityRef), context))
+      case node : Node => Stream(Result(new EvText(node.text), context))
     }
 
-    override def apply(in : XMLResultStream) : XMLResultStream =
-      Stream.concat(serializeXML(nodeSeq), in)
+    override def apply(in : XMLResultStream) : XMLResultStream = {
+        val context = if (in.isEmpty) None else in.head.context
+        Stream.concat(serializeXML(nodeSeq, context), in)
+      }
   }
 
 
@@ -296,8 +304,8 @@ object transform {
 			Stream.empty
 		  else {
 			  in.head match {
-			    case Result(_) => Stream.cons(in.head.toTail(), this.apply(in.tail))
-			    case Tail(_) => in // When we have reached the first Tail, the recursion is over.
+			    case Result(_, _) => Stream.cons(in.head.toTail(), this.apply(in.tail))
+			    case Tail(_, _) => in // When we have reached the first Tail, the recursion is over.
 			  }
 
 		  }
@@ -379,7 +387,7 @@ object transform {
             case EvComment(text : String)
                   => Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
             case EvText(text : String) if ("".equals(text.trim()))
-                  => Stream.cons(Result(EvText(text)), new ZeroTransform().apply(in.tail))        
+                  => Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))        
 		  		  case _ => new ZeroTransform().apply(in)
 		  		}
     }

@@ -1,9 +1,10 @@
 package org.freetle
 
-import meta.{SpaceSkipingMetaProcessor, RecursiveMetaProcessor}
+
+import meta.Meta
 import org.junit._
 import Assert._
-import org.freetle.transform._
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,8 +13,11 @@ import org.freetle.transform._
  * Time: 21:22:59
  * To change this template use File | Settings | File Templates.
  */
+
+class MyContext
+
 @Test
-class MetaProcessorTest {
+class MetaProcessorTest extends Meta[MyContext] {
   @Test
   def testRunRecursive() {
     val t = new TakeSpace()

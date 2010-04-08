@@ -1,15 +1,15 @@
 package org.freetle
 
-import meta.SpaceSkipingMetaProcessor
+
+import meta.Meta
 import org.junit._
 import Assert._
 import io.Source
-import org.freetle.transform._
+
 import util.{XMLEventStream, EvEntityRef, EvProcInstr, EvComment, EvText, EvElemEnd, EvElemStart}
 import scala.xml.{Atom, Unparsed, PCData, PrettyPrinter, EntityRef, ProcInstr, Comment, Text, Elem, Node, NodeSeq}
 
-@Test
-class TransformTest {
+class TransformTestBase[Context] extends Meta[Context] {
   // Utility methods used to test XMLResultStream
   /**
    * Asserts that there are only Results in the stream.
@@ -22,7 +22,7 @@ class TransformTest {
   def assertAllTail(r : XMLResultStream) :Unit = r.foreach(x => assertTrue(x.isInstanceOf[Tail]))
 
   /**
-   * Return the longest substream that begins very a Tail. 
+   * Return the longest substream that begins very a Tail.
    */
   def findFirstTail(r : XMLResultStream) : XMLResultStream = r.head match {
     case result : Result => findFirstTail(r.tail)
@@ -43,11 +43,15 @@ class TransformTest {
    * Number of Tails in the Stream.
    */
   def lengthTail(r : XMLResultStream) : Int = r.filter(_.isInstanceOf[Result]).length
+  
+}
+@Test
+class TransformTest extends TransformTestBase[MyContext] {
 
  
 	@Test
 	def testTakeElem() = {
-	  val s = Stream(new EvElemStart("p", "body", null, null)) map (Tail(_))
+	  val s = Stream(new EvElemStart("p", "body", null, null)) map (Tail(_, null))
 	  val trans = new TakeStartElement("body")
 	  val r = trans(s)
 	  assertEquals(1, r.length)
@@ -60,7 +64,7 @@ class TransformTest {
 	}
     @Test
     def testConcatOperator() = {		        
-      val input = List(new EvElemStart("p", "body", null, null), new EvElemStart("p", "message", null, null)).toStream map (Tail(_))
+      val input = List(new EvElemStart("p", "body", null, null), new EvElemStart("p", "message", null, null)).toStream map (Tail(_, null))
           val trans = new ConcatOperator(new TakeStartElement("body"), new TakeStartElement("message"))
           val result = trans(input)
       assertEquals(2, result.length)
@@ -82,9 +86,9 @@ class TransformTest {
             (Stream.concat(
                       Stream.make(depthTest, new EvElemStart("p", "message", null, null)),
                       Stream(new EvElemStart("p", "body", null, null))
-                    ) map (Tail(_))))
+                    ) map (Tail(_, null))))
         .foldLeft(new Counter(0,0))( (u,z) => new Counter(u.countTotal+1, u.countResult + (z match {
-            case Result(_) => 1
+            case Result(_, _) => 1
             case _ => 0
           })) )
 
@@ -110,7 +114,7 @@ class TransformTest {
           new EvElemEnd("p", "body"),
           new EvElemEnd("p", "body")
       )
-      val s = Stream.fromIterator(in.elements) map (Tail(_))
+      val s = Stream.fromIterator(in.elements) map (Tail(_, null))
       val t = new ConcatOperator(
         new ConcatOperator(new TakeStartElement("body"), new TakeStartElement("body")),
         new DeepFilter())
@@ -120,8 +124,6 @@ class TransformTest {
       val r2 = t2(s)
       assertEquals(6, lengthResult(r2))
     }
-
-     
 
     @Test
     def testXMLExp() = {
@@ -133,7 +135,7 @@ class TransformTest {
     @Test
     def testLoadXML() = {
       val src = this.getClass().getResourceAsStream("/org/freetle/input.xml")
-      val evStream = Stream.fromIterator( new XMLEventStream(src) map (Tail(_)) )
+      val evStream = Stream.fromIterator( new XMLEventStream(src) map (Tail(_, null)) )
       val t = new SequenceOperator(new TakeStartElement("input"), new SequenceOperator(
       new RepeatUntilNoResultOperator(new SequenceOperator(new SequenceOperator(new TakeStartElement("message"),
         new SequenceOperator(new PushEvent(new EvElemStart("p", "a", null, null)), new PushEvent(new EvElemEnd("p", "a")))),
@@ -149,11 +151,11 @@ class TransformTest {
     def testTakeSpace() {
       val t = new TakeSpace()
       
-      assertEquals(0, lengthResult(t(Stream(Tail(new EvElemStart("p", "a", null, null))))))
+      assertEquals(0, lengthResult(t(Stream(Tail(new EvElemStart("p", "a", null, null), null)))))
               
-      assertEquals(0, lengthResult(t(Stream(Tail(new EvText("p"))))))
+      assertEquals(0, lengthResult(t(Stream(Tail(new EvText("p"), null)))))
 
-      assertEquals(1, lengthResult(t(Stream(Tail(new EvText("        \t        "))))))
+      assertEquals(1, lengthResult(t(Stream(Tail(new EvText("        \t        "), null)))))
               
     }
 
