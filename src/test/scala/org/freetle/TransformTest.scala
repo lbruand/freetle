@@ -137,13 +137,12 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
               ).toStream.map(x => Tail(x, Some(c)))
       val t = new TakeDataToContext() {
         def pushToContext(text : String, context : TransformTestContext) : TransformTestContext = {
-            val c : TransformTestContext = context
-            c.name = text
-            c
+            context.name = text
+            context
         }
       }
-      
-      assertTrue(true)
+      val r = t(s)
+      assertEquals("after", c.name)
     }
 
 }
