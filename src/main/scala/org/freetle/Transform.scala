@@ -309,7 +309,7 @@ trait Transform[Context] extends TransformModel[Context] {
 				Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
 		  }
 	}
-
+  // TODO There is a problem with the fact that the context is mutable. (Really ?)
   abstract case class TakeDataToContext() extends TakeTransform {
 
     def pushToContext(text : String, context : Context) : Context
