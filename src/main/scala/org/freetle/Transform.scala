@@ -310,13 +310,35 @@ trait Transform[Context] extends TransformModel[Context] {
 		  }
 	}
 
+  abstract case class TakeDataToContext() extends TakeTransform {
+
+    def pushToContext(text : String, context : Context) : Context
+
+		override def apply(in : XMLResultStream) : XMLResultStream =
+		  if (in.isEmpty)
+			Stream.empty
+		  else in.head.sub match {
+        case EvText(text) => {
+          val context =
+                    in.head.context match {
+                      case Some(context) => {
+                          Some(pushToContext(text, context))
+                      }
+                      case None => None
+                    }
+          Stream.cons( Result(in.head.sub, context), new ZeroTransform().apply(in.tail))
+        }
+        case _ => new ZeroTransform().apply(in)
+      }
+  }
+
 	case class TakeStartElement(name :String) extends TakeTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream =
 			if (in.isEmpty) 
 				Stream.empty
 			else
 		  		in.head.sub match {
-		  		  case EvElemStart(_, label: String, _, _)  if (label.equals(name)) 
+		  		  case EvElemStart(_, label : String, _, _)  if (label.equals(name)) 
 		  			  	 => Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
 		  		  case _ => new ZeroTransform().apply(in)
 		  		} 

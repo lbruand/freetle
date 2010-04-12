@@ -10,7 +10,9 @@ import util.{XMLEventStream, EvEntityRef, EvProcInstr, EvComment, EvText, EvElem
 import scala.xml.{Atom, Unparsed, PCData, PrettyPrinter, EntityRef, ProcInstr, Comment, Text, Elem, Node, NodeSeq}
 
 
-class TransformTestContext
+class TransformTestContext {
+  var name : String = null
+}
 @Test
 class TransformTest extends TransformTestBase[TransformTestContext] with Meta[TransformTestContext] {
 
@@ -125,8 +127,23 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
               
     }
 
+    @Test
     def testContext() {
+      val c = new TransformTestContext()
+      c.name = "before"
+      val s = List(
+                new EvText("after"),
+                new EvText(" night")
+              ).toStream.map(x => Tail(x, Some(c)))
+      val t = new TakeDataToContext() {
+        def pushToContext(text : String, context : TransformTestContext) : TransformTestContext = {
+            val c : TransformTestContext = context
+            c.name = text
+            c
+        }
+      }
       
+      assertTrue(true)
     }
 
 }
