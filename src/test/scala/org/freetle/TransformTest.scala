@@ -82,7 +82,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
           new EvElemEnd("p", "body"),
           new EvElemEnd("p", "body")
       )
-      val s = Stream.fromIterator(in.elements) map (Tail(_, null))
+      val s = in.toStream map (Tail(_, None))
       val t = new ConcatOperator(
         new ConcatOperator(new TakeStartElement("body"), new TakeStartElement("body")),
         new DeepFilter())
