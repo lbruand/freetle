@@ -202,6 +202,36 @@ trait Transform[Context] extends TransformModel[Context] {
 		}
 	}
 
+  abstract case  class PushFromContext extends PushTransform {
+    def generate(context : Context) : event
+    override def apply(in : XMLResultStream) : XMLResultStream = {
+      if (in.isEmpty)
+        Stream.empty
+      else {
+        val someContext = in.head.context
+        someContext match {
+          case Some(context) => Stream.cons(Result(generate(context), Some(context)), new ZeroTransform().apply(in))
+          case None => in
+        }
+      }
+		}
+  }
+
+  abstract case  class PushSeqFromContext extends PushTransform {
+    def generate(context : Context) : Stream[event]
+    override def apply(in : XMLResultStream) : XMLResultStream = {
+      if (in.isEmpty)
+        Stream.empty
+      else {
+        val someContext = in.head.context
+        someContext match {
+          case Some(context) => Stream.concat(generate(context).map(Result(_, Some(context))), new ZeroTransform().apply(in))
+          case None => in
+        }
+      }
+		}
+  }
+
   case class PushNode(nodeSeq: NodeSeq) extends PushTransform {
 
     def serializeXML(nodeSeq : NodeSeq, context : Option[Context]) : XMLResultStream = {
