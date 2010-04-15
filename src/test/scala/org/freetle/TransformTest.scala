@@ -128,7 +128,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     }
 
     @Test
-    def testContext() {
+    def testPushToContext() {
       val c = new TransformTestContext()
       c.name = "before"
       val s = List(
@@ -143,6 +143,20 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
       }
       val r = t(s)
       assertEquals("after", c.name)
+    }
+    @Test
+    def testOutOfContext() {
+      val c = new TransformTestContext()
+      c.name = "before"
+      val s = List(new EvText("after")).toStream.map(x => Tail(x, Some(c)))
+      val t = new ConcatOperator(new PushFromContext() {
+        def generate(context: TransformTestContext) = {
+          new EvText(c.name)
+        }
+      }, new TakeText())
+      val r = t(s)
+      assertAllResult(r)
+      assertEquals(2, r.length)
     }
 
 }

@@ -386,6 +386,18 @@ trait Transform[Context] extends TransformModel[Context] {
 		  		}
 	}
 
+  case class TakeText extends TakeTransform {
+    def apply(in : XMLResultStream) : XMLResultStream = {
+			if (in.isEmpty)
+				Stream.empty
+			else
+		  		in.head.sub match {
+            case EvText(_) => Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
+		  		  case _ => new ZeroTransform().apply(in)
+		  		}
+    }    
+  }
+
   case class TakeSpace extends TakeTransform {
     
     // TODO : There is still a big problem : A text token can be split in many.
