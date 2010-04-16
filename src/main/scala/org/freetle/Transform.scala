@@ -14,16 +14,11 @@ import xml._
 //    =>  There is a need for a Repeat which always succeed...
 //  Functionalities
 //  ===============
-//  * Add the operators on the Transform class
-//  * Add multi unary operator
 //  * Check that the Compose Operator (i.d. irish composition) works properly. (tail  of the first function)
 //  * Check that a SAXPath expression can be created using the unitary transformations and operaor.
-//  * Check for space-performance.
 //  * Is it possible to convert the framework into a real pipeline (with multiple threads) ?
 //  * Maybe there is a need for a unix 'tee' operator --> Problem how to determine which handside has consummed the more tokens ?
 //			(idea) : We could use a element counting Stream                                                                      
-//  * Solve the template output problem : Sometimes it is necessary to reorder/sort a bit element. How to deal with that nicely.
-//			Use context definition ?
 //  * Add a offset and size system .
 //
 //	Optimizer
