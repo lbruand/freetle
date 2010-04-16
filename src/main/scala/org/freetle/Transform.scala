@@ -363,7 +363,10 @@ trait Transform[Context] extends TransformModel[Context] {
 		}
 	}
 
-  //  The deepfilter does return the matching end bracket.
+  /**
+   * Take all the underlying nodes of the current event.
+   * The deepfilter does return the matching end bracket.
+   */
   case class DeepFilter extends TakeTransform {
   def recurseDeep(in : XMLResultStream, depth :Int) : XMLResultStream = {
       if (in.isEmpty)
