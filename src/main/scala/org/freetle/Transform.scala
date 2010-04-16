@@ -251,10 +251,10 @@ trait Transform[Context] extends TransformModel[Context] {
   abstract case class PushTransform extends BaseTransform
   
 	// Add helpers to build events simply.
-	case class PushEvent(event :event) extends PushTransform {
+	case class PushEvent[+Event <: event](ev :Event) extends PushTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream = {
       val context = if (in.isEmpty) None else in.head.context
-			Stream.cons(Result(event, context), new ZeroTransform().apply(in))
+			Stream.cons(Result(ev, context), new ZeroTransform().apply(in))
 		}
 	}
 
