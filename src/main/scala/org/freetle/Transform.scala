@@ -303,8 +303,14 @@ trait Transform[Context] extends TransformModel[Context] {
    */
   abstract case class TakeTransform extends BaseTransform
 
+  /**
+   * The ZeroTransform is the simpliest transform. It takes all the input and make equivalent Tailed version.
+   * There is simplier but much more expensive code in the for of apply = ( in map (x => Tail(x.sub)) )
+   * but it is rather lacking because it is not take advantage of the fact that the stream is Tail after a
+   * certain rank.
+   */
   case class ZeroTransform extends TakeTransform {
-		override final def apply(in : XMLResultStream) : XMLResultStream = { // Simplier but much more expansive code = ( in map (x => Tail(x.sub)) )
+		override final def apply(in : XMLResultStream) : XMLResultStream = {
 		  if (in.isEmpty)
 			Stream.empty
 		  else {
