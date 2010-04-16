@@ -34,7 +34,9 @@ import xml._
 
 
 trait Transform[Context] extends TransformModel[Context] {
-
+  /**
+   * Base class for all transforms.
+   */
   abstract class CFilterBase extends CFilter {
     def concat(right : CFilterBase) : CFilterBase = {
       new ConcatOperator(this, right)
@@ -77,13 +79,22 @@ trait Transform[Context] extends TransformModel[Context] {
     def |(right : CFilterBase) = choice(right)    
   }
 
+  /**
+   * Base class for all operators.
+   */
 	abstract class Operator extends CFilterBase
 
+  /**
+   * Base class for all unary operators.
+   */
 	abstract case class UnaryOperator(val underlying : CFilterBase) extends
         Operator {
     def clone(underlying : CFilterBase) : UnaryOperator
   }
 
+  /**
+   * Base class for all binary operators.
+   */
  	abstract case class BinaryOperator(val left : CFilterBase, val right :CFilterBase) extends
         Operator {
      def clone(left : CFilterBase, right :CFilterBase) : BinaryOperator
