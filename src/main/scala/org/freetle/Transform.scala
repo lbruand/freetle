@@ -116,7 +116,9 @@ trait Transform[Context] extends TransformModel[Context] {
 
   
   /**
-   * This is a concat operator. 
+   * This is a concat operator.
+   * It applies sequentially the left transform first and then right transform, whatever the result of left
+   * transform was. 
    */
   case class ConcatOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
