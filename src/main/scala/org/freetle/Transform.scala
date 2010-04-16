@@ -228,12 +228,6 @@ trait Transform[Context] extends TransformModel[Context] {
 		    }
 		}
  	}
-  
-
-
-
-
-   
 
   /**
    * Base class for all transformations that only output events.
