@@ -212,7 +212,11 @@ trait Transform[Context] extends TransformModel[Context] {
 		  Stream.concat(left(rightResult), recurseKeepTail(rightStream))		  
 		}	 				
  	}
-    
+
+  /**
+   * Apply the left transform first. If the left transform has return a result
+   * then apply the right transform. 
+   */
  	case class ChoiceOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = new ChoiceOperator(left, right)
@@ -230,7 +234,7 @@ trait Transform[Context] extends TransformModel[Context] {
  	}
 
   /**
-   * Base class for all transformations that only output events.
+   * Base class for all transformations that only output events and take nothing off the Stream.
    */
   abstract case class PushTransform extends BaseTransform
   
@@ -347,12 +351,16 @@ trait Transform[Context] extends TransformModel[Context] {
 }
 
 
-
-
+  /**
+   * Turn all the stream into the equivalent Identical result stream.
+   */
  	case class IdTransform extends TakeTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream = in map (_.toResult)
 	}
 
+  /**
+   * Take one Tail at the head and turn it into a Result
+   */
   case class OnceTransform extends TakeTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream =
 		  if (in.isEmpty)
@@ -361,6 +369,7 @@ trait Transform[Context] extends TransformModel[Context] {
 				Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
 		  }
 	}
+  
   // TODO There is a problem with the fact that the context is mutable. (Really ?)
   abstract case class TakeDataToContext() extends TakeTransform {
 
