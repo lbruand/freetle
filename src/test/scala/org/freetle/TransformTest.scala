@@ -67,10 +67,10 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
           }
       runForIteration(depthTest)
     }
-    
+
     @Test
     def testDeep() = {
-      val in = List(
+      val s = List(
           new EvElemStart("p", "body", null, null),
           new EvElemStart("p", "body", null, null),
           new EvElemStart("p", "a", null, null),
@@ -81,14 +81,12 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
           new EvElemEnd("p", "a"),
           new EvElemEnd("p", "body"),
           new EvElemEnd("p", "body")
-      )
-      val s = in.toStream map (Tail(_, None))
-      val t = new ConcatOperator(
-        new ConcatOperator(new TakeStartElement("body"), new TakeStartElement("body")),
-        new DeepFilter())
+      ).toStream map (Tail(_, None))
+      
+      val t = new TakeStartElement("body") ~~ new TakeStartElement("body") ~~ new DeepFilter()
       val r = t(s)
       assertEquals(9, lengthResult(r))
-      val t2 = new ConcatOperator(new ConcatOperator(new TakeStartElement("body"), new ConcatOperator(new TakeStartElement("body"), new TakeStartElement("a"))), new DeepFilter())
+      val t2 = new TakeStartElement("body") ~~ new TakeStartElement("body") ~~ new TakeStartElement("a") ~~ new DeepFilter()
       val r2 = t2(s)
       assertEquals(6, lengthResult(r2))
     }
@@ -104,10 +102,14 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     def testLoadXML() = {
       val src = this.getClass().getResourceAsStream("/org/freetle/input.xml")
       val evStream = Stream.fromIterator( new XMLEventStream(src) map (Tail(_, null)) )
-      val t = new SequenceOperator(new TakeStartElement("input"), new SequenceOperator(
-      new RepeatUntilNoResultOperator(new SequenceOperator(new SequenceOperator(new TakeStartElement("message"),
-        new SequenceOperator(new PushEvent(new EvElemStart("p", "a", null, null)), new PushEvent(new EvElemEnd("p", "a")))),
-          new SequenceOperator(new DeepFilter(),new TakeEndElement("message")))), new TakeEndElement("input")))
+
+      val t = new TakeStartElement("input") ~
+                  (( new TakeStartElement("message") ~
+                    new PushEvent(new EvElemStart("p", "a", null, null)) ~
+                    new PushEvent(new EvElemEnd("p", "a")) ~
+                    new DeepFilter() ~
+                    new TakeEndElement("message")
+                  )+) ~ new TakeEndElement("input")
       val r = (new SpaceSkipingMetaProcessor())(t)(evStream)
       assertAllResult(r)
     }

@@ -42,6 +42,62 @@ import xml._
 
 trait Transform[Context] extends TransformModel[Context] {
 
+  abstract class CFilterBase extends CFilter {
+    def concat(right : CFilterBase) : CFilterBase = {
+      new ConcatOperator(this, right)
+    }
+
+    def sequence(right : CFilterBase) : CFilterBase = {
+      new SequenceOperator(this, right)
+    }
+
+    def simpleCompose(right : CFilterBase) : CFilterBase = {
+      new SimpleComposeOperator(this, right)
+    }
+
+    def compose(right : CFilterBase) : CFilterBase= {
+      new ComposeOperator(this, right)
+    }
+
+    def andThen(right : CFilterBase) : CFilterBase= {
+      new ComposeOperator(right, this)
+    }
+
+    def choice(right : CFilterBase) = {
+      new ChoiceOperator(this, right)
+    }
+
+    def repeat : CFilterBase = new RepeatUntilNoResultOperator(this)
+
+    def + : CFilterBase  = repeat
+
+    def ~(right : CFilterBase) = sequence(right)
+
+    def ~~(right : CFilterBase) = concat(right)
+
+    def @@(right : CFilterBase) = compose(right)
+
+    def @@@(right : CFilterBase) = simpleCompose(right)
+
+
+
+    def ->(right : CFilterBase) = andThen(right)
+
+    def |(right : CFilterBase) = choice(right)
+    
+  }
+
+	abstract class Operator extends CFilterBase
+
+	abstract case class UnaryOperator(val underlying : CFilterBase) extends
+        Operator {
+    def clone(underlying : CFilterBase) : UnaryOperator
+  }
+
+ 	abstract case class BinaryOperator(val left : CFilterBase, val right :CFilterBase) extends
+        Operator {
+     def clone(left : CFilterBase, right :CFilterBase) : BinaryOperator
+  }
 
 
   case class RepeatUntilNoResultOperator(override val underlying : CFilterBase) extends
@@ -257,31 +313,7 @@ trait Transform[Context] extends TransformModel[Context] {
       }
   }
 
- 	abstract case class BaseTransform extends CFilterBase {
-	  def concat(right : CFilterBase) = {
-	    new ConcatOperator(this, right)
-    }
-
-    def sequence(right : CFilterBase) = {
-      new SequenceOperator(this, right)
-    }
-
-    def simpleCompose(right : CFilterBase) = {
-      new SimpleComposeOperator(this, right)
-    }
-
-	  def compose(right : CFilterBase) = {
-	    new ComposeOperator(this, right)
-	  }
-
-	  def andThen(right : CFilterBase) = {
-	    new ComposeOperator(right, this)
-	  }
-
-	  def choice(right : CFilterBase) = {
-	    new ChoiceOperator(this, right)
-	  }
- 	}
+ 	abstract case class BaseTransform extends CFilterBase
   /**
    * base transform for all transformations that only take stuff.
    */
