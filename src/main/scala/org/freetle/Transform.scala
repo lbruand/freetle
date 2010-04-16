@@ -1,7 +1,5 @@
 package org.freetle
-import scala._
 import scala.Stream
-import scala.io.Source
 import util._
 import xml._
 // RAF :
@@ -74,12 +72,9 @@ trait Transform[Context] extends TransformModel[Context] {
 
     def @@@(right : CFilterBase) = simpleCompose(right)
 
-
-
     def ->(right : CFilterBase) = andThen(right)
 
-    def |(right : CFilterBase) = choice(right)
-    
+    def |(right : CFilterBase) = choice(right)    
   }
 
 	abstract class Operator extends CFilterBase
