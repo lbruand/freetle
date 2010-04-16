@@ -256,6 +256,10 @@ trait Transform[Context] extends TransformModel[Context] {
   abstract case class PushTransform extends BaseTransform
   
 	// Add helpers to build events simply.
+
+  /**
+   * Push a single event down on the pipeline, not consumming any event in entry.
+   */
 	case class PushEvent[+Event <: event](ev :Event) extends PushTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream = {
       val context = if (in.isEmpty) None else in.head.context
@@ -263,6 +267,9 @@ trait Transform[Context] extends TransformModel[Context] {
 		}
 	}
 
+  /**
+   * Abstract class to push stuff from the context.
+   */
   abstract case  class PushFromContext extends PushTransform {
     def generate(context : Context) : event
     override def apply(in : XMLResultStream) : XMLResultStream = {
@@ -278,6 +285,9 @@ trait Transform[Context] extends TransformModel[Context] {
 		}
   }
 
+  /**
+   * Abstract class to push a stream of events down the pipeline 
+   */
   abstract case  class PushSeqFromContext extends PushTransform {
     def generate(context : Context) : Stream[event]
     override def apply(in : XMLResultStream) : XMLResultStream = {
@@ -293,6 +303,9 @@ trait Transform[Context] extends TransformModel[Context] {
 		}
   }
 
+  /**
+   * Push a scala xml content down the pipeline.
+   */
   case class PushNode(nodeSeq: NodeSeq) extends PushTransform {
 
     def serializeXML(nodeSeq : NodeSeq, context : Option[Context]) : XMLResultStream = {
@@ -318,6 +331,11 @@ trait Transform[Context] extends TransformModel[Context] {
       }
   }
 
+  /**
+   * Base non-composite transform class.
+   * (not composite in the sens it is not requiring any underlying transform,
+   * opposing meaning of an operator) 
+   */
  	abstract case class BaseTransform extends CFilterBase
   /**
    * base transform for all transformations that only take stuff.
@@ -387,9 +405,13 @@ trait Transform[Context] extends TransformModel[Context] {
 		  }
 	}
   
-  // TODO There is a problem with the fact that the context is mutable. (Really ?)
-  abstract case class TakeDataToContext() extends TakeTransform {
 
+
+  /**
+   * Take a text from the entry and store it in the context.
+   */
+  abstract case class TakeDataToContext() extends TakeTransform {
+    // TODO There is a problem with the fact that the context is mutable. (Really ?)
     def pushToContext(text : String, context : Context) : Context
 
 		override def apply(in : XMLResultStream) : XMLResultStream =
@@ -410,7 +432,11 @@ trait Transform[Context] extends TransformModel[Context] {
       }
   }
 
+  /**
+   * Take a single start element event if it has the correct name.
+   */
 	case class TakeStartElement(name :String) extends TakeTransform {
+    // TODO Maybe we should reorganise better this to be able to select events better.
 		override def apply(in : XMLResultStream) : XMLResultStream =
 			if (in.isEmpty) 
 				Stream.empty
@@ -422,6 +448,9 @@ trait Transform[Context] extends TransformModel[Context] {
 		  		} 
 	}
 
+  /**
+   * Take a single end element event if it has the correct name (but regardless of its namespace)
+   */
 	case class TakeEndElement(name :String) extends TakeTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream =
 			if (in.isEmpty)
@@ -434,6 +463,9 @@ trait Transform[Context] extends TransformModel[Context] {
 		  		}
 	}
 
+  /**
+   * Take a single text event.
+   */
   case class TakeText extends TakeTransform {
     def apply(in : XMLResultStream) : XMLResultStream = {
 			if (in.isEmpty)
@@ -446,6 +478,9 @@ trait Transform[Context] extends TransformModel[Context] {
     }    
   }
 
+  /**
+   * Take a whitespace event.
+   */
   case class TakeSpace extends TakeTransform {
     
     // TODO : There is still a big problem : A text token can be split in many.
