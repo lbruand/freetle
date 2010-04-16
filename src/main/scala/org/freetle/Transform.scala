@@ -89,7 +89,9 @@ trait Transform[Context] extends TransformModel[Context] {
      def clone(left : CFilterBase, right :CFilterBase) : BinaryOperator
   }
 
-
+  /**
+   * Applies the underlying as long as it returns a result. 
+   */
   case class RepeatUntilNoResultOperator(override val underlying : CFilterBase) extends
         UnaryOperator(underlying : CFilterBase) {
     def clone(underlying: CFilterBase) = new RepeatUntilNoResultOperator(underlying)
