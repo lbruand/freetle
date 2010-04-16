@@ -200,6 +200,7 @@ trait Transform[Context] extends TransformModel[Context] {
   case class ComposeOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = new ComposeOperator(left, right)
+
     def recurseKeepResult(in : XMLResultStream) : XMLResultStream = {
     	  if (in.isEmpty)
 			  Stream.empty
@@ -208,8 +209,8 @@ trait Transform[Context] extends TransformModel[Context] {
 			    case Result(_, _) => Stream.cons(in.head, recurseKeepResult(in.tail))
 			    case Tail(_, _) => Stream.empty
 			  }
-          }
-    	}
+      }
+    }
      
     def recurseKeepTail(in : XMLResultStream) : XMLResultStream = {
     	  if (in.isEmpty)
@@ -219,8 +220,9 @@ trait Transform[Context] extends TransformModel[Context] {
 			    case Result(_, _) => recurseKeepTail(in.tail)
 			    case Tail(_, _) => in
 			  }
-          }
-    	}
+      }
+    }
+
 		override def apply(in : XMLResultStream) : XMLResultStream = {
 		  val rightStream = right(in)
 		  val rightResult = recurseKeepResult(rightStream)
