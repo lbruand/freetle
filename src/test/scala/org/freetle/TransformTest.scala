@@ -33,8 +33,8 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     @Test
     def testConcatOperator() = {		        
       val input = List(new EvElemStart("p", "body", null, null), new EvElemStart("p", "message", null, null)).toStream map (Tail(_, null))
-          val trans = new ConcatOperator(new TakeStartElement("body"), new TakeStartElement("message"))
-          val result = trans(input)
+      val trans = new TakeStartElement("body") ~~ new TakeStartElement("message")
+      val result = trans(input)
       assertEquals(2, result.length)
       assertEquals(2, lengthResult(result))
     }
