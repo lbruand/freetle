@@ -21,7 +21,7 @@ import scala.xml._
 //			(idea) : We could use a element counting Stream                                                                      
 //  * Add a offset and size system .
 //  * Transformations and operators will need to have serialization inside.
-//  * Transformations and operators will need to have hashcode, equals etc methods.
+//  * Transformations and operators will need to have hashcode, equals etc methods. (maybe it is include in the case class stuff)
 //
 //	Optimizer
 //  =========
@@ -144,7 +144,7 @@ trait Transform[Context] extends TransformModel[Context] {
     
     def clone(underlying: CFilterBase) = new RepeatUntilNoResultOperator(underlying)
 
-    override def keepResultWhenEmpty = true
+    override final def keepResultWhenEmpty = true
 
     override def apply(in : XMLResultStream) : XMLResultStream = {
       recurse(in, true)
@@ -161,7 +161,7 @@ trait Transform[Context] extends TransformModel[Context] {
     def clone(underlying: CFilterBase) = new AtMostOnceResultOperator(underlying)
 
 
-    override def keepResultWhenEmpty = true // Unused
+    override final def keepResultWhenEmpty = true // Unused
 
     override def apply(in : XMLResultStream) : XMLResultStream = {
       if (in.isEmpty)

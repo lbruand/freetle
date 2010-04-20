@@ -3,11 +3,7 @@ package org.freetle
 import util.XMLEvent
 
 /**
- * Created by IntelliJ IDEA.
- * User: LBRUAND
- * Date: 8 avr. 2010
- * Time: 15:22:12
- * To change this template use File | Settings | File Templates.
+ * This is the freetle model classes.
  */
 
 trait FreetleModel[Context] {
