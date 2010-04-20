@@ -135,6 +135,22 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
       assertAllResult(r)
     }
 
+      @Test
+    def testLoadXMLWhile() = {
+      val src = this.getClass().getResourceAsStream("/org/freetle/input.xml")
+      val evStream = Stream.fromIterator( new XMLEventStream(src) map (Tail(_, null)) )
+
+      val t = new TakeStartElement("input") ~
+                  (( new TakeStartElement("message") ~
+                    new PushEvent(new EvElemStart("p", "a", null, null)) ~
+                    new PushEvent(new EvElemEnd("p", "a")) ~
+                    new DeepFilter() ~
+                    new TakeEndElement("message")
+                  )*) ~ new TakeEndElement("input")
+      val r = (new SpaceSkipingMetaProcessor())(t)(evStream)
+      assertAllResult(r)
+    }
+
 
 
   
