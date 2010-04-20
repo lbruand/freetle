@@ -20,6 +20,8 @@ import scala.xml._
 //  * Maybe there is a need for a unix 'tee' operator --> Problem how to determine which handside has consummed the more tokens ?
 //			(idea) : We could use a element counting Stream                                                                      
 //  * Add a offset and size system .
+//  * Transformations and operators will need to have serialization inside.
+//  * Transformations and operators will need to have hashcode, equals etc methods.
 //
 //	Optimizer
 //  =========
@@ -65,7 +67,9 @@ trait Transform[Context] extends TransformModel[Context] {
     }
 
     def repeat : CFilterBase = new RepeatUntilNoResultOperator(this)
+
     def repeatOrNo : CFilterBase = new WhileNoResultOperator(this)
+
     def atMostOnce : CFilterBase = new AtMostOnceResultOperator(this)
 
     def + : CFilterBase = repeat
