@@ -2,6 +2,8 @@ package org.freetle
 import scala.Stream
 import util._
 import xml._
+import scala.xml._
+
 // RAF :
 
 //  Model
