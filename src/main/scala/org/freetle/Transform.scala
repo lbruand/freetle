@@ -103,35 +103,89 @@ trait Transform[Context] extends TransformModel[Context] {
   }
 
   /**
-   * Applies the underlying as long as it returns a result. 
+   * Abstract base class for all cardinality operators.
+   */
+  abstract case class AbstractRepeatOperator(override val underlying : CFilterBase) extends
+        UnaryOperator(underlying : CFilterBase) {
+
+    def keepResultWhenEmpty : Boolean
+    
+    def recurse(in : XMLResultStream, applied : Boolean) : XMLResultStream = {
+      val result = if (applied) underlying(in) else in
+      if (result.isEmpty)
+        Stream.empty
+      else {
+        (result.head) match {
+          case Result(_, _) => Stream.cons(result.head, this.recurse(result.tail, false)) // /!\ not tail recursive ?
+          case Tail(_, _) => if (applied)
+                      if (keepResultWhenEmpty) result else in// Repeating is over since underlying was applied and we have a Tail in the head.
+                    else
+                      this.recurse(result, true) // Go on recursing.
+        }
+      }
+    }
+
+  }
+
+  /**
+   *  Applies the underlying as long as it returns a result.
+   * Cardinality : 1..*
    */
   case class RepeatUntilNoResultOperator(override val underlying : CFilterBase) extends
-        UnaryOperator(underlying : CFilterBase) {
+        AbstractRepeatOperator(underlying : CFilterBase) {
+    
     def clone(underlying: CFilterBase) = new RepeatUntilNoResultOperator(underlying)
 
-    def recurse(in : XMLResultStream, applied : Boolean) : XMLResultStream = {
-			  val result = if (applied) underlying(in) else in
-			  if (result.isEmpty) 
-				  Stream.empty
-			  else {
-				  (result.head) match {
-				    case Result(_, _) => Stream.cons(result.head, this.recurse(result.tail, false)) // /!\ not tail recursive ?
-				    case Tail(_, _) => if (applied)
-				    					  result // Repeating is over since underlying was applied and we have a Tail in the head.
-				    				  else 
-				    					  this.recurse(result, true) // Go on recursing. 
-				  }  
-			  } 
-			}
-			override def apply(in : XMLResultStream) : XMLResultStream = {
-			  recurse(in, true)
-			}
- 	}  
- 
+    override def keepResultWhenEmpty = true
 
-  
+    override def apply(in : XMLResultStream) : XMLResultStream = {
+      recurse(in, true)
+    }
+ 	}
+
   /**
-   * This is a concat operator.
+   * Executes the underlying operator at most once.
+   * Cardinality : 0..1
+   */
+  case class AtMostOnceResultOperator(override val underlying : CFilterBase) extends
+        AbstractRepeatOperator(underlying : CFilterBase) {
+
+    def clone(underlying: CFilterBase) = new AtMostOnceResultOperator(underlying)
+
+
+    override def keepResultWhenEmpty = true // Unused
+
+    override def apply(in : XMLResultStream) : XMLResultStream = {
+      if (in.isEmpty)
+        in
+      else {
+          val result = underlying(in)
+          (result.head) match {
+            case Result(_, _) => result
+            case Tail(_, _) => in
+          }
+        }
+    }
+  }
+
+  /**
+   * Executes the underlying operator
+   * Cardinality : 0..*
+   */
+  case class WhileNoResultOperator(override val underlying : CFilterBase) extends
+        AbstractRepeatOperator(underlying : CFilterBase) {
+
+    def clone(underlying: CFilterBase) = new WhileNoResultOperator(underlying)
+
+    override def keepResultWhenEmpty = false
+
+    override def apply(in : XMLResultStream) : XMLResultStream = {
+      recurse(in, true)
+    }
+  }
+
+  /**
+   *  This is a concat operator. 
    * It applies sequentially the left transform first and then right transform, whatever the result of left
    * transform was. 
    */
