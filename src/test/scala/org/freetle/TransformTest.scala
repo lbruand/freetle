@@ -68,6 +68,27 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
       runForIteration(depthTest)
     }
 
+  @Test
+    def testWhileNoResultOperator() = {
+      def runForIteration(depthTest :Int) = {
+          val c = new WhileNoResultOperator(new TakeStartElement("message")).apply(
+            (Stream.concat(
+                      Stream.make(depthTest, new EvElemStart("p", "message", null, null)),
+                      Stream(new EvElemStart("p", "body", null, null))
+                    ) map (Tail(_, null))))
+        .foldLeft(new Counter(0,0))( (u,z) => new Counter(u.countTotal+1, u.countResult + (z match {
+            case Result(_, _) => 1
+            case _ => 0
+          })) )
+
+              assertEquals(depthTest + 1, c.countTotal)
+              assertEquals(depthTest, c.countResult)
+
+
+          }
+      runForIteration(depthTest)
+    }
+
     @Test
     def testDeep() = {
       val s = List(

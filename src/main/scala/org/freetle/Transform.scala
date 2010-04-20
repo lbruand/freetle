@@ -65,8 +65,12 @@ trait Transform[Context] extends TransformModel[Context] {
     }
 
     def repeat : CFilterBase = new RepeatUntilNoResultOperator(this)
+    def repeatOrNo : CFilterBase = new WhileNoResultOperator(this)
+    def atMostOnce : CFilterBase = new AtMostOnceResultOperator(this)
 
-    def + : CFilterBase  = repeat
+    def + : CFilterBase = repeat
+    def * : CFilterBase = repeatOrNo
+    def ? : CFilterBase = atMostOnce
 
     def ~(right : CFilterBase) = sequence(right)
 
