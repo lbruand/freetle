@@ -49,7 +49,7 @@ class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
   def buildEvent(input:XMLStreamReader) : XMLEvent = {
     val eventType = input.getEventType
 	  
-	  val result : XMLEvent = eventType match {
+	  val event : XMLEvent = eventType match {
 	    case XMLStreamConstants.START_ELEMENT => new EvElemStart(input.getPrefix, input.getLocalName, null, null) 
       case XMLStreamConstants.END_ELEMENT => new EvElemEnd(input.getPrefix, input.getLocalName)
       case XMLStreamConstants.CHARACTERS => new EvText(input.getText)
@@ -59,10 +59,10 @@ class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
         // TODO Add start and end document.
 	    case _ => null
 	  }
-    if (result != null) {
-      result.location = input.getLocation()
+    if (event != null) {
+      event.location = input.getLocation()
     }
-    result
+    event
   }
   def next(): XMLEvent = {	  
 	  var event = buildEvent(input)
@@ -72,8 +72,6 @@ class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
     }
 	  input.next
 	  event
-   
-	  
   }
   
   override def hasNext() : Boolean = input.hasNext
