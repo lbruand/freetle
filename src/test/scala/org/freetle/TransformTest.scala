@@ -13,6 +13,7 @@ import scala.xml.{Atom, Unparsed, PCData, PrettyPrinter, EntityRef, ProcInstr, C
 class TransformTestContext {
   var name : String = null
 }
+
 @Test
 class TransformTest extends TransformTestBase[TransformTestContext] with Meta[TransformTestContext] {
 
