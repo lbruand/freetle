@@ -237,7 +237,7 @@ trait Transform[Context] extends TransformModel[Context] {
 			  (in.head) match {
 			    case Result(_, _) => Stream.cons(in.head, this.recurse(in.tail, true))
 			    case Tail(_, _) => if (hasResult) 
-			    					right(in) 
+			    					right(in) // TODO There is a problem here : if right results in an empty stream then we don't rollback left. 
 			    				else 
 			    					in
 			  }
