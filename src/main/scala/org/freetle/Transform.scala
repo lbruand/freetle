@@ -12,6 +12,7 @@ import scala.xml._
 //		 Since failure is an empty result. 
 // 		We might need a special token that helps with empty positive-result.
 //    =>  There is a need for a Repeat which always succeed...
+//  * There is a problem with the context in the case of backtracking. (for example from a choice)
 //  Functionalities
 //  ===============
 //  * Check that the Compose Operator (i.d. irish composition) works properly. (tail  of the first function)
