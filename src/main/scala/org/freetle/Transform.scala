@@ -246,9 +246,8 @@ trait Transform[Context] extends TransformModel[Context] {
 		override def apply(in : XMLResultStream) : XMLResultStream = {
 		  if (in.isEmpty)
 			  Stream.empty
-		  else {
-			  val resultLeft = left(in)
-			  recurse(resultLeft, false)
+		  else { 
+			  recurse(left(in), false)
 		  }
 		}
  	}
@@ -443,7 +442,7 @@ trait Transform[Context] extends TransformModel[Context] {
           in
         else {
           val acc = in.head.sub match {
-              case EvElemStart(_, _, _, _) => +1
+            case EvElemStart(_, _, _, _) => +1
             case EvElemEnd(_, _) 		 => -1
             case _ 						 =>  0
           }
