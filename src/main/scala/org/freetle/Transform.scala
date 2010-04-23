@@ -225,8 +225,9 @@ trait Transform[Context] extends TransformModel[Context] {
  	}
     
   /**
-     * We execute in sequence left and then right if left has returned a result.
-     */
+   * We execute in sequence left and then right if left has returned a result.
+   * TODO does not allow for backtracking decisions. 
+   */
   case class SequenceOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = new SequenceOperator(left, right)
@@ -237,7 +238,7 @@ trait Transform[Context] extends TransformModel[Context] {
 			  (in.head) match {
 			    case Result(_, _) => Stream.cons(in.head, this.recurse(in.tail, true))
 			    case Tail(_, _) => if (hasResult) 
-			    					right(in) // TODO There is a problem here : if right results in an empty stream then we don't rollback left. 
+			    					right(in) // TODO There is a problem here : if right results in an empty stream then we don't backtrack left. 
 			    				else 
 			    					in
 			  }
