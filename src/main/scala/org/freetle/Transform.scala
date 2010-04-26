@@ -50,7 +50,7 @@ trait Transform[Context] extends TransformModel[Context] {
     }
 
     def sequence(right : CFilterBase) : CFilterBase = {
-      new SequenceOperator(this, right)
+      new SequenceOperatorNoBacktrack(this, right)
     }
 
     def simpleCompose(right : CFilterBase) : CFilterBase = {
@@ -204,7 +204,7 @@ trait Transform[Context] extends TransformModel[Context] {
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = new ConcatOperator(left, right)
 
-    def recurse(in : XMLResultStream) : XMLResultStream = {
+    private def recurse(in : XMLResultStream) : XMLResultStream = {
 		  if (in.isEmpty)
 			  Stream.empty
 		  else {
@@ -226,24 +226,26 @@ trait Transform[Context] extends TransformModel[Context] {
     
   /**
    * We execute in sequence left and then right if left has returned a result.
-   * TODO does not allow for backtracking decisions. 
+   * does not allow for backtracking decisions. 
    */
-  case class SequenceOperator(override val left : CFilterBase, override val right :CFilterBase) extends
+  case class SequenceOperatorNoBacktrack(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
-    def clone(left : CFilterBase, right :CFilterBase) = new SequenceOperator(left, right)
-		def recurse(in : XMLResultStream, hasResult : Boolean) : XMLResultStream = {
+    def clone(left : CFilterBase, right :CFilterBase) = new SequenceOperatorNoBacktrack(left, right)
+    
+		private def recurse(in : XMLResultStream, hasResult : Boolean) : XMLResultStream = {
 		  if (in.isEmpty)
 			  Stream.empty
 		  else {
 			  (in.head) match {
 			    case Result(_, _) => Stream.cons(in.head, this.recurse(in.tail, true))
 			    case Tail(_, _) => if (hasResult) 
-			    					right(in) // TODO There is a problem here : if right results in an empty stream then we don't backtrack left. 
+			    					right(in) 
 			    				else 
 			    					in
 			  }
-          }
+      }
 		}
+    
 		override def apply(in : XMLResultStream) : XMLResultStream = {
 		  if (in.isEmpty)
 			  Stream.empty
@@ -252,6 +254,45 @@ trait Transform[Context] extends TransformModel[Context] {
 		  }
 		}
  	}
+
+    /**
+   * We execute in sequence left and then right if left has returned a result.
+   * does allow for backtracking decisions.
+   * This might prove costful. 
+   */
+  case class SequenceOperator(override val left : CFilterBase, override val right :CFilterBase) extends
+        BinaryOperator(left : CFilterBase, right :CFilterBase) {
+    def clone(left : CFilterBase, right :CFilterBase) = new SequenceOperator(left, right)
+    
+		private def recurse(current : XMLResultStream, hasResult : Boolean, in : XMLResultStream) : XMLResultStream = {
+		  if (current.isEmpty)
+			  Stream.empty
+		  else {
+			  (current.head) match {
+			    case Result(_, _) => Stream.cons(current.head, this.recurse(current.tail, true, in))
+			    case Tail(_, _) => if (hasResult) {
+                                val rightResult = right(current)
+                                if (rightResult.isEmpty)
+                                  in
+                                else
+                                  (rightResult.head) match {
+                                    case Result(_, _) => rightResult
+                                    case Tail(_, _) => in  // No result, we track back to the original Stream. 
+                                  }
+                             } else
+                                current
+			  }
+      }
+		}
+		override def apply(in : XMLResultStream) : XMLResultStream = {
+		  if (in.isEmpty)
+			  Stream.empty
+		  else {
+			  recurse(left(in), false, in)
+		  }
+		}
+ 	}
+  
   /**
      * A compose operator where the left operator can consumme the tail from the right operator's result.
      */
