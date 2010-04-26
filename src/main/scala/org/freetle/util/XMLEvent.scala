@@ -8,7 +8,7 @@ import javax.xml.stream.Location
  *  tree we are parsing, each "event" is returned to the caller
  *  and the traversal is suspended.
  */
-trait XMLEvent {
+sealed abstract class XMLEvent {
   var location : Location = null
 }
 
