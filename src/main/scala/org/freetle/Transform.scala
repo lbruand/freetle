@@ -23,7 +23,7 @@ import scala.xml._
 //			(idea) : We could use a element counting Stream                                                                      
 //  * Add a offset and size system .
 //  * Transformations and operators will need to have serialization inside.
-//  * Transformations and operators will need to have hashcode, equals etc methods. (maybe it is include in the case class stuff)
+//  * Transformations and operators will need to have hashcode, equals etc methods. (maybe it is included in the case class stuff)
 //  * There is some thinking to be done on how to maybe integrate the TakeTransform with the unapply methods and or wildcard cases.
 //
 //	Optimizer
