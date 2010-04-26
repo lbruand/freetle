@@ -506,20 +506,6 @@ trait Transform[Context] extends TransformModel[Context] {
 	}
 
   /**
-   * Take one Tail at the head and turn it into a Result
-   */
-  case class OnceTransform extends TakeTransform {
-		override def apply(in : XMLResultStream) : XMLResultStream =
-		  if (in.isEmpty)
-			  Stream.empty
-		  else {
-				Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
-		  }
-	}
-  
-
-
-  /**
    * Take a text from the entry and store it in the context.
    */
   abstract case class TakeDataToContext() extends TakeTransform {
@@ -545,9 +531,21 @@ trait Transform[Context] extends TransformModel[Context] {
   }
 
   /**
+   * Take one Tail at the head and turn it into a Result
+   */
+  case class TakeOnceTransform extends TakeTransform {
+		override def apply(in : XMLResultStream) : XMLResultStream =
+		  if (in.isEmpty)
+			  Stream.empty
+		  else {
+				Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
+		  }
+	}
+  
+  /**
    * Take a single start element event if it has the correct name.
    */
-	case class TakeStartElement(name :String) extends TakeTransform {
+	case class TakeStartElement(name :String) extends TakeOnceTransform {
     // TODO Maybe we should reorganise better this to be able to select events better.
 		override def apply(in : XMLResultStream) : XMLResultStream =
 			if (in.isEmpty) 
@@ -563,7 +561,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Take a single end element event if it has the correct name (but regardless of its namespace)
    */
-	case class TakeEndElement(name :String) extends TakeTransform {
+	case class TakeEndElement(name :String) extends TakeOnceTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream =
 			if (in.isEmpty)
 				Stream.empty
@@ -578,8 +576,8 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Take a single text event.
    */
-  case class TakeText extends TakeTransform {
-    def apply(in : XMLResultStream) : XMLResultStream = {
+  case class TakeText extends TakeOnceTransform {
+    override def apply(in : XMLResultStream) : XMLResultStream = {
 			if (in.isEmpty)
 				Stream.empty
 			else
@@ -593,11 +591,11 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Take a whitespace event.
    */
-  case class TakeSpace extends TakeTransform {
+  case class TakeSpace extends TakeOnceTransform {
     
     // TODO : There is still a big problem : A text token can be split in many.
     //        And by comments which we might not get every whitespace.
-    def apply(in : XMLResultStream) : XMLResultStream = {
+    override def apply(in : XMLResultStream) : XMLResultStream = {
 			if (in.isEmpty)
 				Stream.empty
 			else
