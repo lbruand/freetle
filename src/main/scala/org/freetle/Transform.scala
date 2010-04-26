@@ -533,12 +533,16 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Take one Tail at the head and turn it into a Result
    */
-  case class TakeOnceTransform extends TakeTransform {
+  abstract class TakeOnceTransform extends TakeTransform {
+    def matcher : XMLEventMatcher
 		override def apply(in : XMLResultStream) : XMLResultStream =
 		  if (in.isEmpty)
 			  Stream.empty
 		  else {
-				Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
+        if (matcher(in.head.sub))
+				  Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
+        else
+          in // Faster than new ZeroTransform().apply(in)
 		  }
 	}
   
@@ -546,67 +550,38 @@ trait Transform[Context] extends TransformModel[Context] {
    * Take a single start element event if it has the correct name.
    */
 	case class TakeStartElement(name :String) extends TakeOnceTransform {
-    // TODO Maybe we should reorganise better this to be able to select events better.
-		override def apply(in : XMLResultStream) : XMLResultStream =
-			if (in.isEmpty) 
-				Stream.empty
-			else
-		  		in.head.sub match {
-		  		  case EvElemStart(_, label : String, _, _)  if (label.equals(name)) 
-		  			  	 => Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
-		  		  case _ => new ZeroTransform().apply(in)
-		  		} 
+    def matcher = new FilterMatcher[EvElemStart]() {
+      def apply[EvElemStart](event : EvElemStart) : Boolean = event match {
+        case EvElemStart(_, label : String, _, _)  if (label.equals(name)) => true
+        case _ => false
+      }
+    }
 	}
 
   /**
    * Take a single end element event if it has the correct name (but regardless of its namespace)
    */
-	case class TakeEndElement(name :String) extends TakeOnceTransform {
-		override def apply(in : XMLResultStream) : XMLResultStream =
-			if (in.isEmpty)
-				Stream.empty
-			else
-		  		in.head.sub match {
-		  		  case EvElemEnd(_, label: String)  if (label.equals(name))
-		  			  	 => Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
-		  		  case _ => new ZeroTransform().apply(in)
-		  		}
+  case class TakeEndElement(name :String) extends TakeOnceTransform {
+    def matcher = new FilterMatcher[EvElemEnd]() {
+      def apply[EvElemEnd](event : EvElemEnd) : Boolean = event match {
+        case EvElemEnd(_, label: String)  if (label.equals(name)) => true
+        case _ => false
+      }
+    }
 	}
 
   /**
    * Take a single text event.
    */
   case class TakeText extends TakeOnceTransform {
-    override def apply(in : XMLResultStream) : XMLResultStream = {
-			if (in.isEmpty)
-				Stream.empty
-			else
-		  		in.head.sub match {
-            case EvText(_) => Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
-		  		  case _ => new ZeroTransform().apply(in)
-		  		}
-    }    
+    def matcher = new TypeMatcher[EvText]()
   }
 
   /**
    * Take a whitespace event.
    */
   case class TakeSpace extends TakeOnceTransform {
-    
-    // TODO : There is still a big problem : A text token can be split in many.
-    //        And by comments which we might not get every whitespace.
-    override def apply(in : XMLResultStream) : XMLResultStream = {
-			if (in.isEmpty)
-				Stream.empty
-			else
-		  		in.head.sub match {		  		  
-            case EvComment(text : String)
-                  => Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
-            case EvText(text : String) if ("".equals(text.trim()))
-                  => Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))        
-		  		  case _ => new ZeroTransform().apply(in)
-		  		}
-    }
+    def matcher = new SpaceOrCommentMatcher()
   }
  
 
