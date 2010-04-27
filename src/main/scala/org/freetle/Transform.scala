@@ -542,39 +542,41 @@ trait Transform[Context] extends TransformModel[Context] {
         if (matcher(in.head.sub))
 				  Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
         else
-          in // Faster than new ZeroTransform().apply(in)
+          new ZeroTransform().apply(in)
 		  }
 	}
   
   /**
    * Take a single start element event if it has the correct name.
    */
-	case class TakeStartElement(name :String) extends TakeOnceTransform {
-    def matcher = new FilterMatcher[EvElemStart]() {
+	case class TakeStartElement(name : String) extends TakeOnceTransform {
+    final class LabelEvElemStartFilterMatcher(name : String) extends FilterMatcher[EvElemStart]() {
       def apply[EvElemStart](event : EvElemStart) : Boolean = event match {
         case EvElemStart(_, label : String, _, _)  if (label.equals(name)) => true
         case _ => false
       }
     }
+    def matcher = new LabelEvElemStartFilterMatcher(name)
 	}
 
   /**
    * Take a single end element event if it has the correct name (but regardless of its namespace)
    */
-  case class TakeEndElement(name :String) extends TakeOnceTransform {
-    def matcher = new FilterMatcher[EvElemEnd]() {
+  case class TakeEndElement(name : String) extends TakeOnceTransform {
+    final class LabelEvElemEndFilterMatcher(name : String) extends FilterMatcher[EvElemEnd]() {
       def apply[EvElemEnd](event : EvElemEnd) : Boolean = event match {
         case EvElemEnd(_, label: String)  if (label.equals(name)) => true
         case _ => false
       }
     }
+    def matcher = new LabelEvElemEndFilterMatcher(name)
 	}
 
   /**
    * Take a single text event.
    */
   case class TakeText extends TakeOnceTransform {
-    def matcher = new TypeMatcher[EvText]()
+    def matcher = new EvTextTypeMatcher()
   }
 
   /**

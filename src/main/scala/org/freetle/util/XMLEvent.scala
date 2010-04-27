@@ -44,8 +44,29 @@ class AlwaysMatcher extends XMLEventMatcher {
   def apply(event : XMLEvent) : Boolean = true
 }
 
-class TypeMatcher[+ParamEvent <: XMLEvent] extends XMLEventMatcher {
+/**
+ * This can not be used directly because of type erasure.
+ */
+trait TypeMatcher[+ParamEvent <: XMLEvent] extends XMLEventMatcher {
   def apply(event : XMLEvent) : Boolean = event.isInstanceOf[ParamEvent]
+}
+class EvElemStartTypeMatcher extends TypeMatcher[EvElemStart] {
+  override def apply(event : XMLEvent) : Boolean = event.isInstanceOf[EvElemStart]
+}
+class EvElemEndTypeMatcher extends TypeMatcher[EvElemEnd] {
+  override def apply(event : XMLEvent) : Boolean = event.isInstanceOf[EvElemEnd]
+}
+class EvTextTypeMatcher extends TypeMatcher[EvText] {
+  override def apply(event : XMLEvent) : Boolean = event.isInstanceOf[EvText]
+}
+class EvEntityRefTypeMatcher extends TypeMatcher[EvEntityRef] {
+  override def apply(event : XMLEvent) : Boolean = event.isInstanceOf[EvEntityRef]
+}
+class EvProcInstrTypeMatcher extends TypeMatcher[EvProcInstr] {
+  override def apply(event : XMLEvent) : Boolean = event.isInstanceOf[EvProcInstr]
+}
+class EvCommentTypeMatcher extends TypeMatcher[EvComment] {
+  override def apply(event : XMLEvent) : Boolean = event.isInstanceOf[EvComment]
 }
 
 abstract class FilterMatcher[+ParamEvent <: XMLEvent] extends TypeMatcher[ParamEvent] {
@@ -56,13 +77,12 @@ abstract class FilterMatcher[+ParamEvent <: XMLEvent] extends TypeMatcher[ParamE
   }
 }
 
-class OrMatcher[+T1 <: XMLEventMatcher, +T2 <: XMLEventMatcher] extends XMLEventMatcher {
-  //                                               V : This fucks up big time... The apply function called is not the one believe.  
-  def apply(event : XMLEvent) : Boolean = this.asInstanceOf[T1].apply(event) ^ this.asInstanceOf[T2].apply(event)
+class OrMatcher(t1 : XMLEventMatcher, t2 : XMLEventMatcher) extends XMLEventMatcher {
+  def apply(event : XMLEvent) : Boolean = t1(event) || t2(event)
 }
 
-class AndMatcher[+T1 <: XMLEventMatcher, +T2 <: XMLEventMatcher] extends XMLEventMatcher {
-  def apply(event : XMLEvent) : Boolean = this.asInstanceOf[T1].apply(event) & this.asInstanceOf[T2].apply(event)
+class AndMatcher(t1 : XMLEventMatcher, t2 : XMLEventMatcher) extends XMLEventMatcher {
+  def apply(event : XMLEvent) : Boolean = t1(event) && t2(event)
 }
 
 abstract class FilterTextMatcher extends FilterMatcher[EvText] {
@@ -76,5 +96,5 @@ class SpaceMatcher extends FilterTextMatcher {
   final def filter =  x => "".equals(x.trim())
 }
 
-class SpaceOrCommentMatcher extends OrMatcher[SpaceMatcher, TypeMatcher[EvComment]]
+class SpaceOrCommentMatcher extends OrMatcher(new SpaceMatcher(), new EvCommentTypeMatcher())
 

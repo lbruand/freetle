@@ -6,8 +6,8 @@ import org.junit._
 import Assert._
 import io.Source
 
-import util.{XMLEventStream, EvEntityRef, EvProcInstr, EvComment, EvText, EvElemEnd, EvElemStart}
 import scala.xml.{Atom, Unparsed, PCData, PrettyPrinter, EntityRef, ProcInstr, Comment, Text, Elem, Node, NodeSeq}
+import util._
 
 
 class TransformTestContext {
@@ -157,9 +157,13 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
 
   @Test
   def testTakeSpace() {
+
+    val ev = new EvElemStart("p", "a", null, null)
+    assertFalse(new EvCommentTypeMatcher()(ev))
+    assertFalse(new SpaceOrCommentMatcher()(ev))
     val t = new TakeSpace()
 
-    assertEquals(0, lengthResult(t(Stream(Tail(new EvElemStart("p", "a", null, null), null)))))
+    assertEquals("EvElemStart", 0, lengthResult(t(Stream(Tail(ev, null)))))
 
     assertEquals(0, lengthResult(t(Stream(Tail(new EvText("p"), null)))))
 
