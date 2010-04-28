@@ -2,9 +2,17 @@ package org.freetle
 
 import org.junit._
 import Assert._
-
+import util.{Memoize1, XMLEventStream}
+import java.io.InputStream
 
 class TransformTestBase[Context] extends FreetleModel[Context] {
+
+  private def mloadStreamFromResource(resourceName: String): XMLResultStream = {
+    val src: InputStream = this.getClass().getResourceAsStream(resourceName)
+    Stream.fromIterator(new XMLEventStream(src) map (Tail(_, null)))
+  }
+
+  def loadStreamFromResource = new Memoize1(mloadStreamFromResource)
   // Utility methods used to test XMLResultStream
   /**
    * Asserts that there are only Results in the stream.

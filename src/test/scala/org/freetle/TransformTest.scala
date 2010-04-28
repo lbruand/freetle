@@ -4,7 +4,6 @@ package org.freetle
 import meta.Meta
 import org.junit._
 import Assert._
-import io.Source
 
 import scala.xml.{Atom, Unparsed, PCData, PrettyPrinter, EntityRef, ProcInstr, Comment, Text, Elem, Node, NodeSeq}
 import util._
@@ -16,7 +15,6 @@ class TransformTestContext {
 
 @Test
 class TransformTest extends TransformTestBase[TransformTestContext] with Meta[TransformTestContext] {
-
  
 	@Test
 	def testTakeElem() = {
@@ -122,8 +120,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
 
   @Test
   def testLoadXML() = {
-    val src = this.getClass().getResourceAsStream("/org/freetle/input.xml")
-    val evStream = Stream.fromIterator( new XMLEventStream(src) map (Tail(_, null)) )
+    val evStream = loadStreamFromResource("/org/freetle/input.xml")
 
     val t = new TakeStartElement("input") ~
                 (( new TakeStartElement("message") ~
@@ -136,10 +133,9 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     assertAllResult(r)
   }
 
-    @Test
+  @Test
   def testLoadXMLWhile() = {
-    val src = this.getClass().getResourceAsStream("/org/freetle/input.xml")
-    val evStream = Stream.fromIterator( new XMLEventStream(src) map (Tail(_, null)) )
+    val evStream = loadStreamFromResource("/org/freetle/input.xml")
 
     val t = new TakeStartElement("input") ~
                 (( new TakeStartElement("message") ~
