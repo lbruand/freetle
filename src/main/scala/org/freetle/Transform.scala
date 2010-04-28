@@ -492,11 +492,24 @@ trait Transform[Context] extends TransformModel[Context] {
           Stream.cons(in.head.toResult(), recurseDeep(in.tail, depth + acc))
         }
   }
-  override def apply(in : XMLResultStream) : XMLResultStream = {
-      recurseDeep(in, 0)
-  }
+  override def apply(in : XMLResultStream) : XMLResultStream = recurseDeep(in, 0)
+
 }
 
+  /**
+   * Drop everything from the incoming result.
+   */
+  case class DropFilter extends TakeTransform {
+    override def apply(in : XMLResultStream) : XMLResultStream = {
+       if (in.isEmpty)
+         Stream.empty
+       else
+         in.head match {
+           case r : Result => apply(in.tail)
+           case _ => in
+         }
+    }
+  }
 
   /**
    * Turn all the stream into the equivalent Identical result stream.
@@ -514,7 +527,7 @@ trait Transform[Context] extends TransformModel[Context] {
 
 		override def apply(in : XMLResultStream) : XMLResultStream =
 		  if (in.isEmpty)
-			Stream.empty
+			  Stream.empty
 		  else in.head.sub match {
         case EvText(text) => {
           val context =

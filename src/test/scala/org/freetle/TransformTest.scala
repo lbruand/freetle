@@ -133,6 +133,21 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     assertAllResult(r)
   }
 
+    @Test
+  def testDropFilter() = {
+    val evStream = loadStreamFromResource("/org/freetle/input.xml")
+
+    val t = new TakeStartElement("input") ~
+                (( new TakeStartElement("message") ~
+                   new TakeStartElement("value") ~
+                   new TakeText() ~
+                   new TakeEndElement("value") ~
+                  new TakeEndElement("message")
+                )+) ~ new TakeEndElement("input")
+    val r = (new SpaceSkipingMetaProcessor())(t)(evStream)
+    assertAllResult(r)
+  }
+
   @Test
   def testLoadXMLWhile() = {
     val evStream = loadStreamFromResource("/org/freetle/input.xml")
@@ -148,9 +163,12 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     assertAllResult(r)
   }
 
-
-
-
+  @Test
+  def testTakeText() {
+    val t = new TakeText()
+    assertEquals(1, lengthResult(t(Stream(Tail(new EvText("p"), null)))))
+  }
+  
   @Test
   def testTakeSpace() {
 
