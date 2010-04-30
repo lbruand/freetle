@@ -26,6 +26,8 @@ import scala.xml._
 //  * Transformations and operators will need to have hashcode, equals etc methods. (maybe it is included in the case class stuff)
 //  * There is some thinking to be done on how to maybe integrate the TakeTransform with the unapply methods
 //    and or wildcard cases and or a visitor pattern.
+//  * EvPositiveElement trashing is not satisfactory : We need to introduce a pattern for Result checking that
+//    encapsulate the EvPositiveElement trashing rather than have this code so widely occuring in the code.
 //
 //	Optimizer
 //  =========
