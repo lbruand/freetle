@@ -219,6 +219,7 @@ trait Transform[Context] extends TransformModel[Context] {
 			  Stream.empty
 		  else {
 			  (in.head) match {
+          case Result(EvPositiveResult(), _) => this.recurse(in.tail) // --> EvPositiveResult can be trashed.
 			    case Result(_, _) => Stream.cons(in.head, this.recurse(in.tail))
 			    case Tail(_, _) => right(in)
 			  }
