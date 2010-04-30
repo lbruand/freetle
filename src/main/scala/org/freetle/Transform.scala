@@ -515,7 +515,7 @@ trait Transform[Context] extends TransformModel[Context] {
    * Drop everything from the incoming result.
    */
   case class DropFilter extends TakeTransform {
-    override def apply(in : XMLResultStream) : XMLResultStream = {
+    def recurse(in : XMLResultStream) : XMLResultStream = {
        if (in.isEmpty)
          Stream.empty
        else
@@ -523,6 +523,13 @@ trait Transform[Context] extends TransformModel[Context] {
            case r : Result => apply(in.tail)
            case _ => in
          }
+    }
+    override def apply(in : XMLResultStream) : XMLResultStream = {
+      val result = recurse(in)
+      if (result.isEmpty)
+        Stream.empty
+      else
+        Stream.cons(Result(new EvPositiveResult(), result.head.context), result)
     }
   }
 
