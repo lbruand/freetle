@@ -128,6 +128,7 @@ trait Transform[Context] extends TransformModel[Context] {
         Stream.empty
       else {
         (result.head) match {
+          case Result(EvPositiveResult(), _) => this.recurse(result.tail, false) // --> EvPositiveResult can be trashed.
           case Result(_, _) => Stream.cons(result.head, this.recurse(result.tail, false)) // /!\ not tail recursive ?
           case Tail(_, _) => if (applied)
                       if (keepResultWhenEmpty) result else in// Repeating is over since underlying was applied and we have a Tail in the head.
@@ -174,7 +175,7 @@ trait Transform[Context] extends TransformModel[Context] {
           val result = underlying(in)
           (result.head) match {
             case Result(_, _) => result
-            case Tail(_, _) => in
+            case Tail(_, context) => Stream.cons(Result(EvPositiveResult(), context), result)
           }
         }
     }
@@ -192,7 +193,15 @@ trait Transform[Context] extends TransformModel[Context] {
     override def keepResultWhenEmpty = false
 
     override def apply(in : XMLResultStream) : XMLResultStream = {
-      recurse(in, true)
+      val result = recurse(in, true)
+      if (result.isEmpty) {
+        Stream.empty
+      } else {
+        (result.head) match {
+          case Tail(_, context) => Stream.cons(Result(EvPositiveResult(), context), result)
+          case Result(_, _) => result
+        }
+      }
     }
   }
 
@@ -238,6 +247,7 @@ trait Transform[Context] extends TransformModel[Context] {
 			  Stream.empty
 		  else {
 			  (in.head) match {
+          case Result(EvPositiveResult(), _) => this.recurse(in.tail, true) // --> EvPositiveResult can be trashed.
 			    case Result(_, _) => Stream.cons(in.head, this.recurse(in.tail, true))
 			    case Tail(_, _) => if (hasResult) 
 			    					right(in) 
@@ -270,6 +280,7 @@ trait Transform[Context] extends TransformModel[Context] {
 			  Stream.empty
 		  else {
 			  (current.head) match {
+          case Result(EvPositiveResult(), _) => this.recurse(current.tail, true, in) // --> EvPositiveResult can be trashed.
 			    case Result(_, _) => Stream.cons(current.head, this.recurse(current.tail, true, in))
 			    case Tail(_, _) => if (hasResult) {
                                 val rightResult = right(current)
@@ -558,6 +569,10 @@ trait Transform[Context] extends TransformModel[Context] {
           new ZeroTransform().apply(in)
 		  }
 	}
+
+  class TakeAnyTransform extends TakeOnceTransform {
+    def matcher : XMLEventMatcher = new AlwaysMatcher()   
+  }
   
   /**
    * Take a single start element event if it has the correct name.

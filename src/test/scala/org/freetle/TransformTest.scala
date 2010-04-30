@@ -133,7 +133,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     assertAllResult(r)
   }
 
-    @Test
+  @Test
   def testDropFilter() = {
     val evStream = loadStreamFromResource("/org/freetle/input.xml")
 
@@ -144,7 +144,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
                    new TakeEndElement("value") ~
                   new TakeEndElement("message")
                 )+) ~ new TakeEndElement("input")
-    val r = (new SpaceSkipingMetaProcessor())(t)(evStream)
+    val r = (new SpaceSkipingMetaProcessor())(t)(evStream)   
     assertAllResult(r)
   }
 

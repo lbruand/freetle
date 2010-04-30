@@ -29,8 +29,8 @@ trait Meta[Context] extends Transform[Context] {
 
   class SpaceSkipingMetaProcessor extends RecursiveMetaProcessor {
     def map(in: BaseTransform) = {
-      val takeSpc = new RepeatUntilNoResultOperator(new TakeSpace())
-      new ConcatOperator(takeSpc, new SequenceOperator(in, takeSpc) )
+      val takeSpc = new WhileNoResultOperator(new TakeSpace())
+      new SequenceOperator(takeSpc, new SequenceOperator(in, takeSpc) )
     }
   }
 }
