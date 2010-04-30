@@ -363,6 +363,7 @@ trait Transform[Context] extends TransformModel[Context] {
 		  	if (!leftResult.isEmpty)
 		       leftResult.head match {
 		         case Tail(_, _) => right(in)
+             case Result(EvPositiveResult(), _) => leftResult.tail
 		         case Result(_, _) => leftResult		         
 		       } 
 		    else {
