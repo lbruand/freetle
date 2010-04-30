@@ -175,7 +175,7 @@ trait Transform[Context] extends TransformModel[Context] {
         in
       else {
           val result = underlying(in)
-          (result.head) match {
+          (result.head) match {            
             case Result(_, _) => result
             case Tail(_, context) => Stream.cons(Result(EvPositiveResult(), context), result)
           }
@@ -200,8 +200,8 @@ trait Transform[Context] extends TransformModel[Context] {
         Stream.empty
       } else {
         (result.head) match {
-          case Tail(_, context) => Stream.cons(Result(EvPositiveResult(), context), result)
           case Result(_, _) => result
+          case Tail(_, context) => Stream.cons(Result(EvPositiveResult(), context), result)          
         }
       }
     }
