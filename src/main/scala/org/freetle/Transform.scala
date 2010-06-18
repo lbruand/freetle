@@ -273,7 +273,7 @@ trait Transform[Context] extends TransformModel[Context] {
     /**
    * We execute in sequence left and then right if left has returned a result.
    * does allow for backtracking decisions.
-   * This might prove costful. 
+   * This might prove expensive. 
    */
   case class SequenceOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
