@@ -28,7 +28,7 @@ class SourceReader(src: Source) extends Reader {
 	    def fromIterator(s: Iterator[Char]): Source = {
     		lazy val it = s
     		new Source {
-    			def reset() = fromIterator(s)
+    			override def reset() = fromIterator(s)
     			val iter = it
     		}
 	    }
