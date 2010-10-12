@@ -139,9 +139,9 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
 
     val t = new TakeStartElement("input") ~
                 (( new TakeStartElement("message") ~
-                   (new TakeStartElement("value") ~
+                   ((new TakeStartElement("value") ~
                    new TakeText()  ~
-                   new TakeEndElement("value")) @@ new DropFilter() ~
+                   new TakeEndElement("value")) -> new DropFilter()) ~
                   new TakeEndElement("message")
                 )+) ~ new TakeEndElement("input")
     val r = (new SpaceSkipingMetaProcessor())(t)(evStream)   
