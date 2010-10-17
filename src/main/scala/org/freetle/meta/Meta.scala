@@ -19,7 +19,7 @@ trait Meta[Context] extends Transform[Context] {
 
     def apply(in: CFilterBase) : CFilterBase = {
 
-      in match {
+      in match {        
         case unary @ UnaryOperator(underlying) => unary.clone(this(underlying))
         case binary @ BinaryOperator(left, right) => binary.clone(this(left), this(right))
         case transfo : BaseTransform => map(transfo)
@@ -29,8 +29,12 @@ trait Meta[Context] extends Transform[Context] {
 
   class SpaceSkipingMetaProcessor extends RecursiveMetaProcessor {
     def map(in: BaseTransform) = {
-      val takeSpc = new WhileNoResultOperator(new TakeSpace())
-      new SequenceOperator(takeSpc, new SequenceOperator(in, takeSpc) )
+      if (!in.isInstanceOf[DropFilter]) {
+        val takeSpc = new WhileNoResultOperator(new TakeSpace())
+        new SequenceOperator(takeSpc, new SequenceOperator(in, takeSpc) )
+      } else {
+        in
+      }
     }
   }
 }

@@ -521,10 +521,11 @@ trait Transform[Context] extends TransformModel[Context] {
          Stream.empty
        else
          in.head match {
-           case r : Result => apply(in.tail)
+           case r : Result => recurse(in.tail)
            case _ => in
          }
     }
+
     override def apply(in : XMLResultStream) : XMLResultStream = {
       val result = recurse(in)
       if (result.isEmpty)
