@@ -516,18 +516,8 @@ trait Transform[Context] extends TransformModel[Context] {
    * Drop everything from the incoming result.
    */
   case class DropFilter extends TakeTransform {
-    def recurse(in : XMLResultStream) : XMLResultStream = {
-       if (in.isEmpty)
-         Stream.empty
-       else
-         in.head match {
-           case r : Result => recurse(in.tail)
-           case _ => in
-         }
-    }
-
     override def apply(in : XMLResultStream) : XMLResultStream = {
-      val result = recurse(in)
+      val result = in.dropWhile( _.isInstanceOf[Result] )//recurse(in)
       if (result.isEmpty)
         Stream.empty
       else
