@@ -1,7 +1,6 @@
 package org.freetle
 import scala.Stream
 import util._
-import xml._
 import scala.xml._
 
 // RAF :
@@ -104,7 +103,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Base class for all unary operators.
    */
-	abstract case class UnaryOperator(val underlying : CFilterBase) extends
+	abstract case class UnaryOperator(underlying : CFilterBase) extends
         Operator {
     def clone(underlying : CFilterBase) : UnaryOperator
   }
@@ -112,7 +111,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Base class for all binary operators.
    */
- 	abstract case class BinaryOperator(val left : CFilterBase, val right :CFilterBase) extends
+ 	abstract case class BinaryOperator(left : CFilterBase, right :CFilterBase) extends
         Operator {
      def clone(left : CFilterBase, right :CFilterBase) : BinaryOperator
   }
