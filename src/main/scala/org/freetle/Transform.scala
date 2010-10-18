@@ -478,8 +478,8 @@ trait Transform[Context] extends TransformModel[Context] {
         else {
           val acc = in.head.sub match {
             case e : EvElemStart => +1
-            case e : EvElemEnd 		 => -1
-            case _ 						 =>  0
+            case e : EvElemEnd 	 => -1
+            case _ 						   =>  0
           }
           Stream.cons(in.head.toResult(), recurseDeep(in.tail, depth + acc))
         }
