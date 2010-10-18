@@ -441,7 +441,23 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * base transform for all transformations that only take stuff.
    */
-  abstract case class TakeTransform extends BaseTransform
+  abstract case class TakeTransform extends BaseTransform {
+    def selectUntilAccumulation[Accumulator](in : XMLResultStream,
+                                             accumulator : Accumulator,
+                                             conditionToStop : Accumulator=>Boolean,
+                                             accumulation : (Accumulator, TransformResult) => Accumulator)
+            : XMLResultStream = {
+      if (in.isEmpty)
+        Stream.empty
+      else
+      if (conditionToStop(accumulator))
+        in
+      else
+        Stream.cons(in.head.toResult(),
+                    selectUntilAccumulation(in.tail, accumulation(accumulator, in.head), conditionToStop, accumulation))
+
+    }
+  }
 
   /**
    * The ZeroTransform is the simpliest transform. It takes all the input and make equivalent Tailed version.
@@ -469,22 +485,18 @@ trait Transform[Context] extends TransformModel[Context] {
    * The deepfilter does return the matching end bracket.
    */
   case class DeepFilter extends TakeTransform {
-  def recurseDeep(in : XMLResultStream, depth :Int) : XMLResultStream = {
-      if (in.isEmpty)
-        Stream.empty
-      else
-        if (depth < 0)
-          in
-        else {
-          val acc = in.head.sub match {
-            case e : EvElemStart => +1
-            case e : EvElemEnd 	 => -1
-            case _ 						   =>  0
-          }
-          Stream.cons(in.head.toResult(), recurseDeep(in.tail, depth + acc))
-        }
-  }
-  override def apply(in : XMLResultStream) : XMLResultStream = recurseDeep(in, 0)
+    
+  def accumulation(depth: Int, in: TransformResult) : Int =
+    depth + (in.sub match {
+      case e: EvElemStart => +1
+      case e: EvElemEnd => -1
+      case _ => 0
+    })
+  
+  override def apply(in : XMLResultStream) : XMLResultStream = selectUntilAccumulation[Int](in,
+                                                                                            0,  // <-- Initial depth 
+                                                                                            _ < 0, // <-- When to stop
+                                                                                            accumulation)
 
 }
 
