@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<input>
+<input xmlns='http://freetle.sf.net'>
     <message>
         <value>10010</value>
     </message>

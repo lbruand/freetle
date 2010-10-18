@@ -7,10 +7,6 @@ import scala.xml._
 
 //  Model
 //  =====
-//  * there is no possibility of having an empty positive-result since
-//		 Since failure is an empty result. 
-// 		We might need a special token that helps with empty positive-result.
-//    =>  There is a need for a Repeat which always succeed...
 //  * There is a problem with the context in the case of backtracking. (for example from a choice)
 //  * Stop using prefixes and use namespace instead.
 //

@@ -7,6 +7,7 @@ import Assert._
 
 import scala.xml.{Atom, Unparsed, PCData, PrettyPrinter, EntityRef, ProcInstr, Comment, Text, Elem, Node, NodeSeq}
 import util._
+import java.lang.String
 
 
 class TransformTestContext {
@@ -15,10 +16,10 @@ class TransformTestContext {
 
 @Test
 class TransformTest extends TransformTestBase[TransformTestContext] with Meta[TransformTestContext] {
- 
+  val PREFIX: String = "p"
 	@Test
 	def testTakeElem() = {
-	  val s = Stream(new EvElemStart("p", "body", null, null)) map (Tail(_, null))
+	  val s = Stream(new EvElemStart(PREFIX, "body", null, null)) map (Tail(_, null))
 	  val trans = new TakeStartElement("body")
 	  val r = trans(s)
 	  assertEquals(1, r.length)
@@ -31,7 +32,8 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
   
   @Test
   def testConcatOperator() = {
-    val input = List(new EvElemStart("p", "body", null, null), new EvElemStart("p", "message", null, null)).toStream map (Tail(_, null))
+    val input = List(new EvElemStart(PREFIX, "body", null, null),
+                     new EvElemStart(PREFIX, "message", null, null)).toStream map (Tail(_, null))
     val trans = new TakeStartElement("body") ~~ new TakeStartElement("message")
     val result = trans(input)
     assertEquals(2, result.length)
@@ -51,8 +53,8 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     def runForIteration(depthTest :Int) = {
         val c = new RepeatUntilNoResultOperator(new TakeStartElement("message")).apply(
           (Stream.concat(
-                    Stream.make(depthTest, new EvElemStart("p", "message", null, null)),
-                    Stream(new EvElemStart("p", "body", null, null))
+                    Stream.make(depthTest, new EvElemStart(PREFIX, "message", null, null)),
+                    Stream(new EvElemStart(PREFIX, "body", null, null))
                   ) map (Tail(_, null))))
       .foldLeft(new Counter(0,0))( (u,z) => new Counter(u.countTotal+1, u.countResult + (z match {
           case Result(_, _) => 1
@@ -72,8 +74,8 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     def runForIteration(depthTest :Int) = {
         val c = new WhileNoResultOperator(new TakeStartElement("message")).apply(
           (Stream.concat(
-                    Stream.make(depthTest, new EvElemStart("p", "message", null, null)),
-                    Stream(new EvElemStart("p", "body", null, null))
+                    Stream.make(depthTest, new EvElemStart(PREFIX, "message", null, null)),
+                    Stream(new EvElemStart(PREFIX, "body", null, null))
                   ) map (Tail(_, null))))
       .foldLeft(new Counter(0,0))( (u,z) => new Counter(u.countTotal+1, u.countResult + (z match {
           case Result(_, _) => 1
@@ -91,16 +93,16 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
   @Test
   def testDeep() = {
     val s = List(
-        new EvElemStart("p", "body", null, null),
-        new EvElemStart("p", "body", null, null),
-        new EvElemStart("p", "a", null, null),
-        new EvElemStart("p", "a", null, null),
-        new EvElemEnd("p", "a"),
-        new EvElemEnd("p", "a"),
-        new EvElemStart("p", "a", null, null),
-        new EvElemEnd("p", "a"),
-        new EvElemEnd("p", "body"),
-        new EvElemEnd("p", "body")
+        new EvElemStart(PREFIX, "body", null, null),
+        new EvElemStart(PREFIX, "body", null, null),
+        new EvElemStart(PREFIX, "a", null, null),
+        new EvElemStart(PREFIX, "a", null, null),
+        new EvElemEnd(PREFIX, "a"),
+        new EvElemEnd(PREFIX, "a"),
+        new EvElemStart(PREFIX, "a", null, null),
+        new EvElemEnd(PREFIX, "a"),
+        new EvElemEnd(PREFIX, "body"),
+        new EvElemEnd(PREFIX, "body")
     ).toStream map (Tail(_, None))
 
     val t = new TakeStartElement("body") ~~ new TakeStartElement("body") ~~ new DeepFilter()
@@ -124,8 +126,8 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
 
     val t = new TakeStartElement("input") ~
                 (( new TakeStartElement("message") ~
-                  new PushEvent(new EvElemStart("p", "a", null, null)) ~
-                  new PushEvent(new EvElemEnd("p", "a")) ~
+                  new PushEvent(new EvElemStart(PREFIX, "a", null, null)) ~
+                  new PushEvent(new EvElemEnd(PREFIX, "a")) ~
                   new DeepFilter() ~
                   new TakeEndElement("message")
                 )+) ~ new TakeEndElement("input")
@@ -153,10 +155,11 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
   def testLoadXMLWhile() = {
     val evStream = loadStreamFromResource("/org/freetle/input.xml")
 
+
     val t = new TakeStartElement("input") ~
                 (( new TakeStartElement("message") ~
-                  new PushEvent(new EvElemStart("p", "a", null, null)) ~
-                  new PushEvent(new EvElemEnd("p", "a")) ~
+                  new PushEvent(new EvElemStart(PREFIX, "a", null, null)) ~
+                  new PushEvent(new EvElemEnd(PREFIX, "a")) ~
                   new DeepFilter() ~
                   new TakeEndElement("message")
                 )*) ~ new TakeEndElement("input")
@@ -173,7 +176,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
   @Test
   def testTakeSpace() {
 
-    val ev = new EvElemStart("p", "a", null, null)
+    val ev = new EvElemStart(PREFIX, "a", null, null)
     assertFalse(new EvCommentTypeMatcher()(ev))
     assertFalse(new SpaceOrCommentMatcher()(ev))
     val t = new TakeSpace()
