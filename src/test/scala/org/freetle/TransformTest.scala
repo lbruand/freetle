@@ -97,12 +97,12 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
         new EvElemStart(PREFIX, "body", null, null),
         new EvElemStart(PREFIX, "a", null, null),
         new EvElemStart(PREFIX, "a", null, null),
-        new EvElemEnd(PREFIX, "a"),
-        new EvElemEnd(PREFIX, "a"),
+        new EvElemEnd(PREFIX, "a", null),
+        new EvElemEnd(PREFIX, "a", null),
         new EvElemStart(PREFIX, "a", null, null),
-        new EvElemEnd(PREFIX, "a"),
-        new EvElemEnd(PREFIX, "body"),
-        new EvElemEnd(PREFIX, "body")
+        new EvElemEnd(PREFIX, "a", null),
+        new EvElemEnd(PREFIX, "body", null),
+        new EvElemEnd(PREFIX, "body", null)
     ).toStream map (Tail(_, None))
 
     val t = new TakeStartElement("body") ~~ new TakeStartElement("body") ~~ new DeepFilter()
@@ -127,7 +127,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     val t = new TakeStartElement("input") ~
                 (( new TakeStartElement("message") ~
                   new PushEvent(new EvElemStart(PREFIX, "a", null, null)) ~
-                  new PushEvent(new EvElemEnd(PREFIX, "a")) ~
+                  new PushEvent(new EvElemEnd(PREFIX, "a", null)) ~
                   new DeepFilter() ~
                   new TakeEndElement("message")
                 )+) ~ new TakeEndElement("input")
@@ -159,7 +159,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     val t = new TakeStartElement("input") ~
                 (( new TakeStartElement("message") ~
                   new PushEvent(new EvElemStart(PREFIX, "a", null, null)) ~
-                  new PushEvent(new EvElemEnd(PREFIX, "a")) ~
+                  new PushEvent(new EvElemEnd(PREFIX, "a", null)) ~
                   new DeepFilter() ~
                   new TakeEndElement("message")
                 )*) ~ new TakeEndElement("input")

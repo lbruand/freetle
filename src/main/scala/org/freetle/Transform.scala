@@ -2,6 +2,7 @@ package org.freetle
 import scala.Stream
 import util._
 import scala.xml._
+import javax.xml.namespace.QName
 
 // RAF :
 
@@ -410,12 +411,14 @@ trait Transform[Context] extends TransformModel[Context] {
       nodeSeq.foldLeft[XMLResultStream](Stream.empty)(
         (x : XMLResultStream, y : Node) => Stream.concat(serializeXML(y, context), x))
     }
-
+    /*def buildAttributes(attributes : MetaData) : Map[QName, String] = {
+      attributes.
+    }*/
     def serializeXML(node : Node, context : Option[Context]) : XMLResultStream = node match {
       case Elem(prefix, label, attributes, scope, child)
-            => Stream.cons( Result(new EvElemStart(prefix, label, attributes, scope), context),
+            => Stream.cons( Result(new EvElemStart(prefix, label, scope.getURI(prefix) /* TODO */, null), context),
                           Stream.concat(serializeXML(child, context),
-                            Stream(Result(new EvElemEnd(prefix, label), context))))
+                            Stream(Result(new EvElemEnd(prefix, label, scope.getURI(prefix)), context))))
       case Text(text) => Stream(Result(new EvText(text), context))
       case Comment(text) => Stream(Result(new EvComment(text), context))
       case ProcInstr(target, procText) => Stream(Result(new EvProcInstr(target, procText), context))
@@ -474,8 +477,8 @@ trait Transform[Context] extends TransformModel[Context] {
           in
         else {
           val acc = in.head.sub match {
-            case EvElemStart(_, _, _, _) => +1
-            case EvElemEnd(_, _) 		 => -1
+            case e : EvElemStart => +1
+            case e : EvElemEnd 		 => -1
             case _ 						 =>  0
           }
           Stream.cons(in.head.toResult(), recurseDeep(in.tail, depth + acc))
@@ -569,7 +572,7 @@ trait Transform[Context] extends TransformModel[Context] {
   case class TakeEndElement(name : String) extends TakeOnceTransform {
     final class LabelEvElemEndFilterMatcher(name : String) extends FilterMatcher[EvElemEnd]() {
       def apply[EvElemEnd](event : EvElemEnd) : Boolean = event match {
-        case EvElemEnd(_, label: String)  if (label.equals(name)) => true
+        case EvElemEnd(_, label: String, _)  if (label.equals(name)) => true
         case _ => false
       }
     }

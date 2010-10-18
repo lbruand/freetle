@@ -2,6 +2,7 @@ package org.freetle.util
 
 import scala.xml.{MetaData, NamespaceBinding}
 import javax.xml.stream.Location
+import javax.xml.namespace.QName
 
 /** This class represents an XML event for pull parsing.
  *  Pull parsing means that during the traversal of the XML
@@ -13,10 +14,10 @@ sealed abstract class XMLEvent {
 }
 
 /** An element is encountered the first time */
-case class EvElemStart(pre: String, label: String, attrs: MetaData, scope: NamespaceBinding) extends XMLEvent
+case class EvElemStart(pre: String, label: String, namespace: String, attributes : Map[QName, String]) extends XMLEvent
 
 /** An element is encountered the last time */
-case class EvElemEnd(pre: String, label: String) extends XMLEvent
+case class EvElemEnd(pre: String, label: String, namespace :String) extends XMLEvent
 /** A text node is encountered */
 case class EvText(text : String) extends XMLEvent
 
