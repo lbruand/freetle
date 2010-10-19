@@ -25,6 +25,7 @@ import javax.xml.namespace.QName
 //    and or wildcard cases and or a visitor pattern.
 //  * EvPositiveElement trashing is not satisfactory : We need to introduce a pattern for Result checking that
 //    encapsulate the EvPositiveElement trashing rather than have this code so widely occuring in the code.
+//  * With the namespaces, there is a problem. When you push tokens, how do u know which prefix to use ?
 //
 //	Optimizer
 //  =========
