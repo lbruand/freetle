@@ -505,7 +505,7 @@ trait Transform[Context] extends TransformModel[Context] {
    */
   case class DropFilter extends TakeTransform {
     override def apply(in : XMLResultStream) : XMLResultStream = {
-      val result = in.dropWhile( _.isInstanceOf[Result] )//recurse(in)
+      val result = in.dropWhile( _.isInstanceOf[Result] )
       if (result.isEmpty)
         Stream.empty
       else
@@ -533,12 +533,12 @@ trait Transform[Context] extends TransformModel[Context] {
 		  else in.head.sub match {
         case EvText(text) => {
           val context =
-                    in.head.context match {
-                      case Some(context) => {
-                          Some(pushToContext(text, context))
-                      }
-                      case None => None
-                    }
+                in.head.context match {
+                  case Some(context) => {
+                      Some(pushToContext(text, context))
+                  }
+                  case None => None
+                }
           Stream.cons( Result(in.head.sub, context), new ZeroTransform().apply(in.tail))
         }
         case _ => new ZeroTransform().apply(in)
