@@ -17,7 +17,7 @@ class TransformTestContext {
 @Test
 class TransformTest extends TransformTestBase[TransformTestContext] with Meta[TransformTestContext] {
   val PREFIX : String = "p"
-  var NAMESPACE : String = "http://freetle.sf.net/"
+  val NAMESPACE : String = "http://freetle.sf.net/"
   
 	@Test
 	def testTakeElem() = {
