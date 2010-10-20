@@ -7,12 +7,12 @@ import java.io.InputStream
 
 class TransformTestBase[Context] extends FreetleModel[Context] {
 
-  private def mloadStreamFromResource(resourceName: String): XMLResultStream = {
+  def mloadStreamFromResource(resourceName: String, context : Option[Context]): XMLResultStream = {
     val src: InputStream = this.getClass().getResourceAsStream(resourceName)
-    Stream.fromIterator(new XMLEventStream(src) map (Tail(_, null)))
+    Stream.fromIterator(new XMLEventStream(src) map (Tail(_, context)))
   }
-
-  def loadStreamFromResource = new Memoize1(mloadStreamFromResource)
+  def sloadStreamFromResource(resourceName: String) = mloadStreamFromResource(resourceName, null)
+  def loadStreamFromResource = new Memoize1(sloadStreamFromResource)
   // Utility methods used to test XMLResultStream
   /**
    * Asserts that there are only Results in the stream.

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<input xmlns='http://freetle.sf.net'>
+    <groupheader>
+        <totalSum>20030</totalSum>
+    </groupheader>
+    <message>
+        <value>10010</value>
+    </message>
+    <message>
+        <value>10020</value>
+    </message>
+</input>

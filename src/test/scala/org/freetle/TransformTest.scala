@@ -12,6 +12,8 @@ import java.lang.String
 
 class TransformTestContext {
   var name : String = null
+  var totalSum : Int = 0
+  var currentSum : Int = 0
 }
 
 @Test
@@ -178,18 +180,13 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
   
   @Test
   def testTakeSpace() {
-
     val ev = new EvElemStart(PREFIX, "a", null, null)
     assertFalse(new EvCommentTypeMatcher()(ev))
     assertFalse(new SpaceOrCommentMatcher()(ev))
     val t = new TakeSpace()
-
     assertEquals("EvElemStart", 0, lengthResult(t(Stream(Tail(ev, null)))))
-
     assertEquals(0, lengthResult(t(Stream(Tail(new EvText("p"), null)))))
-
     assertEquals(1, lengthResult(t(Stream(Tail(new EvText("        \t        "), null)))))
-
   }
 
   @Test
@@ -209,6 +206,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     val r = t(s)
     assertEquals("after", c.name)
   }
+  
   @Test
   def testOutOfContext() {
     val c = new TransformTestContext()
@@ -224,6 +222,43 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     assertEquals(2, r.length)
   }
 
+    @Test
+  def testSumming() = {
+    val c = new TransformTestContext()
+    val evStream = mloadStreamFromResource("/org/freetle/input2.xml", Some(c))
+    val totalSumTaker = new TakeDataToContext() {
+      def pushToContext(text : String, context : TransformTestContext) : TransformTestContext = {
+          context.totalSum = Integer.parseInt(text)
+          context
+      }
+    }
+
+    val sumTaker = new TakeDataToContext() {
+      def pushToContext(text : String, context : TransformTestContext) : TransformTestContext = {
+          context.currentSum += Integer.parseInt(text)
+          context
+      }
+    }
+
+    val t = new TakeStartElement("input") ~
+                (
+                 new TakeStartElement("groupheader") ~
+                         new TakeStartElement("totalSum") ~
+                         totalSumTaker ~
+                         new TakeEndElement("totalSum") ~
+                 new TakeEndElement("groupheader")       
+                ) ~
+                (( new TakeStartElement("message") ~
+                    new TakeStartElement("value") ~
+                         sumTaker ~
+                    new TakeEndElement("value") ~
+                  new TakeEndElement("message")
+                )*) ~ new TakeEndElement("input")
+    val r = (new SpaceSkipingMetaProcessor())(t)(evStream)
+    assertAllResult(r)
+    assertEquals(20030, c.totalSum)
+    assertEquals(20030, c.currentSum)
+  }
 }
 
 
