@@ -605,8 +605,14 @@ trait Transform[Context] extends TransformModel[Context] {
   case class TakeSpace extends TakeOnceTransform {
     def matcher = new SpaceOrCommentMatcher()
   }
- 
+  object < {
+    def apply(name : String) = new TakeStartElement(name)
+  }
 
+    object </ {
+    def apply(name : String) = new TakeEndElement(name)
+  }
 }
+
 
 

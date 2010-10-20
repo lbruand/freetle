@@ -240,20 +240,20 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
       }
     }
 
-    val t = new TakeStartElement("input") ~
+    val t = <("input") ~
                 (
-                 new TakeStartElement("groupheader") ~
-                         new TakeStartElement("totalSum") ~
+                 <("groupheader") ~
+                         <("totalSum") ~
                          totalSumTaker ~
-                         new TakeEndElement("totalSum") ~
-                 new TakeEndElement("groupheader")       
+                         </("totalSum") ~
+                 </("groupheader")
                 ) ~
-                (( new TakeStartElement("message") ~
-                    new TakeStartElement("value") ~
+                (( <("message") ~
+                    <("value") ~
                          sumTaker ~
-                    new TakeEndElement("value") ~
-                  new TakeEndElement("message")
-                )*) ~ new TakeEndElement("input")
+                    </("value") ~
+                  </("message")
+                )*) ~ </("input")
     val r = (new SpaceSkipingMetaProcessor())(t)(evStream)
     assertAllResult(r)
     assertEquals(20030, c.totalSum)
