@@ -17,6 +17,8 @@ class TransformTestContext {
 @Test
 class TransformTest extends TransformTestBase[TransformTestContext] with Meta[TransformTestContext] {
   val PREFIX: String = "p"
+  var NAMESPACE: String = "http://freetle.sf.net/"
+  
 	@Test
 	def testTakeElem() = {
 	  val s = Stream(new EvElemStart(PREFIX, "body", null, null)) map (Tail(_, null))
@@ -92,17 +94,18 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
 
   @Test
   def testDeep() = {
+
     val s = List(
-        new EvElemStart(PREFIX, "body", null, null),
-        new EvElemStart(PREFIX, "body", null, null),
-        new EvElemStart(PREFIX, "a", null, null),
-        new EvElemStart(PREFIX, "a", null, null),
-        new EvElemEnd(PREFIX, "a", null),
-        new EvElemEnd(PREFIX, "a", null),
-        new EvElemStart(PREFIX, "a", null, null),
-        new EvElemEnd(PREFIX, "a", null),
-        new EvElemEnd(PREFIX, "body", null),
-        new EvElemEnd(PREFIX, "body", null)
+        new EvElemStart(PREFIX, "body", NAMESPACE, null),
+        new EvElemStart(PREFIX, "body", NAMESPACE, null),
+        new EvElemStart(PREFIX, "a", NAMESPACE, null),
+        new EvElemStart(PREFIX, "a", NAMESPACE, null),
+        new EvElemEnd(PREFIX, "a", NAMESPACE),
+        new EvElemEnd(PREFIX, "a", NAMESPACE),
+        new EvElemStart(PREFIX, "a", NAMESPACE, null),
+        new EvElemEnd(PREFIX, "a", NAMESPACE),
+        new EvElemEnd(PREFIX, "body", NAMESPACE),
+        new EvElemEnd(PREFIX, "body", NAMESPACE)
     ).toStream map (Tail(_, None))
 
     val t = new TakeStartElement("body") ~~ new TakeStartElement("body") ~~ new DeepFilter()
