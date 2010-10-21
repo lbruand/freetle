@@ -120,7 +120,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
 
   @Test
   def testXMLExp() = {
-    val f : (String => Node) = hello => <message>{hello}</message>
+    val f : (String => Node) = variable => <message>{variable}</message>
     val t = new PushNode(f("hello"))
     assertEquals(3, t(Stream.empty).length)
   }
@@ -222,7 +222,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     assertEquals(2, r.length)
   }
 
-    @Test
+  @Test
   def testSumming() = {
     val c = new TransformTestContext()
     val evStream = mloadStreamFromResource("/org/freetle/input2.xml", Some(c))
@@ -253,7 +253,8 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
                          sumTaker ~
                     </("value") ~
                   </("message")
-                )*) ~ </("input")
+                )*) ~
+            </("input")
     val r = (new SpaceSkipingMetaProcessor())(t)(evStream)
     assertAllResult(r)
     assertEquals(20030, c.totalSum)
