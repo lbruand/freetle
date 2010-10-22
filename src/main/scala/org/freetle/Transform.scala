@@ -1,8 +1,9 @@
 package org.freetle
+import annotation.tailrec
 import scala.Stream
 import util._
 import scala.xml._
-import javax.xml.namespace.QName
+
 
 // RAF :
 
@@ -46,6 +47,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Base class for all transforms.
    */
+  @serializable
   abstract class CFilterBase extends CFilter {
     def concat(right : CFilterBase) : CFilterBase = {
       new ConcatOperator(this, right)
@@ -123,7 +125,8 @@ trait Transform[Context] extends TransformModel[Context] {
 
     def keepResultWhenEmpty : Boolean
     
-    def recurse(in : XMLResultStream, applied : Boolean) : XMLResultStream = {
+    @tailrec 
+    protected final def recurse(in : XMLResultStream, applied : Boolean) : XMLResultStream = {
       val result = if (applied) underlying(in) else in
       if (result.isEmpty)
         Stream.empty
@@ -215,7 +218,8 @@ trait Transform[Context] extends TransformModel[Context] {
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = new ConcatOperator(left, right)
 
-    private def recurse(in : XMLResultStream) : XMLResultStream = {
+    @tailrec
+    private final def recurse(in : XMLResultStream) : XMLResultStream = {
 		  if (in.isEmpty)
 			  Stream.empty
 		  else {
@@ -243,8 +247,9 @@ trait Transform[Context] extends TransformModel[Context] {
   case class SequenceOperatorNoBacktrack(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = new SequenceOperatorNoBacktrack(left, right)
-    
-		private def recurse(in : XMLResultStream, hasResult : Boolean) : XMLResultStream = {
+
+    @tailrec
+		private final def recurse(in : XMLResultStream, hasResult : Boolean) : XMLResultStream = {
 		  if (in.isEmpty)
 			  Stream.empty
 		  else {
@@ -276,8 +281,9 @@ trait Transform[Context] extends TransformModel[Context] {
   case class SequenceOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = new SequenceOperator(left, right)
-    
-		private def recurse(current : XMLResultStream, hasResult : Boolean, in : XMLResultStream) : XMLResultStream = {
+
+    @tailrec
+		private final def recurse(current : XMLResultStream, hasResult : Boolean, in : XMLResultStream) : XMLResultStream = {
 		  if (current.isEmpty)
 			  Stream.empty
 		  else {
@@ -443,8 +449,8 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * base transform for all transformations that only take stuff.
    */
-  abstract case class TakeTransform extends BaseTransform {
-    def selectUntilAccumulation[Accumulator](in : XMLResultStream,
+  abstract case class TakeTransform extends BaseTransform {    
+    protected final def selectUntilAccumulation[Accumulator](in : XMLResultStream,
                                              accumulator : Accumulator,
                                              conditionToStop : Accumulator=>Boolean,
                                              accumulation : (Accumulator, TransformResult) => Accumulator)
