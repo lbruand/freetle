@@ -7,7 +7,6 @@ import Assert._
 
 import scala.xml.{Atom, Unparsed, PCData, PrettyPrinter, EntityRef, ProcInstr, Comment, Text, Elem, Node, NodeSeq}
 import util._
-import java.lang.String
 
 
 class TransformTestContext {
