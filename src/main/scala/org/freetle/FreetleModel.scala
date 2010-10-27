@@ -5,11 +5,11 @@ import util.XMLEvent
 /**
  * This is the freetle model classes.
  */
-
+@serializable @SerialVersionUID(599494944949L + 1001L)
 trait FreetleModel[Context] {
   // ============ Model =====================
   type event = XMLEvent
-
+  @serializable @SerialVersionUID(599494944949L + 1002L)
   abstract class TransformResult(val sub : event, val context : Option[Context]) {
     def toTail() : TransformResult = {
       this match {
@@ -24,8 +24,10 @@ trait FreetleModel[Context] {
       }
     }
   }
+  @serializable @SerialVersionUID(599494944949L + 1003L)
   case class Result(override val sub : event, override val context : Option[Context])
           extends TransformResult(sub : event, context : Option[Context])
+  @serializable @SerialVersionUID(599494944949L + 1004L)
   case class Tail(override val sub : event, override val context : Option[Context])
           extends TransformResult(sub : event, context : Option[Context])
 

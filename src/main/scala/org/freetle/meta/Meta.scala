@@ -10,6 +10,7 @@ import org.freetle.Transform
  * Time: 21:19:34
  * To change this template use File | Settings | File Templates.
  */
+@serializable @SerialVersionUID(599494944949L + 10002L)
 trait Meta[Context] extends Transform[Context] {
   abstract class MetaProcessor extends (CFilterBase => CFilterBase)
 
