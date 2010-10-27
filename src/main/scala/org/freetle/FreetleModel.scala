@@ -31,7 +31,6 @@ trait FreetleModel[Context] {
   case class Tail(override val subEvent : event, override val context : Option[Context])
           extends TransformResult(subEvent : event, context : Option[Context])
 
-    // TODO Find a way to add a constraint on the Stream. (Useful ? )
     //		The constraint being : We have Results until a certain rank and then we have Tails.
   type XMLResultStream = Stream[TransformResult]
     // ============ End of Model ==============
