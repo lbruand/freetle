@@ -617,7 +617,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Take a single end element event if it has the correct name (but regardless of its namespace)
    */
-  @serializable @SerialVersionUID(599494944949L + 10 *30L)
+  @serializable @SerialVersionUID(599494944949L + 10 * 30L)
   case class TakeEndElement(name : String) extends TakeOnceTransform {
     @serializable @SerialVersionUID(599494944949L + 10 * 30L + 1L)
     final class LabelEvElemEndFilterMatcher(name : String) extends FilterMatcher[EvElemEnd]() {
@@ -632,7 +632,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Take a single text event.
    */
-  @serializable @SerialVersionUID(599494944949L + 10 *31L)
+  @serializable @SerialVersionUID(599494944949L + 10 * 31L)
   case class TakeText extends TakeOnceTransform {
     def matcher = new EvTextTypeMatcher()
   }
@@ -640,16 +640,16 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Take a whitespace event.
    */
-  @serializable @SerialVersionUID(599494944949L + 10 *32L)
+  @serializable @SerialVersionUID(599494944949L + 10 * 32L)
   case class TakeSpace extends TakeOnceTransform {
     def matcher = new SpaceOrCommentMatcher()
   }
 
-  @serializable @SerialVersionUID(599494944949L + 10 *33L)
+  @serializable @SerialVersionUID(599494944949L + 10 * 33L)
   object < {
     def apply(name : String) = new TakeStartElement(name)
   }
-  @serializable @SerialVersionUID(599494944949L + 10 *34L)
+  @serializable @SerialVersionUID(599494944949L + 10 * 34L)
   object </ {
     def apply(name : String) = new TakeEndElement(name)
   }
