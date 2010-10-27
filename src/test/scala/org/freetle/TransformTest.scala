@@ -19,6 +19,13 @@ class TransformTestContext {
 class TransformTest extends TransformTestBase[TransformTestContext] with Meta[TransformTestContext] {
   val PREFIX : String = "p"
   val NAMESPACE : String = "http://freetle.sf.net/"
+
+  @Test
+  def testCopyElem() = {
+    val ev = new EvElemStart(PREFIX, "body", null, null)
+    val evCopy = ev.copy(pre = "after")
+    assertEquals("after", evCopy.pre)
+  }
   
 	@Test
 	def testTakeElem() = {
