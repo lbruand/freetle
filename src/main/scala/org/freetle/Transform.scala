@@ -489,7 +489,7 @@ trait Transform[Context] extends TransformModel[Context] {
 
   /**
    * The ZeroTransform is the simpliest transform. It takes all the input and make equivalent Tailed version.
-   * There is simplier but much more expensive code in the for of apply = ( in map (x => Tail(x.sub)) )
+   * There is simplier but much more expensive code in the for of apply = ( in map (x => Tail(x.subEvent)) )
    * but it is rather lacking because it is not take advantage of the fact that the stream is Tail after a
    * certain rank.
    */
@@ -517,7 +517,7 @@ trait Transform[Context] extends TransformModel[Context] {
   case class DeepFilter extends TakeTransform {
     
   def accumulation(depth: Int, in: TransformResult) : Int =
-    depth + (in.sub match {
+    depth + (in.subEvent match {
       case e: EvElemStart => +1
       case e: EvElemEnd => -1
       case _ => 0
@@ -563,7 +563,7 @@ trait Transform[Context] extends TransformModel[Context] {
 		override def apply(in : XMLResultStream) : XMLResultStream =
 		  if (in.isEmpty)
 			  Stream.empty
-		  else in.head.sub match {
+		  else in.head.subEvent match {
         case EvText(text) => {
           val context =
                 in.head.context match {
@@ -572,7 +572,7 @@ trait Transform[Context] extends TransformModel[Context] {
                   }
                   case None => None
                 }
-          Stream.cons( Result(in.head.sub, context), new ZeroTransform().apply(in.tail))
+          Stream.cons( Result(in.head.subEvent, context), new ZeroTransform().apply(in.tail))
         }
         case _ => new ZeroTransform().apply(in)
       }
@@ -588,7 +588,7 @@ trait Transform[Context] extends TransformModel[Context] {
 		  if (in.isEmpty)
 			  Stream.empty
 		  else {
-        if (matcher(in.head.sub))
+        if (matcher(in.head.subEvent))
 				  Stream.cons(in.head.toResult(), new ZeroTransform().apply(in.tail))
         else
           new ZeroTransform().apply(in)

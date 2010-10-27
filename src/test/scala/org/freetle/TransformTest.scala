@@ -27,7 +27,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
 	  val r = trans(s)
 	  assertEquals(1, r.length)
 	  assertEquals(1, lengthResult(r))
-	  assertTrue("body", r.head.sub match {
+	  assertTrue("body", r.head.subEvent match {
 	    case EvElemStart(_, "body", _, _) => true
 	    case _ => false
 	  })
@@ -226,13 +226,13 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     val c = new TransformTestContext()
     val evStream : XMLResultStream = mloadStreamFromResource("/org/freetle/input2.xml", Some(c))
 
-    evStream.foreach( x => assertNotNull(x.sub.location))
+    evStream.foreach( x => assertNotNull(x.subEvent.location))
 
-    evStream.foreach( x => assertNotNull(x.sub.location.getCharacterOffset))
+    evStream.foreach( x => assertNotNull(x.subEvent.location.getCharacterOffset))
 
     assertTrue(evStream.foldLeft[Int](0)( (i : Int, x : TransformResult) => {
-        assertTrue(i <= x.sub.location.getCharacterOffset)
-        x.sub.location.getCharacterOffset
+        assertTrue(i <= x.subEvent.location.getCharacterOffset)
+        x.subEvent.location.getCharacterOffset
       }
     ) > 0)
   }
