@@ -7,14 +7,9 @@ import org.junit._
 import Assert._
 
 /**
- * Created by IntelliJ IDEA.
- * User: luke
- * Date: 22 oct. 2010
- * Time: 21:35:30
- * To change this template use File | Settings | File Templates.
+ * Testing serialisability
  */
 @Test
-@serializable
 class SerializeTest extends TransformTestBase[TransformTestContext] with Meta[TransformTestContext] {
   @Test
   def testSerialize() {
