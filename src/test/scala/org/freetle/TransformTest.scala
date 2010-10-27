@@ -222,6 +222,22 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
   }
 
   @Test
+  def testLocationAndOffset() = {
+    val c = new TransformTestContext()
+    val evStream : XMLResultStream = mloadStreamFromResource("/org/freetle/input2.xml", Some(c))
+
+    evStream.foreach( x => assertNotNull(x.sub.location))
+
+    evStream.foreach( x => assertNotNull(x.sub.location.getCharacterOffset))
+
+    assertTrue(evStream.foldLeft[Int](0)( (i : Int, x : TransformResult) => {
+        assertTrue(i <= x.sub.location.getCharacterOffset)
+        x.sub.location.getCharacterOffset
+      }
+    ) > 0)
+  }
+
+  @Test
   def testSumming() = {
     val c = new TransformTestContext()
     val evStream = mloadStreamFromResource("/org/freetle/input2.xml", Some(c))
