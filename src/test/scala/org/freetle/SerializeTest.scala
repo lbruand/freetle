@@ -1,10 +1,9 @@
 package org.freetle
 
 import meta.Meta
-import java.io.ObjectOutputStream
-import java.io.ByteArrayOutputStream
 import org.junit._
 import Assert._
+import java.io.{ByteArrayInputStream, ObjectOutputStream, ByteArrayOutputStream}
 
 /**
  * Testing serialisability
@@ -16,7 +15,7 @@ class SerializeTest extends TransformTestBase[TransformTestContext] with Meta[Tr
 
 
     
-    val t = <("input") ~
+    val t = new SpaceSkipingMetaProcessor() (<("input") ~
           (
            <("groupheader") ~
                    <("totalSum") ~
@@ -28,11 +27,18 @@ class SerializeTest extends TransformTestBase[TransformTestContext] with Meta[Tr
               </("value") ~
             </("message")
           )*) ~
-      </("input")
+      </("input"))
     val bout = new java.io.ByteArrayOutputStream()
     val objStr = new java.io.ObjectOutputStream(bout)
     objStr.writeObject(t)
     objStr.close()
+    bout.close()
+    val ba = bout.toByteArray
+    assertEquals(4518, ba.size)
+    val inStr = new java.io.ObjectInputStream(new ByteArrayInputStream(ba))
+    val rt = inStr.readObject()
+
+    assertTrue(rt.isInstanceOf[CFilterBase])
     
   }
 
