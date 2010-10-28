@@ -55,6 +55,7 @@ class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
       x => (input.getAttributeName(x), input.getAttributeValue(x))
       ).toMap    
   }
+  //input.getNamespaceContext
   def buildEvent(input:XMLStreamReader) : XMLEvent = {
     val eventType = input.getEventType
 	  val event : XMLEvent = eventType match {
@@ -72,7 +73,8 @@ class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
 	    case _ => null
 	  }
     if (event != null) {
-      event.location = input.getLocation()
+      event.location = input.getLocation
+      event.namespaceContext = input.getNamespaceContext
     }
     event
   }

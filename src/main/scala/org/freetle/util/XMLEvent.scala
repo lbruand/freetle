@@ -3,6 +3,7 @@ package org.freetle.util
 import scala.xml.{MetaData, NamespaceBinding}
 import javax.xml.stream.Location
 import javax.xml.namespace.QName
+import javax.xml.namespace.NamespaceContext
 
 /** This class represents an XML event for pull parsing.
  *  Pull parsing means that during the traversal of the XML
@@ -11,17 +12,26 @@ import javax.xml.namespace.QName
  */
 sealed abstract class XMLEvent {
   var location : Location = null
+  var namespaceContext : NamespaceContext = null
   def toString() : String
 }
 
 /** An element is encountered the first time */
 case class EvElemStart(pre: String, label: String, namespace: String, attributes : Map[QName, String]) extends XMLEvent {
-  override def toString() = "<" + pre + ":" + label + ">"
+  private def build(j : Tuple2[QName, String]) : String = j._2
+  override def toString() = "<" +
+                            (if (!pre.isEmpty) ( pre + ":" ) else "") + label +
+           attributes.foldLeft[String]("")( (str, attribute) => if (str.isEmpty)
+                                                      build(attribute)
+                                                    else
+                                                      " " + build(attribute)) +
+          ">"
 }
 
 /** An element is encountered the last time */
 case class EvElemEnd(pre: String, label: String, namespace :String) extends XMLEvent {
-  override def toString() = "</" + pre + ":" + label + ">"
+  override def toString() = "</" +
+                            (if (!pre.isEmpty) ( pre + ":" ) else "") + label + ">"
 }
 /** A text node is encountered */
 case class EvText(text : String) extends XMLEvent {

@@ -10,9 +10,9 @@ import util._
 
 @serializable @SerialVersionUID(599494944949L + 10000L)
 case class TransformTestContext (
-  val name : String = null,
-  val totalSum : Int = 0,
-  val currentSum : Int = 0
+  name : String = null,
+  totalSum : Int = 0,
+  currentSum : Int = 0
 )
 
 @Test
@@ -77,6 +77,15 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
 
         }
     runForIteration(depthTest)
+  }
+
+  @Test
+  def testSerialize() {
+    val evStream = loadStreamFromResource("/org/freetle/input.xml")
+    assertEquals("<input>\n    <message>\n        <value>10010</value>\n    </message>\n    <message>\n        <value>10010</value>\n    </message>\n</input>",
+      evStream.foldLeft("")( _ + _.subEvent.toString))
+
+
   }
 
   @Test
