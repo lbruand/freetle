@@ -565,14 +565,14 @@ trait Transform[Context] extends TransformModel[Context] {
 			  Stream.empty
 		  else in.head.subEvent match {
         case EvText(text) => {
-          val context =
+          val newContext =
                 in.head.context match {
-                  case Some(context) => {
-                      Some(pushToContext(text, context))
+                  case Some(oldContext) => {
+                      Some(pushToContext(text, oldContext))
                   }
                   case None => None
                 }
-          Stream.cons( Result(in.head.subEvent, context), new ZeroTransform().apply(in.tail))
+          Stream.cons( Result(in.head.subEvent, newContext), in.tail map (x => Tail(x.subEvent, newContext)))
         }
         case _ => new ZeroTransform().apply(in)
       }

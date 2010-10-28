@@ -9,11 +9,11 @@ import scala.xml.{Atom, Unparsed, PCData, PrettyPrinter, EntityRef, ProcInstr, C
 import util._
 
 @serializable @SerialVersionUID(599494944949L + 10000L)
-class TransformTestContext {
-  var name : String = null
-  var totalSum : Int = 0
-  var currentSum : Int = 0
-}
+case class TransformTestContext (
+  val name : String = null,
+  val totalSum : Int = 0,
+  val currentSum : Int = 0
+)
 
 @Test
 class TransformTest extends TransformTestBase[TransformTestContext] with Meta[TransformTestContext] {
@@ -197,26 +197,24 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
 
   @Test
   def testPushToContext() {
-    val c = new TransformTestContext()
-    c.name = "before"
+    val c = new TransformTestContext(name = "before")
     val s = List(
               new EvText("after"),
               new EvText(" night")
             ).toStream.map(x => Tail(x, Some(c)))
     val t = new TakeDataToContext() {
       def pushToContext(text : String, context : TransformTestContext) : TransformTestContext = {
-          context.name = text
-          context
+          context.copy(name = text)
       }
     }
     val r = t(s)
-    assertEquals("after", c.name)
+    val cout = r.last.context.get
+    assertEquals("after", cout.name)
   }
   
   @Test
   def testOutOfContext() {
-    val c = new TransformTestContext()
-    c.name = "before"
+    val c = new TransformTestContext(name = "before")
     val s = List(new EvText("after")).toStream.map(x => Tail(x, Some(c)))
     val t = new ConcatOperator(new PushFromContext() {
       def generate(context: TransformTestContext) = {
@@ -250,15 +248,13 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     val evStream = mloadStreamFromResource("/org/freetle/input2.xml", Some(c))
     val totalSumTaker = new TakeDataToContext() {
       def pushToContext(text : String, context : TransformTestContext) : TransformTestContext = {
-          context.totalSum = Integer.parseInt(text)
-          context
+          context.copy(totalSum = Integer.parseInt(text))
       }
     }
 
     val sumTaker = new TakeDataToContext() {
       def pushToContext(text : String, context : TransformTestContext) : TransformTestContext = {
-          context.currentSum += Integer.parseInt(text)
-          context
+          context.copy(currentSum = context.currentSum + Integer.parseInt(text))
       }
     }
 
@@ -279,8 +275,9 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
             </("input")
     val r = (new SpaceSkipingMetaProcessor())(t)(evStream)
     assertAllResult(r)
-    assertEquals(20030, c.totalSum)
-    assertEquals(20030, c.currentSum)
+    val cout = r.last.context.get
+    assertEquals(20030, cout.totalSum)
+    assertEquals(20030, cout.currentSum)
   }
 }
 
