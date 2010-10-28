@@ -11,27 +11,42 @@ import javax.xml.namespace.QName
  */
 sealed abstract class XMLEvent {
   var location : Location = null
+  abstract def toString() : String
 }
 
 /** An element is encountered the first time */
-case class EvElemStart(pre: String, label: String, namespace: String, attributes : Map[QName, String]) extends XMLEvent
+case class EvElemStart(pre: String, label: String, namespace: String, attributes : Map[QName, String]) extends XMLEvent {
+  override def toString() = "<" + pre + ":" + label + ">"
+}
 
 /** An element is encountered the last time */
-case class EvElemEnd(pre: String, label: String, namespace :String) extends XMLEvent
+case class EvElemEnd(pre: String, label: String, namespace :String) extends XMLEvent {
+  override def toString() = "</" + pre + ":" + label + ">"
+}
 /** A text node is encountered */
-case class EvText(text : String) extends XMLEvent
+case class EvText(text : String) extends XMLEvent {
+  override def toString() = text
+}
 
 /** An entity reference is encountered */
-case class EvEntityRef(entity: String) extends XMLEvent
+case class EvEntityRef(entity: String) extends XMLEvent {
+  override def toString() = "&" + entity + ";"
+}
 
 /** A processing instruction is encountered */
-case class EvProcInstr(target: String, text: String) extends XMLEvent
+case class EvProcInstr(target: String, text: String) extends XMLEvent {
+  override def toString() = ""
+}
 
 /** A comment is encountered */
-case class EvComment(text: String) extends XMLEvent
+case class EvComment(text: String) extends XMLEvent {
+  override def toString() = "<!-- " + text + " -->"
+}
 
 /** Used when we want a empty but yet positive result */
-case class EvPositiveResult() extends XMLEvent
+case class EvPositiveResult() extends XMLEvent {
+  override def toString() = ""
+}
 
 
 
