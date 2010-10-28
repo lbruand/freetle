@@ -645,10 +645,16 @@ trait Transform[Context] extends TransformModel[Context] {
     def matcher = new SpaceOrCommentMatcher()
   }
 
+  /**
+   * Shortcut to create TakeStartElement.
+   */
   @serializable @SerialVersionUID(599494944949L + 10 * 33L)
   object < {
     def apply(name : String) = new TakeStartElement(name)
   }
+  /**
+   * Shortcut to create TakeEndElement.
+   */
   @serializable @SerialVersionUID(599494944949L + 10 * 34L)
   object </ {
     def apply(name : String) = new TakeEndElement(name)
