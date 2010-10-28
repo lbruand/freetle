@@ -156,7 +156,7 @@ trait Transform[Context] extends TransformModel[Context] {
   case class RepeatUntilNoResultOperator(override val underlying : CFilterBase) extends
         AbstractRepeatOperator(underlying : CFilterBase) {
     
-    def clone(underlying: CFilterBase) = new RepeatUntilNoResultOperator(underlying)
+    def clone(underlying: CFilterBase) = copy(underlying = underlying)
 
     override final def keepResultWhenEmpty = true
 
@@ -173,7 +173,7 @@ trait Transform[Context] extends TransformModel[Context] {
   case class AtMostOnceResultOperator(override val underlying : CFilterBase) extends
         AbstractRepeatOperator(underlying : CFilterBase) {
 
-    def clone(underlying: CFilterBase) = new AtMostOnceResultOperator(underlying)
+    def clone(underlying: CFilterBase) = copy(underlying = underlying)
 
 
     override final def keepResultWhenEmpty = true // Unused
@@ -199,7 +199,7 @@ trait Transform[Context] extends TransformModel[Context] {
   case class WhileNoResultOperator(override val underlying : CFilterBase) extends
         AbstractRepeatOperator(underlying : CFilterBase) {
 
-    def clone(underlying: CFilterBase) = new WhileNoResultOperator(underlying)
+    def clone(underlying: CFilterBase) = copy(underlying = underlying)
 
     override def keepResultWhenEmpty = false
 
@@ -224,7 +224,7 @@ trait Transform[Context] extends TransformModel[Context] {
   @serializable @SerialVersionUID(599494944949L + 9L)
   case class ConcatOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
-    def clone(left : CFilterBase, right :CFilterBase) = new ConcatOperator(left, right)
+    def clone(left : CFilterBase, right :CFilterBase) = copy(left = left, right = right)
 
     @tailrec
     private final def recurse(in : XMLResultStream) : XMLResultStream = {
@@ -255,7 +255,7 @@ trait Transform[Context] extends TransformModel[Context] {
   @serializable @SerialVersionUID(599494944949L + 10L)
   case class SequenceOperatorNoBacktrack(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
-    def clone(left : CFilterBase, right :CFilterBase) = new SequenceOperatorNoBacktrack(left, right)
+    def clone(left : CFilterBase, right :CFilterBase) = copy(left = left, right = right)
 
     @tailrec
 		private final def recurse(in : XMLResultStream, hasResult : Boolean) : XMLResultStream = {
@@ -290,7 +290,7 @@ trait Transform[Context] extends TransformModel[Context] {
   @serializable @SerialVersionUID(599494944949L + 11L)
   case class SequenceOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
-    def clone(left : CFilterBase, right :CFilterBase) = new SequenceOperator(left, right)
+    def clone(left : CFilterBase, right :CFilterBase) = copy(left = left, right = right)
 
     @tailrec
 		private final def recurse(current : XMLResultStream, hasResult : Boolean, in : XMLResultStream) : XMLResultStream = {
@@ -329,7 +329,7 @@ trait Transform[Context] extends TransformModel[Context] {
   @serializable @SerialVersionUID(599494944949L + 12L)
   case class SimpleComposeOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
-    def clone(left : CFilterBase, right :CFilterBase) = new SimpleComposeOperator(left, right)
+    def clone(left : CFilterBase, right :CFilterBase) = copy(left = left, right = right)
 		override def apply(in : XMLResultStream) : XMLResultStream = left(right(in))
  	}
     
@@ -339,7 +339,7 @@ trait Transform[Context] extends TransformModel[Context] {
   @serializable @SerialVersionUID(599494944949L + 13L)
   case class ComposeOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
-    def clone(left : CFilterBase, right :CFilterBase) = new ComposeOperator(left, right)
+    def clone(left : CFilterBase, right :CFilterBase) = copy(left = left, right = right)
 
 		override def apply(in : XMLResultStream) : XMLResultStream = {
 		  val rightStream = right(in)
@@ -355,7 +355,7 @@ trait Transform[Context] extends TransformModel[Context] {
   @serializable @SerialVersionUID(599494944949L + 14L)
  	case class ChoiceOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
-    def clone(left : CFilterBase, right :CFilterBase) = new ChoiceOperator(left, right)
+    def clone(left : CFilterBase, right :CFilterBase) = copy(left = left, right = right)
 		override def apply(in : XMLResultStream) : XMLResultStream = {
 			val leftResult = left(in)
 		  	if (!leftResult.isEmpty)
