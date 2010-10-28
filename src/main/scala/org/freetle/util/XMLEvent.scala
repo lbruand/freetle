@@ -11,7 +11,7 @@ import javax.xml.namespace.QName
  */
 sealed abstract class XMLEvent {
   var location : Location = null
-  abstract def toString() : String
+  def toString() : String
 }
 
 /** An element is encountered the first time */
