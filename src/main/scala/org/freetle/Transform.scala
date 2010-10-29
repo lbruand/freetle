@@ -38,12 +38,12 @@ import scala.xml._
 //			Which is promisingly faster.
   
 
-@serializable @SerialVersionUID(599494944949L + 0L)
+@serializable @SerialVersionUID(599494944949L + 10 *0L)
 trait Transform[Context] extends TransformModel[Context] {
   /**
    * Base class for all transforms.
    */
-  @serializable @SerialVersionUID(599494944949L + 1L)
+  @serializable @SerialVersionUID(599494944949L + 10 *1L)
   abstract class CFilterBase extends CFilter {
     def concat(right : CFilterBase) : CFilterBase = {
       new ConcatOperator(this, right)
@@ -95,13 +95,13 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Base class for all operators.
    */
-  @serializable @SerialVersionUID(599494944949L + 2L)
+  @serializable @SerialVersionUID(599494944949L + 10 *2L)
 	abstract class Operator extends CFilterBase
 
   /**
    * Base class for all unary operators.
    */
-  @serializable @SerialVersionUID(599494944949L + 3L)
+  @serializable @SerialVersionUID(599494944949L + 10 *3L)
 	abstract case class UnaryOperator(underlying : CFilterBase) extends
         Operator {
     def clone(underlying : CFilterBase) : UnaryOperator
@@ -110,7 +110,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Base class for all binary operators.
    */
-  @serializable @SerialVersionUID(599494944949L + 4L)
+  @serializable @SerialVersionUID(599494944949L + 10 *4L)
  	abstract case class BinaryOperator(left : CFilterBase, right :CFilterBase) extends
         Operator {
      def clone(left : CFilterBase, right :CFilterBase) : BinaryOperator
@@ -119,7 +119,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Abstract base class for all cardinality operators.
    */
-  @serializable @SerialVersionUID(599494944949L + 5L)
+  @serializable @SerialVersionUID(599494944949L + 10 *5L)
   abstract case class AbstractRepeatOperator(override val underlying : CFilterBase) extends
         UnaryOperator(underlying : CFilterBase) {
 
@@ -148,7 +148,7 @@ trait Transform[Context] extends TransformModel[Context] {
    *  Applies the underlying as long as it returns a result.
    * Cardinality : 1..*
    */
-  @serializable @SerialVersionUID(599494944949L + 6L)
+  @serializable @SerialVersionUID(599494944949L + 10 *6L)
   case class RepeatUntilNoResultOperator(override val underlying : CFilterBase) extends
         AbstractRepeatOperator(underlying : CFilterBase) {
     
@@ -165,7 +165,7 @@ trait Transform[Context] extends TransformModel[Context] {
    * Executes the underlying operator at most once.
    * Cardinality : 0..1
    */
-  @serializable @SerialVersionUID(599494944949L + 7L)
+  @serializable @SerialVersionUID(599494944949L + 10 *7L)
   case class AtMostOnceResultOperator(override val underlying : CFilterBase) extends
         AbstractRepeatOperator(underlying : CFilterBase) {
 
@@ -191,7 +191,7 @@ trait Transform[Context] extends TransformModel[Context] {
    * Executes the underlying operator
    * Cardinality : 0..*
    */
-  @serializable @SerialVersionUID(599494944949L + 8L)
+  @serializable @SerialVersionUID(599494944949L + 10 *8L)
   case class WhileNoResultOperator(override val underlying : CFilterBase) extends
         AbstractRepeatOperator(underlying : CFilterBase) {
 
@@ -217,7 +217,7 @@ trait Transform[Context] extends TransformModel[Context] {
    * It applies sequentially the left transform first and then right transform, whatever the result of left
    * transform was. 
    */
-  @serializable @SerialVersionUID(599494944949L + 9L)
+  @serializable @SerialVersionUID(599494944949L + 10 *9L)
   case class ConcatOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = copy(left = left, right = right)
@@ -248,7 +248,7 @@ trait Transform[Context] extends TransformModel[Context] {
    * We execute in sequence left and then right if left has returned a result.
    * does not allow for backtracking decisions. 
    */
-  @serializable @SerialVersionUID(599494944949L + 10L)
+  @serializable @SerialVersionUID(599494944949L + 10 *10L)
   case class SequenceOperatorNoBacktrack(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = copy(left = left, right = right)
@@ -283,7 +283,7 @@ trait Transform[Context] extends TransformModel[Context] {
    * does allow for backtracking decisions.
    * This might prove expensive. 
    */
-  @serializable @SerialVersionUID(599494944949L + 11L)
+  @serializable @SerialVersionUID(599494944949L + 10 *11L)
   case class SequenceOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = copy(left = left, right = right)
@@ -322,7 +322,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
      * A compose operator where the left operator can consumme the tail from the right operator's result.
      */
-  @serializable @SerialVersionUID(599494944949L + 12L)
+  @serializable @SerialVersionUID(599494944949L + 10 *12L)
   case class SimpleComposeOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = copy(left = left, right = right)
@@ -332,7 +332,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
      * A compose operator where the left operator cannot consumme the tail from the right operator's result.
      */
-  @serializable @SerialVersionUID(599494944949L + 13L)
+  @serializable @SerialVersionUID(599494944949L + 10 *13L)
   case class ComposeOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = copy(left = left, right = right)
@@ -348,7 +348,7 @@ trait Transform[Context] extends TransformModel[Context] {
    * Apply the left transform first. If the left transform has return a result
    * then apply the right transform. 
    */
-  @serializable @SerialVersionUID(599494944949L + 14L)
+  @serializable @SerialVersionUID(599494944949L + 10 *14L)
  	case class ChoiceOperator(override val left : CFilterBase, override val right :CFilterBase) extends
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = copy(left = left, right = right)
@@ -369,7 +369,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Base class for all transformations that only output events and take nothing off the Stream.
    */
-  @serializable @SerialVersionUID(599494944949L + 15L)
+  @serializable @SerialVersionUID(599494944949L + 10 *15L)
   abstract case class PushTransform extends BaseTransform
   
 	// Add helpers to build events simply.
@@ -377,7 +377,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Push a single event down on the pipeline, not consumming any event in entry.
    */
-  @serializable @SerialVersionUID(599494944949L + 16L)
+  @serializable @SerialVersionUID(599494944949L + 10 *16L)
 	case class PushEvent[+Event <: event](ev :Event) extends PushTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream = {
       val context = if (in.isEmpty) None else in.head.context
@@ -388,7 +388,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Abstract class to push stuff from the context.
    */
-  @serializable @SerialVersionUID(599494944949L + 17L)
+  @serializable @SerialVersionUID(599494944949L + 10 *17L)
   abstract case  class PushFromContext extends PushTransform {
     def generate(context : Context) : event
     override def apply(in : XMLResultStream) : XMLResultStream = {
@@ -407,7 +407,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Abstract class to push a stream of events down the pipeline 
    */
-  @serializable @SerialVersionUID(599494944949L + 18L)
+  @serializable @SerialVersionUID(599494944949L + 10 *18L)
   abstract case  class PushSeqFromContext extends PushTransform {
     def generate(context : Context) : Stream[event]
     override def apply(in : XMLResultStream) : XMLResultStream = {
@@ -426,7 +426,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Push a scala xml content down the pipeline.
    */
-  @serializable @SerialVersionUID(599494944949L + 19L)
+  @serializable @SerialVersionUID(599494944949L + 10 *19L)
   case class PushNode(nodeSeq: NodeSeq) extends PushTransform {
 
     def serializeXML(nodeSeq : NodeSeq, context : Option[Context]) : XMLResultStream = {
@@ -459,12 +459,12 @@ trait Transform[Context] extends TransformModel[Context] {
    * (not composite in the sens it is not requiring any underlying transform,
    * opposing meaning of an operator) 
    */
-  @serializable @SerialVersionUID(599494944949L + 20L)
+  @serializable @SerialVersionUID(599494944949L + 10 *20L)
  	abstract case class BaseTransform extends CFilterBase
   /**
    * base transform for all transformations that only take stuff.
    */
-  @serializable @SerialVersionUID(599494944949L + 21L)
+  @serializable @SerialVersionUID(599494944949L + 10 *21L)
   abstract case class TakeTransform extends BaseTransform {    
     protected final def selectUntilAccumulation[Accumulator](in : XMLResultStream,
                                              accumulator : Accumulator,
@@ -489,7 +489,7 @@ trait Transform[Context] extends TransformModel[Context] {
    * but it is rather lacking because it is not take advantage of the fact that the stream is Tail after a
    * certain rank.
    */
-  @serializable @SerialVersionUID(599494944949L + 22L)
+  @serializable @SerialVersionUID(599494944949L + 10 *22L)
   case class ZeroTransform extends TakeTransform {
 		override final def apply(in : XMLResultStream) : XMLResultStream = {
 		  if (in.isEmpty)
@@ -509,7 +509,7 @@ trait Transform[Context] extends TransformModel[Context] {
    * Take all the underlying nodes of the current event.
    * The deepfilter does return the matching end bracket.
    */
-  @serializable @SerialVersionUID(599494944949L + 23L)
+  @serializable @SerialVersionUID(599494944949L + 10 *23L)
   case class DeepFilter extends TakeTransform {
     
   def accumulation(depth: Int, in: TransformResult) : Int =
@@ -529,7 +529,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Drop everything from the incoming result.
    */
-  @serializable @SerialVersionUID(599494944949L + 24L)
+  @serializable @SerialVersionUID(599494944949L + 10 *24L)
   case class DropFilter extends TakeTransform {
     override def apply(in : XMLResultStream) : XMLResultStream = {
       val result = in.dropWhile( _.isInstanceOf[Result] )
@@ -543,7 +543,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Turn all the stream into the equivalent Identical result stream.
    */
-  @serializable @SerialVersionUID(599494944949L + 25L)
+  @serializable @SerialVersionUID(599494944949L + 10 *25L)
  	case class IdTransform extends TakeTransform {
 		override def apply(in : XMLResultStream) : XMLResultStream = in map (_.toResult)
 	}
@@ -551,7 +551,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Take a text from the entry and store it in the context.
    */
-  @serializable @SerialVersionUID(599494944949L + 26L)
+  @serializable @SerialVersionUID(599494944949L + 10 *26L)
   abstract case class TakeDataToContext() extends TakeTransform {
     // TODO There is a problem with the fact that the context is mutable. (Really ?)
     def pushToContext(text : String, context : Context) : Context
@@ -577,7 +577,7 @@ trait Transform[Context] extends TransformModel[Context] {
   /**
    * Take one Tail at the head and turn it into a Result
    */
-  @serializable @SerialVersionUID(599494944949L + 27L)
+  @serializable @SerialVersionUID(599494944949L + 10 *27L)
   abstract class TakeOnceTransform extends TakeTransform {
     def matcher : XMLEventMatcher
 		override def apply(in : XMLResultStream) : XMLResultStream =
@@ -590,7 +590,7 @@ trait Transform[Context] extends TransformModel[Context] {
           new ZeroTransform().apply(in)
 		  }
 	}
-  @serializable @SerialVersionUID(599494944949L + 28L)
+  @serializable @SerialVersionUID(599494944949L + 10 * 28L)
   class TakeAnyTransform extends TakeOnceTransform {
     def matcher : XMLEventMatcher = new AlwaysMatcher()   
   }
