@@ -9,7 +9,6 @@ import scala.xml._
 
 //  Model
 //  =====
-//  * There is a problem with the context in the case of backtracking. (for example from a choice)
 //  * Stop using prefixes and use namespace instead.
 //
 //  Functionalities
@@ -18,10 +17,7 @@ import scala.xml._
 //  * Check that a SAXPath expression can be created using the unitary transformations and operator.
 //  * Is it possible to convert the framework into a real pipeline (with multiple threads) ?
 //  * Maybe there is a need for a unix 'tee' operator --> Problem how to determine which handside has consummed the more tokens ?
-//			(idea) : We could use a element counting Stream                                                                      
-//  * Add a offset and size system .
-//  * Transformations and operators will need to have serialization inside.
-//  * Transformations and operators will need to have hashcode, equals etc methods. (maybe it is included in the case class stuff)
+//			(idea) : We could use a element counting Stream
 //  * There is some thinking to be done on how to maybe integrate the TakeTransform with the unapply methods
 //    and or wildcard cases and or a visitor pattern.
 //  * EvPositiveElement trashing is not satisfactory : We need to introduce a pattern for Result checking that
