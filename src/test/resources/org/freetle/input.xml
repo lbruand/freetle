@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <input xmlns='http://freetle.sf.net'>
-    <message>
+    <message pid="hello">
         <value>10010</value>
     </message>
     <message>

@@ -4,6 +4,7 @@ import scala.xml.{MetaData, NamespaceBinding}
 import javax.xml.stream.Location
 import javax.xml.namespace.QName
 import javax.xml.namespace.NamespaceContext
+import javax.xml.XMLConstants
 
 /** This class represents an XML event for pull parsing.
  *  Pull parsing means that during the traversal of the XML
@@ -18,13 +19,16 @@ sealed abstract class XMLEvent {
 
 /** An element is encountered the first time */
 case class EvElemStart(pre: String, label: String, namespace: String, attributes : Map[QName, String]) extends XMLEvent {
-  private def build(j : Tuple2[QName, String]) : String = j._2
+  private def build(j : Tuple2[QName, String]) : String = { (if (!j._1.getPrefix.isEmpty)
+                                                              j._1.getPrefix + ":"
+                                                             else
+                                                              ""
+                                                            ) + j._1.getLocalPart() + "=\"" + j._2 + "\""
+                                                          }
   override def toString() = "<" +
                             (if (!pre.isEmpty) ( pre + ":" ) else "") + label +
-           attributes.foldLeft[String]("")( (str, attribute) => if (str.isEmpty)
-                                                      build(attribute)
-                                                    else
-                                                      " " + build(attribute)) +
+           attributes.foldLeft[String]("")( (str, attribute) =>
+                                                      (str + " " + build(attribute))) +
           ">"
 }
 

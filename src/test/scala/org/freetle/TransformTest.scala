@@ -82,8 +82,15 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
   @Test
   def testSerialize() {
     val evStream = loadStreamFromResource("/org/freetle/input.xml")
-    assertEquals("<input>\n    <message>\n        <value>10010</value>\n    </message>\n    <message>\n        <value>10010</value>\n    </message>\n</input>",
-      evStream.foldLeft("")( _ + _.subEvent.toString))
+    assertEquals("""<input>
+    <message pid="hello">
+        <value>10010</value>
+    </message>
+    <message>
+        <value>10010</value>
+    </message>
+</input>""",
+            evStream.foldLeft("")( _ + _.subEvent.toString))
 
 
   }

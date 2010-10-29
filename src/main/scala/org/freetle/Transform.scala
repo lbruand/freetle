@@ -13,7 +13,7 @@ import scala.xml._
 //
 //  Functionalities
 //  ===============
-//  * Check that the Compose Operator (i.d. irish composition) works properly. (tail  of the first function)
+//  * Write a test checking that the Compose Operator (i.d. irish composition) works properly. (tail  of the first function)
 //  * Check that a SAXPath expression can be created using the unitary transformations and operator.
 //  * Is it possible to convert the framework into a real pipeline (with multiple threads) ?
 //  * Maybe there is a need for a unix 'tee' operator --> Problem how to determine which handside has consummed the more tokens ?
