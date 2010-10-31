@@ -89,8 +89,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     <message>
         <value>10010</value>
     </message>
-</input>""",
-            evStream.foldLeft("")( _ + _.subEvent.toString))
+</input>""", serialize(evStream))
 
 
   }
@@ -295,6 +294,8 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     assertEquals(20030, cout.totalSum)
     assertEquals(20030, cout.currentSum)
   }
+  
+
 
   @Test
   def testSort() = {
@@ -332,8 +333,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
 <message>
         <value>10020</value>
     </message>
-    </input>""",
-                r.foldLeft("")( _ + _.subEvent.toString))
+    </input>""", serialize(r))
     
   }
 }

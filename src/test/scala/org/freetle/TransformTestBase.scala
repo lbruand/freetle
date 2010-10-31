@@ -47,4 +47,8 @@ class TransformTestBase[Context] extends FreetleModel[Context] {
    */
   def lengthTail(r : XMLResultStream) : Int = r.filter(_.isInstanceOf[Result]).length
 
+  /**
+   * Serialize ( not very efficient ).
+   */
+  def serialize(x : XMLResultStream) : String = x.foldLeft("")( _ + _.subEvent.toString)
 }
