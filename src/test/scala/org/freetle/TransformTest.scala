@@ -295,6 +295,47 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     assertEquals(20030, cout.totalSum)
     assertEquals(20030, cout.currentSum)
   }
+
+  @Test
+  def testSort() = {
+    val c = new TransformTestContext()
+    val evStream = mloadStreamFromResource("/org/freetle/input2.xml", Some(c))
+        val t = <("input") ~
+                (
+                 <("groupheader") ~
+                         <("totalSum") ~
+                         new TakeText() ~
+                         </("totalSum") ~
+                 </("groupheader")
+                ) ~
+                new SortOperator(( <("message") ~
+                    <("value") ~
+                         new TakeText() ~
+                    </("value") ~
+                  </("message")
+                ), ( ((<("message")  ~
+                    <("value")) -> new DropFilter()) ~
+                         new TakeText() ~
+                    ((</("value") ~
+                  </("message")) -> new DropFilter())
+                )) ~
+            </("input")
+    val r = (new SpaceSkipingMetaProcessor())(t)(evStream)
+    assertAllResult(r)
+    assertEquals("""<input>
+    <groupheader>
+        <totalSum>20030</totalSum>
+    </groupheader>
+    <message>
+        <value>10010</value>
+    </message>
+<message>
+        <value>10020</value>
+    </message>
+    </input>""",
+                r.foldLeft("")( _ + _.subEvent.toString))
+    
+  }
 }
 
 

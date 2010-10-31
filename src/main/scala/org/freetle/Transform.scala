@@ -367,7 +367,41 @@ trait Transform[Context] extends TransformModel[Context] {
  	}
 
   /**
-   * Base class for all transformations that only output events and take nothing off the Stream.
+   * Sort operator - Naive implementation for now - stores everything in memory for now.
+   * TODO Make this use a disk cache to scale with data.
+   * left : group-selector
+   * right : select any expression to sort on for the group.
+   */
+  @serializable @SerialVersionUID(599494944949L + 10 *14L + 1)
+  case class SortOperator(override val left : CFilterBase, override val right :CFilterBase) extends
+        BinaryOperator(left : CFilterBase, right :CFilterBase) {
+    def clone(left : CFilterBase, right :CFilterBase) = copy(left = left, right = right)
+
+    // TODO make this lazy!!!
+    @tailrec
+    private def recurse(resStream : Stream[XMLResultStream], tail : XMLResultStream)
+              : (Stream[XMLResultStream], XMLResultStream)  = {
+      val (hd, tl) = left(tail) span (_.isInstanceOf[Result])
+      if (hd.isEmpty) {
+        (resStream, tail)
+      } else {
+        recurse(Stream.cons(hd, resStream), tl)
+      }
+    }
+
+    def toString(in : XMLResultStream) : String = {
+      in.foldLeft("")( _ + _.subEvent.toString)
+    }
+
+    override def apply(in : XMLResultStream) : XMLResultStream = {
+      val (hd, tl) = recurse(Stream.empty, in)
+      val sortedHead = hd.sortBy[String](x => toString(right(x)) )
+      Stream.concat(sortedHead.flatten map (_.toResult), tl)
+    }
+  }
+
+  /**
+   *  Base class for all transformations that only output events and take nothing off the Stream.
    */
   @serializable @SerialVersionUID(599494944949L + 10 *15L)
   abstract case class PushTransform extends BaseTransform
