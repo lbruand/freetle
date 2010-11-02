@@ -59,12 +59,10 @@ class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
   def buildEvent(input:XMLStreamReader) : XMLEvent = {
     val eventType = input.getEventType
 	  val event : XMLEvent = eventType match {
-	    case XMLStreamConstants.START_ELEMENT => new EvElemStart(input.getPrefix,
-                                                               input.getLocalName,
-                                                               input.getNamespaceURI,
+	    case XMLStreamConstants.START_ELEMENT => new EvElemStart(input.getName,
                                                                buildAttributes(input)
                                                                )
-      case XMLStreamConstants.END_ELEMENT => new EvElemEnd(input.getPrefix, input.getLocalName, input.getNamespaceURI)
+      case XMLStreamConstants.END_ELEMENT => new EvElemEnd(input.getName)
       case XMLStreamConstants.CHARACTERS => new EvText(input.getText)
       case XMLStreamConstants.COMMENT => new EvComment(input.getText)
       case XMLStreamConstants.PROCESSING_INSTRUCTION => new EvProcInstr(input.getPITarget, input.getPIData)

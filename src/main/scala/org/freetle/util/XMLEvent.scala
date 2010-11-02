@@ -18,7 +18,7 @@ sealed abstract class XMLEvent {
 }
 
 /** An element is encountered the first time */
-case class EvElemStart(pre: String, label: String, namespace: String, attributes : Map[QName, String]) extends XMLEvent {
+case class EvElemStart(name : QName, attributes : Map[QName, String]) extends XMLEvent {
   private def build(j : Tuple2[QName, String]) : String = { (if (!j._1.getPrefix.isEmpty)
                                                               j._1.getPrefix + ":"
                                                              else
@@ -26,16 +26,16 @@ case class EvElemStart(pre: String, label: String, namespace: String, attributes
                                                             ) + j._1.getLocalPart() + "=\"" + j._2 + "\""
                                                           }
   override def toString() = "<" +
-                            (if (!pre.isEmpty) ( pre + ":" ) else "") + label +
+                            (if (!name.getPrefix.isEmpty) ( name.getPrefix + ":" ) else "") + name.getLocalPart +
            attributes.foldLeft[String]("")( (str, attribute) =>
                                                       (str + " " + build(attribute))) +
           ">"
 }
 
 /** An element is encountered the last time */
-case class EvElemEnd(pre: String, label: String, namespace :String) extends XMLEvent {
+case class EvElemEnd(name : QName) extends XMLEvent {
   override def toString() = "</" +
-                            (if (!pre.isEmpty) ( pre + ":" ) else "") + label + ">"
+                            (if (!name.getPrefix.isEmpty) ( name.getPrefix + ":" ) else "") + name.getLocalPart + ">"
 }
 /** A text node is encountered */
 case class EvText(text : String) extends XMLEvent {

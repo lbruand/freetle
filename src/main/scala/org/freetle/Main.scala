@@ -25,7 +25,7 @@ object Main extends Transform[MainContext] {
       println(id(Stream.fromIterator( new XMLEventStream(src) map (Tail(_)) ) ).foldLeft(0)( (x,y) => x ^ y.hashCode()))*/
       //idResult.foreach(x => println(x))
       val depthTest = 100
-    	val i = Stream.make(depthTest, new EvElemStart("p", "message", null, null)) map (Tail(_, null))
+    	val i = Stream.make(depthTest, new EvElemStart(new javax.xml.namespace.QName("http://namespace.com/", "p", "message" ),  null)) map (Tail(_, null))
 		val t = new RepeatUntilNoResultOperator(new TakeStartElement("message"))
 		val r = t(i)
         println(r)

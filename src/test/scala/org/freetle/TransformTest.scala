@@ -7,6 +7,7 @@ import Assert._
 
 import scala.xml.{Atom, Unparsed, PCData, PrettyPrinter, EntityRef, ProcInstr, Comment, Text, Elem, Node, NodeSeq}
 import util._
+import javax.xml.namespace.QName
 
 @serializable @SerialVersionUID(599494944949L + 10000L)
 case class TransformTestContext (
@@ -22,28 +23,28 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
 
   @Test
   def testCopyElem() = {
-    val ev = new EvElemStart(PREFIX, "body", null, null)
-    val evCopy = ev.copy(pre = "after")
-    assertEquals("after", evCopy.pre)
+    val ev = createStartElem("body")
+    val evCopy = ev.copy(name =  new QName(NAMESPACE, "after", PREFIX))
+    assertEquals("after", evCopy.name.getLocalPart)
   }
   
 	@Test
 	def testTakeElem() = {
-	  val s = Stream(new EvElemStart(PREFIX, "body", null, null)) map (Tail(_, null))
+	  val s = Stream(createStartElem("body")) map (Tail(_, null))
 	  val trans = new TakeStartElement("body")
 	  val r = trans(s)
 	  assertEquals(1, r.length)
 	  assertEquals(1, lengthResult(r))
 	  assertTrue("body", r.head.subEvent match {
-	    case EvElemStart(_, "body", _, _) => true
+	    case EvElemStart(name, _) => (name.getLocalPart.equals("body")) 
 	    case _ => false
 	  })
 	}
   
   @Test
   def testConcatOperator() = {
-    val input = List(new EvElemStart(PREFIX, "body", null, null),
-                     new EvElemStart(PREFIX, "message", null, null)).toStream map (Tail(_, null))
+    val input = List(createStartElem("body"),
+                     createStartElem("message")).toStream map (Tail(_, null))
     val trans = new TakeStartElement("body") ~~ new TakeStartElement("message")
     val result = trans(input)
     assertEquals(2, result.length)
@@ -63,8 +64,8 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     def runForIteration(depthTest :Int) = {
         val c = new RepeatUntilNoResultOperator(new TakeStartElement("message")).apply(
           (Stream.concat(
-                    Stream.make(depthTest, new EvElemStart(PREFIX, "message", null, null)),
-                    Stream(new EvElemStart(PREFIX, "body", null, null))
+                    Stream.make(depthTest, new EvElemStart(new QName(NAMESPACE, "message", PREFIX), null)),
+                    Stream(new EvElemStart(new QName(NAMESPACE, "body", PREFIX), null))
                   ) map (Tail(_, null))))
       .foldLeft(new Counter(0,0))( (u,z) => new Counter(u.countTotal+1, u.countResult + (z match {
           case Result(_, _) => 1
@@ -99,8 +100,8 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     def runForIteration(depthTest :Int) = {
         val c = new WhileNoResultOperator(new TakeStartElement("message")).apply(
           (Stream.concat(
-                    Stream.make(depthTest, new EvElemStart(PREFIX, "message", null, null)),
-                    Stream(new EvElemStart(PREFIX, "body", null, null))
+                    Stream.make(depthTest, new EvElemStart(new QName(NAMESPACE, "message", PREFIX), null)),
+                    Stream(new EvElemStart(new QName(NAMESPACE, "body", PREFIX), null))
                   ) map (Tail(_, null))))
       .foldLeft(new Counter(0,0))( (u,z) => new Counter(u.countTotal+1, u.countResult + (z match {
           case Result(_, _) => 1
@@ -115,20 +116,22 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     runForIteration(depthTest)
   }
 
+  private def createStartElem(s : String) = new EvElemStart(new QName(NAMESPACE, s, PREFIX), null)
+  private def createEndElem(s : String) = new EvElemEnd(new QName(NAMESPACE, s, PREFIX))
   @Test
   def testDeep() = {
 
     val s = List(
-        new EvElemStart(PREFIX, "body", NAMESPACE, null),
-        new EvElemStart(PREFIX, "body", NAMESPACE, null),
-        new EvElemStart(PREFIX, "a", NAMESPACE, null),
-        new EvElemStart(PREFIX, "a", NAMESPACE, null),
-        new EvElemEnd(PREFIX, "a", NAMESPACE),
-        new EvElemEnd(PREFIX, "a", NAMESPACE),
-        new EvElemStart(PREFIX, "a", NAMESPACE, null),
-        new EvElemEnd(PREFIX, "a", NAMESPACE),
-        new EvElemEnd(PREFIX, "body", NAMESPACE),
-        new EvElemEnd(PREFIX, "body", NAMESPACE)
+        createStartElem("body"),
+        createStartElem("body"),
+        createStartElem("a"),
+        createStartElem("a"),
+        createEndElem("a"),
+        createEndElem("a"),
+        createStartElem("a"),
+        createEndElem("a"),
+        createEndElem("body"),
+        createEndElem("body")
     ).toStream map (Tail(_, None))
 
     val t = new TakeStartElement("body") ~~ new TakeStartElement("body") ~~ new DeepFilter()
@@ -152,8 +155,8 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
 
     val t = new TakeStartElement("input") ~
                 (( new TakeStartElement("message") ~
-                  new PushEvent(new EvElemStart(PREFIX, "a", null, null)) ~
-                  new PushEvent(new EvElemEnd(PREFIX, "a", null)) ~
+                  new PushEvent(createStartElem("a")) ~
+                  new PushEvent(createEndElem("a")) ~
                   new DeepFilter() ~
                   new TakeEndElement("message")
                 )+) ~ new TakeEndElement("input")
@@ -184,8 +187,8 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
 
     val t = new TakeStartElement("input") ~
                 (( new TakeStartElement("message") ~
-                  new PushEvent(new EvElemStart(PREFIX, "a", null, null)) ~
-                  new PushEvent(new EvElemEnd(PREFIX, "a", null)) ~
+                  new PushEvent(createStartElem("a")) ~
+                  new PushEvent(createEndElem("a")) ~
                   new DeepFilter() ~
                   new TakeEndElement("message")
                 )*) ~ new TakeEndElement("input")
@@ -201,7 +204,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
   
   @Test
   def testTakeSpace() {
-    val ev = new EvElemStart(PREFIX, "a", null, null)
+    val ev = createStartElem("a")
     assertFalse(new EvCommentTypeMatcher()(ev))
     assertFalse(new SpaceOrCommentMatcher()(ev))
     val t = new TakeSpace()

@@ -3,6 +3,7 @@ import annotation.tailrec
 import scala.Stream
 import util._
 import scala.xml._
+import javax.xml.namespace.QName
 
 
 // RAF :
@@ -467,14 +468,22 @@ trait Transform[Context] extends TransformModel[Context] {
       nodeSeq.foldLeft[XMLResultStream](Stream.empty)(
         (x : XMLResultStream, y : Node) => Stream.concat(serializeXML(y, context), x))
     }
+
+    
     /*def buildAttributes(attributes : MetaData) : Map[QName, String] = {
       attributes.
     }*/
     def serializeXML(node : Node, context : Option[Context]) : XMLResultStream = node match {
       case Elem(prefix, label, attributes, scope, child)
-            => Stream.cons( Result(new EvElemStart(prefix, label, scope.getURI(prefix) /* TODO */, null), context),
+            => {
+                  val qName: QName = if (prefix == null || prefix.isEmpty)
+                                        new javax.xml.namespace.QName(scope.getURI(null), label)
+                                     else
+                                        new javax.xml.namespace.QName(scope.getURI(prefix), label, prefix)
+                  Stream.cons( Result(new EvElemStart(qName,  null), context),
                           Stream.concat(serializeXML(child, context),
-                            Stream(Result(new EvElemEnd(prefix, label, scope.getURI(prefix)), context))))
+                            Stream(Result(new EvElemEnd(qName), context))))
+                }
       case Text(text) => Stream(Result(new EvText(text), context))
       case Comment(text) => Stream(Result(new EvComment(text), context))
       case ProcInstr(target, procText) => Stream(Result(new EvProcInstr(target, procText), context))
@@ -637,7 +646,7 @@ trait Transform[Context] extends TransformModel[Context] {
     @serializable @SerialVersionUID(599494944949L + 10 * 29L + 1L)
     final class LabelEvElemStartFilterMatcher(name : String) extends FilterMatcher[EvElemStart]() {
       def apply[EvElemStart](event : EvElemStart) : Boolean = event match {
-        case EvElemStart(_, label : String, _, _)  if (label.equals(name)) => true
+        case EvElemStart(label : QName, _)  if (label.getLocalPart.equals(name)) => true
         case _ => false
       }
     }
@@ -652,7 +661,7 @@ trait Transform[Context] extends TransformModel[Context] {
     @serializable @SerialVersionUID(599494944949L + 10 * 30L + 1L)
     final class LabelEvElemEndFilterMatcher(name : String) extends FilterMatcher[EvElemEnd]() {
       def apply[EvElemEnd](event : EvElemEnd) : Boolean = event match {
-        case EvElemEnd(_, label: String, _)  if (label.equals(name)) => true
+        case EvElemEnd(label: QName)  if (label.getLocalPart.equals(name)) => true
         case _ => false
       }
     }
