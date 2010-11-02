@@ -519,8 +519,8 @@ trait Transform[Context] extends TransformModel[Context] {
 
   /**
    * The ZeroTransform is the simpliest transform. It takes all the input and make equivalent Tailed version.
-   * There is simplier but much more expensive code in the for of apply = ( in map (x => Tail(x.subEvent)) )
-   * but it is rather lacking because it is not take advantage of the fact that the stream is Tail after a
+   * There is a simplier but much more expensive code in the form of apply = ( in map (x => Tail(x.subEvent)) )
+   * but it is rather lacking because it does not take advantage of the fact that the stream is 'Tailed' after a
    * certain rank.
    */
   @serializable @SerialVersionUID(599494944949L + 10 *22L)
