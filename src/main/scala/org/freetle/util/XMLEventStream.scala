@@ -23,6 +23,9 @@ import java.io.{InputStream, Reader}
 import javax.xml.namespace.QName
 import collection.immutable.HashMap
 
+/**
+ * Helper class to read a Source as a Reader.
+ */
 class SourceReader(src: Source) extends Reader {
   override def read(arr : Array[Char], start : Int, sz : Int) : Int = {
     var i = start
@@ -41,21 +44,23 @@ class SourceReader(src: Source) extends Reader {
   
 }
 
- 	object StreamSource  {
-	    def fromIterator(s: Iterator[Char]): Source = {
-    		lazy val it = s
-    		new Source {
-    			override def reset() = fromIterator(s)
-    			val iter = it
-    		}
-	    }
-	}
+/**
+ * Create a Source from a Char Iterator.
+ */
+object StreamSource  {
+  def fromIterator(s: Iterator[Char]): Source = {
+    lazy val it = s
+    new Source {
+      override def reset() = fromIterator(s)
+      val iter = it
+    }
+  }
+}
 
 
 /**
- * 
- * NB: You can create a stream from this using Stream.fromIterator()
- * TODO Should add other constructors.
+ * Transform a Source a XMLEvent Iterator for the purpose of making it a Stream afterward.
+ * NB: You can create a stream from this using Stream.fromIterator().
  */
 class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
 

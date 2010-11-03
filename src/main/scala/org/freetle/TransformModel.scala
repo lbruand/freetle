@@ -15,6 +15,9 @@
   */
 package org.freetle
 
+/**
+ * Base model.
+ */
 @serializable @SerialVersionUID(599494944949L + 1000L)
 trait TransformModel[Context] extends FreetleModel[Context] {
 	type CFilter =

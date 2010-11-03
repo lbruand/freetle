@@ -19,11 +19,7 @@ package org.freetle.meta
 import org.freetle.Transform
 
 /**
- * Created by IntelliJ IDEA.
- * User: luke
- * Date: 26 mars 2010
- * Time: 21:19:34
- * To change this template use File | Settings | File Templates.
+ * a Meta processor is used to modify programmatically a preexisting transformation.
  */
 @serializable @SerialVersionUID(599494944949L + 10002L)
 trait Meta[Context] extends Transform[Context] {

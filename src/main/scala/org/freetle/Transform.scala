@@ -53,12 +53,15 @@ import javax.xml.namespace.QName
 // 		should be factorised into :
 //      <body>(<message>{message}</message>)|(<operation>{message}</operation>)</body>
 //			Which is promisingly faster.
-  
+
+/**
+ * a trait to implement when writing a transformation.
+ */
 
 @serializable @SerialVersionUID(599494944949L + 10 *0L)
 trait Transform[Context] extends TransformModel[Context] {
   /**
-   * Base class for all transforms.
+   *  Base class for all transforms.
    */
   @serializable @SerialVersionUID(599494944949L + 10 *1L)
   abstract class CFilterBase extends CFilter {
