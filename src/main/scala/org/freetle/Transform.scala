@@ -41,6 +41,7 @@ import javax.xml.namespace.QName
 //    encapsulate the EvPositiveElement trashing rather than have this code so widely occuring in the code.
 //  * With the namespaces, there is a problem. When you push tokens, how do u know which prefix to use ?
 //  * Sorting !!! Introduce a cache.
+//  * QName has to be abstracted. (No direct import except in utils)
 //
 //	Optimizer
 //  =========
