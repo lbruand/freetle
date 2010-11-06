@@ -32,7 +32,7 @@ class TransformTestBase[Context] extends FreetleModel[Context] {
   /**
    * Asserts that there are only Results in the stream.
    */
-  def assertAllResult(r : XMLResultStream) :Unit = r.foreach(x => assertTrue(x.isInstanceOf[Result]))
+  def assertAllResult( r : XMLResultStream, str : String = null) :Unit = r.foreach(x => assertTrue(str, x.isInstanceOf[Result]))
 
   /**
    * Asserts that there are only Tails in the stream.
@@ -66,4 +66,10 @@ class TransformTestBase[Context] extends FreetleModel[Context] {
    * Serialize ( not very efficient ).
    */
   def serialize(x : XMLResultStream) : String = x.foldLeft("")( _ + _.subEvent.toString)
+
+   /**
+   * Serialize ( not very efficient ).
+   */
+  def serializeWithResult(x : XMLResultStream) : String = x.foldLeft("")(
+    (x,y) => x +  (if (y.isInstanceOf[Result]) "R" else "T") + y.subEvent.toString)
 }
