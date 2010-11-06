@@ -43,8 +43,8 @@ case class EvElemStart(name : QName, attributes : Map[QName, String]) extends XM
                                                           }
   override def toString() = "<" +
                             (if (!name.getPrefix.isEmpty) ( name.getPrefix + ":" ) else "") + name.getLocalPart +
-           attributes.foldLeft[String]("")( (str, attribute) =>
-                                                      (str + " " + build(attribute))) +
+           (if (attributes != null) { attributes.foldLeft[String]("")( (str, attribute) =>
+                                                      (str + " " + build(attribute))) } else "")  +
           ">"
 }
 
@@ -75,7 +75,7 @@ case class EvComment(text: String) extends XMLEvent {
 
 /** Used when we want a empty but yet positive result */
 case class EvPositiveResult() extends XMLEvent {
-  override def toString() = ""
+  override def toString() = "<!-- EvPositiveResult -->"
 }
 
 
