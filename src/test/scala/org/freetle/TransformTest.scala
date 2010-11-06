@@ -151,10 +151,10 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
 
     val t = new TakeStartElement("body") ~~ new TakeStartElement("body") ~~ new DeepFilter()
     val r = t(s)
-    assertEquals(9, lengthResult(r))
+    assertEquals(10, lengthResult(r))
     val t2 = new TakeStartElement("body") ~~ new TakeStartElement("body") ~~ new TakeStartElement("a") ~~ new DeepFilter()
     val r2 = t2(s)
-    assertEquals(6, lengthResult(r2))
+    assertEquals(9, lengthResult(r2))
   }
 
   @Test
@@ -176,7 +176,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
                   new TakeEndElement("message")
                 )+) ~ new TakeEndElement("input")
     val r = (new SpaceSkipingMetaProcessor())(t)(evStream)
-    assertAllResult(r)
+    assertAllResult(r, "Result : [" + serializeWithResult(r) + "]" )
   }
 
   @Test
@@ -191,7 +191,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
                   new TakeEndElement("message")
                 )+) ~ new TakeEndElement("input")
     val r = (new SpaceSkipingMetaProcessor())(t)(evStream)
-    assertAllResult(r)
+    assertAllResult(r, "Result : [" + serializeWithResult(r) + "]" )
     assertEquals(evStream.length-8, r.length)
   }
 
@@ -208,7 +208,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
                   new TakeEndElement("message")
                 )*) ~ new TakeEndElement("input")
     val r = (new SpaceSkipingMetaProcessor())(t)(evStream)
-    assertAllResult(r)
+    assertAllResult(r, "Result : [" + serializeWithResult(r) + "]" )
   }
 
   @Test

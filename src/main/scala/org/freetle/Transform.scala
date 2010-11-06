@@ -309,33 +309,33 @@ trait Transform[Context] extends TransformModel[Context] {
         BinaryOperator(left : CFilterBase, right :CFilterBase) {
     def clone(left : CFilterBase, right :CFilterBase) = copy(left = left, right = right)
 
-    @tailrec
-		private final def recurse(current : XMLResultStream, hasResult : Boolean, in : XMLResultStream) : XMLResultStream = {
-		  if (current.isEmpty)
-			  Stream.empty
-		  else {
-			  (current.head) match {
-          case Result(EvPositiveResult(), _) => this.recurse(current.tail, true, in) // --> EvPositiveResult can be trashed.
-			    case Result(_, _) => Stream.cons(current.head, this.recurse(current.tail, true, in))
-			    case Tail(_, _) => if (hasResult) {
-                                val rightResult = right(current)
-                                if (rightResult.isEmpty)
-                                  in
-                                else
-                                  (rightResult.head) match {
-                                    case Result(_, _) => rightResult
-                                    case Tail(_, _) => in  // No result, we track back to the original Stream. 
-                                  }
-                             } else
-                                current
-			  }
-      }
-		}
 		override def apply(in : XMLResultStream) : XMLResultStream = {
 		  if (in.isEmpty)
 			  Stream.empty
 		  else {
-			  recurse(left(in), false, in)
+			  val leftResult = left(in)
+        val (leftHead, leftTail) = leftResult span (_.isInstanceOf[Result])
+        if (leftHead.isEmpty)
+          in
+        else {
+          if (leftTail.isEmpty)
+            leftHead
+          else {
+            val (rightHead, rightTail) = right(leftTail) span (_.isInstanceOf[Result])
+            if (rightHead.isEmpty)
+              in
+            else {
+              val head = Stream.concat(leftHead, rightHead) filterNot (_.subEvent.isInstanceOf[EvPositiveResult])
+              if (head.isEmpty)
+                Stream.cons(Result(EvPositiveResult(), in.head.context), rightTail)
+              else
+                Stream.concat(head, rightTail)
+            }  
+
+          }
+        }
+
+        
 		  }
 		}
  	}
@@ -583,7 +583,7 @@ trait Transform[Context] extends TransformModel[Context] {
     })
   
   override def apply(in : XMLResultStream) : XMLResultStream = selectUntilAccumulation[Int](in,
-                                                                                            0,  // <-- Initial depth 
+                                                                                            1,  // <-- Initial depth 
                                                                                             _ < 0, // <-- When to stop
                                                                                             accumulation)
 
@@ -597,7 +597,7 @@ trait Transform[Context] extends TransformModel[Context] {
     override def apply(in : XMLResultStream) : XMLResultStream = {
       val result = in.dropWhile( _.isInstanceOf[Result] )
       if (result.isEmpty)
-        Stream.empty
+        Stream(Result(new EvPositiveResult(), null))
       else
         Stream.cons(Result(new EvPositiveResult(), result.head.context), result)
     }
