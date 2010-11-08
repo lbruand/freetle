@@ -18,9 +18,7 @@ import scala.io.Source
 import javax.xml.stream.XMLInputFactory
 import javax.xml.stream.XMLStreamReader
 import javax.xml.stream.XMLStreamConstants
-import scala.xml.{MetaData, NamespaceBinding}
 import java.io.{InputStream, Reader}
-import collection.immutable.HashMap
 
 /**
  * Helper class to read a Source as a Reader.
