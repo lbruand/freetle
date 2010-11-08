@@ -44,7 +44,7 @@ class SourceReader(src: Source) extends Reader {
 /**
  * Create a Source from a Char Iterator.
  */
-object StreamSource  {
+object StreamSource {
   def fromIterator(s: Iterator[Char]): Source = {
     lazy val it = s
     new Source {
@@ -74,13 +74,13 @@ class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
       prefix = qn.getPrefix)
   }
   
-  final def buildAttributes(input : XMLStreamReader) : Attributes = {
+  final private def buildAttributes(input : XMLStreamReader) : Attributes = {
     List.range(0, input.getAttributeCount).map(
       x => (fromJavaQName(input.getAttributeName(x)), input.getAttributeValue(x))
       ).toMap    
   }
-  //input.getNamespaceContext
-  def buildEvent(input:XMLStreamReader) : XMLEvent = {
+
+  final private def buildEvent(input:XMLStreamReader) : XMLEvent = {
     val eventType = input.getEventType
 	  val event : XMLEvent = eventType match {
 	    case XMLStreamConstants.START_ELEMENT => new EvElemStart(fromJavaQName(input.getName),
