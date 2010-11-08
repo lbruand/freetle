@@ -17,6 +17,11 @@ Freetle is a contraction of Free ETL.
 
 Those who are dissatisfied with existing transformation tools like XSLT.
 Freetle hopes to bring both simplicity of programming with advanced performance and modularity.
+Freetle favors Agile programming : It put emphases on Testing, Refactoring, Tooling.
+Java programmers will feel in known territory and be immediately productive.
+Rather than selling bells and whistle in the form of a visual IDE and _intuition_,
+Freetle leverages existing knowledge, tools, methodology daily used by Java developers.
+It promotes established programming methodology, simplicity, modularity and openness to achieve your goals.
 
 # Vision
 
@@ -34,12 +39,12 @@ While bringing in major new ideas from the functional programming world :
 Ultimately, Freetle's goal is to stay forever :
     * Open-Sourced (Apache 2.0 license)
     * Scalable
-    * Robust (in the sense that it will be refactorable and changeproof)
+    * Robust (in the sense that it will be easy to debug, refactorable and change-proof)
  
 # Technical Overview
 
 ## Acknowledgement
-Freetle is deeply endebted to giants:
+Freetle is deeply indebted to giants:
     * The [Scala language](http://www.scala-lang.org/) being the most evident
     * TODO ...
 
@@ -65,11 +70,11 @@ oriented transformation such as XSL-T.
 TODO
 
 ## Leveraging existing tooling and standards.
-Rather than redevelopping everything from scratch, Freetle is standing on the shoulders of giants :
+Rather than redeveloping everything from scratch, Freetle is standing on the shoulders of giants :
 the Scala language.
  As a result, much of the tooling for development is pre existing:
 ### IDE Support
-#### Eclispe
+#### Eclipse
     Eclipse has scala-support in the form of the [Scala IDE](http://www.assembla.com/wiki/show/scala-ide)
 
 #### Intellij Idea
