@@ -17,10 +17,7 @@ package org.freetle
 import meta.Meta
 import org.junit._
 import Assert._
-
-import scala.xml.{Atom, Unparsed, PCData, PrettyPrinter, EntityRef, ProcInstr, Comment, Text, Elem, Node, NodeSeq}
 import util._
-import scala.util.Random
 import javax.xml.transform.TransformerFactory
 import javax.xml.transform.stream.{StreamResult, StreamSource}
 import java.io.{StringWriter, StringReader}
