@@ -25,9 +25,9 @@ It promotes established programming methodology, simplicity, modularity and open
 
 # Vision
 
-Because it relies on Scala, Freetle's design is oriented toward tried and true approach of making software :
+Because it relies on Scala, Freetle's design is oriented toward a tried and true approach of making software :
 
-    * Freetle boasts seamless integration with Java.
+    * Freetle boasts seamless integration with Java. Thus it is easy to package and reuse in bigger software.
     * Textfile oriented vanilla programming language rather than exotic binary/XML programming language.
     * Built-in plugin IDE support both for Eclipse and Intellij Idea with navigation between Freetle transformations
       and Java code.
