@@ -29,7 +29,8 @@ import javax.xml.XMLConstants
 sealed abstract class XMLEvent {
   var location : Location = null
   var namespaceContext : NamespaceContext = null
-  def toString() : String
+  override def toString() : String = toStream.mkString
+  def toStream : Stream[Char] = toString.toStream
 
 }
 
@@ -40,47 +41,84 @@ case class QName(namespaceURI : String = XMLConstants.NULL_NS_URI,
 }
 /** An element is encountered the first time */
 case class EvElemStart(name : QName, attributes : Map[QName, String]) extends XMLEvent {
-  private def build(j : Tuple2[QName, String]) : String = { (if (!j._1.prefix.isEmpty)
-                                                              j._1.prefix + ":"
-                                                             else
-                                                              ""
-                                                            ) + j._1.localPart + "=\"" + j._2 + "\""
-                                                          }
-  override def toString() = "<" +
-                            (if (!name.prefix.isEmpty) ( name.prefix + ":" ) else "") + name.localPart +
-           (if (attributes != null) { attributes.foldLeft[String]("")( (str, attribute) =>
-                                                      (str + " " + build(attribute))) } else "")  +
-          ">"
+  private final def buildAttrStringBuffer(sb :StringBuilder)(j : Tuple2[QName, String]): Unit = {
+    sb.append(' ')
+    if (!j._1.prefix.isEmpty) {
+      sb.append(j._1.prefix)
+      sb.append(':')
+    }
+    sb.append(j._1.localPart)
+    sb.append('=')
+    sb.append('"')
+    sb.append(j._2)
+    sb.append('"')
+  }
+  override final def toStream() :  Stream[Char] = {
+    var sb = new StringBuilder()
+    sb.append('<')
+    if (!name.prefix.isEmpty) {
+      sb.append(name.prefix)
+      sb.append(':')
+    }
+    sb.append(name.localPart)
+
+    // Attributes
+    if (attributes != null) {
+      attributes.foreach(
+         buildAttrStringBuffer(sb)
+      )
+    }
+    sb.append('>')
+    sb.toStream
+  }
 }
 
 /** An element is encountered the last time */
 case class EvElemEnd(name : QName) extends XMLEvent {
-  override def toString() = "</" +
-                            (if (!name.prefix.isEmpty) ( name.prefix + ":" ) else "") + name.localPart + ">"
+  override final def toStream() :  Stream[Char] = {
+    var sb = new StringBuilder()
+    sb.append('<')
+    sb.append('/')
+    if (!name.prefix.isEmpty) {
+      sb.append(name.prefix)
+      sb.append(':')
+    }
+    sb.append(name.localPart)
+    sb.append('>')
+    sb.toStream
+  }
 }
 /** A text node is encountered */
 case class EvText(text : String) extends XMLEvent {
-  override def toString() = text
+  override final def toStream() :  Stream[Char] = text.toStream
 }
 
 /** An entity reference is encountered */
 case class EvEntityRef(entity: String) extends XMLEvent {
-  override def toString() = "&" + entity + ";"
+  override final def toStream() :  Stream[Char] = {
+    var sb = new StringBuilder()
+    sb.append('&')
+    sb.append(entity)
+    sb.append(';')
+    sb.toStream
+  }
 }
 
 /** A processing instruction is encountered */
 case class EvProcInstr(target: String, text: String) extends XMLEvent {
-  override def toString() = ""
+  override final def toStream() : Stream[Char] = Stream.empty
 }
 
 /** A comment is encountered */
 case class EvComment(text: String) extends XMLEvent {
-  override def toString() = "<!-- " + text + " -->"
+  override final def toStream() : Stream[Char] =
+    (new StringBuilder()).append("<!-- ").append(text).append(" -->").toStream
 }
 
 /** Used when we want a empty but yet positive result */
 case class EvPositiveResult() extends XMLEvent {
-  override def toString() = "<!-- EvPositiveResult -->"
+  override final def toStream() : Stream[Char] = toString.toStream
+  override final def toString() = "<!-- EvPositiveResult -->"
 }
 
 

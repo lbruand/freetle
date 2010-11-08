@@ -73,7 +73,7 @@ class TransformTestBase[Context] extends TransformModel[Context] {
    */
   def serializeWithResult(x : XMLResultStream) : String = {
     val charStream : Stream[Char] = (x map
-            (y => Stream.cons(if (y.isInstanceOf[Result]) 'R' else 'T', y.subEvent.toString.toList.toStream))).flatten
+            (y => Stream.cons(if (y.isInstanceOf[Result]) 'R' else 'T', y.subEvent.toStream))).flatten
     charStream.toString
   }
 }
