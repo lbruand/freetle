@@ -18,7 +18,6 @@ package org.freetle.util
 
 import scala.xml.{MetaData, NamespaceBinding}
 import javax.xml.stream.Location
-import javax.xml.namespace.QName
 import javax.xml.namespace.NamespaceContext
 import javax.xml.XMLConstants
 
@@ -31,18 +30,24 @@ sealed abstract class XMLEvent {
   var location : Location = null
   var namespaceContext : NamespaceContext = null
   def toString() : String
+
 }
 
+case class QName(namespaceURI : String = XMLConstants.NULL_NS_URI,
+                 localPart: String,
+                 prefix : String = XMLConstants.DEFAULT_NS_PREFIX) {
+
+}
 /** An element is encountered the first time */
 case class EvElemStart(name : QName, attributes : Map[QName, String]) extends XMLEvent {
-  private def build(j : Tuple2[QName, String]) : String = { (if (!j._1.getPrefix.isEmpty)
-                                                              j._1.getPrefix + ":"
+  private def build(j : Tuple2[QName, String]) : String = { (if (!j._1.prefix.isEmpty)
+                                                              j._1.prefix + ":"
                                                              else
                                                               ""
-                                                            ) + j._1.getLocalPart() + "=\"" + j._2 + "\""
+                                                            ) + j._1.localPart + "=\"" + j._2 + "\""
                                                           }
   override def toString() = "<" +
-                            (if (!name.getPrefix.isEmpty) ( name.getPrefix + ":" ) else "") + name.getLocalPart +
+                            (if (!name.prefix.isEmpty) ( name.prefix + ":" ) else "") + name.localPart +
            (if (attributes != null) { attributes.foldLeft[String]("")( (str, attribute) =>
                                                       (str + " " + build(attribute))) } else "")  +
           ">"
@@ -51,7 +56,7 @@ case class EvElemStart(name : QName, attributes : Map[QName, String]) extends XM
 /** An element is encountered the last time */
 case class EvElemEnd(name : QName) extends XMLEvent {
   override def toString() = "</" +
-                            (if (!name.getPrefix.isEmpty) ( name.getPrefix + ":" ) else "") + name.getLocalPart + ">"
+                            (if (!name.prefix.isEmpty) ( name.prefix + ":" ) else "") + name.localPart + ">"
 }
 /** A text node is encountered */
 case class EvText(text : String) extends XMLEvent {

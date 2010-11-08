@@ -22,7 +22,6 @@ import Assert._
 
 import scala.xml.{Atom, Unparsed, PCData, PrettyPrinter, EntityRef, ProcInstr, Comment, Text, Elem, Node, NodeSeq}
 import util._
-import javax.xml.namespace.QName
 
 @serializable @SerialVersionUID(599494944949L + 10000L)
 case class TransformTestContext (
@@ -40,7 +39,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
   def testCopyElem() = {
     val ev = createStartElem("body")
     val evCopy = ev.copy(name =  new QName(NAMESPACE, "after", PREFIX))
-    assertEquals("after", evCopy.name.getLocalPart)
+    assertEquals("after", evCopy.name.localPart)
   }
   
 	@Test
@@ -51,7 +50,7 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
 	  assertEquals(1, r.length)
 	  assertEquals(1, lengthResult(r))
 	  assertTrue("body", r.head.subEvent match {
-	    case EvElemStart(name, _) => (name.getLocalPart.equals("body")) 
+	    case EvElemStart(name, _) => (name.localPart.equals("body")) 
 	    case _ => false
 	  })
 	}

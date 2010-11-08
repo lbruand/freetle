@@ -19,7 +19,6 @@ import annotation.tailrec
 import scala.Stream
 import util._
 import scala.xml._
-import javax.xml.namespace.QName
 
 
 // RAF :
@@ -41,7 +40,6 @@ import javax.xml.namespace.QName
 //    encapsulate the EvPositiveElement trashing rather than have this code so widely occuring in the code.
 //  * With the namespaces, there is a problem. When you push tokens, how do u know which prefix to use ?
 //  * Sorting !!! Introduce a cache.
-//  * QName has to be abstracted. (No direct import except in utils)
 //
 //	Optimizer
 //  =========
@@ -497,9 +495,9 @@ trait Transform[Context] extends TransformModel[Context] {
       case Elem(prefix, label, attributes, scope, child)
             => {
                   val qName: QName = if (prefix == null || prefix.isEmpty)
-                                        new javax.xml.namespace.QName(scope.getURI(null), label)
+                                        new QName(scope.getURI(null), label)
                                      else
-                                        new javax.xml.namespace.QName(scope.getURI(prefix), label, prefix)
+                                        new QName(scope.getURI(prefix), label, prefix)
                   Stream.cons( Result(new EvElemStart(qName,  null), context),
                           Stream.concat(serializeXML(child, context),
                             Stream(Result(new EvElemEnd(qName), context))))
@@ -666,7 +664,7 @@ trait Transform[Context] extends TransformModel[Context] {
     @serializable @SerialVersionUID(599494944949L + 10 * 29L + 1L)
     final class LabelEvElemStartFilterMatcher(name : String) extends FilterMatcher[EvElemStart]() {
       def apply[EvElemStart](event : EvElemStart) : Boolean = event match {
-        case EvElemStart(label : QName, _)  if (label.getLocalPart.equals(name)) => true
+        case EvElemStart(label : QName, _)  if (label.localPart.equals(name)) => true
         case _ => false
       }
     }
@@ -681,7 +679,7 @@ trait Transform[Context] extends TransformModel[Context] {
     @serializable @SerialVersionUID(599494944949L + 10 * 30L + 1L)
     final class LabelEvElemEndFilterMatcher(name : String) extends FilterMatcher[EvElemEnd]() {
       def apply[EvElemEnd](event : EvElemEnd) : Boolean = event match {
-        case EvElemEnd(label: QName)  if (label.getLocalPart.equals(name)) => true
+        case EvElemEnd(label: QName)  if (label.localPart.equals(name)) => true
         case _ => false
       }
     }

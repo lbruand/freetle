@@ -20,7 +20,6 @@ import javax.xml.stream.XMLStreamReader
 import javax.xml.stream.XMLStreamConstants
 import scala.xml.{MetaData, NamespaceBinding}
 import java.io.{InputStream, Reader}
-import javax.xml.namespace.QName
 import collection.immutable.HashMap
 
 /**
@@ -67,22 +66,29 @@ class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
   lazy val factory = XMLInputFactory.newInstance()
   lazy val input : XMLStreamReader = src match {
       case in : InputStream => factory.createXMLStreamReader(in)
-      case src :Source => factory.createXMLStreamReader("hello.xml", new SourceReader(src))
+      case src :Source => factory.createXMLStreamReader("default.xml", new SourceReader(src))
   }
   type Attributes = Map[QName, String]
-  def buildAttributes(input : XMLStreamReader) : Attributes = {
+
+  final private def fromJavaQName(qn : javax.xml.namespace.QName) : org.freetle.util.QName = {
+    new QName(namespaceURI = qn.getNamespaceURI,
+      localPart = qn.getLocalPart,
+      prefix = qn.getPrefix)
+  }
+  
+  final def buildAttributes(input : XMLStreamReader) : Attributes = {
     List.range(0, input.getAttributeCount).map(
-      x => (input.getAttributeName(x), input.getAttributeValue(x))
+      x => (fromJavaQName(input.getAttributeName(x)), input.getAttributeValue(x))
       ).toMap    
   }
   //input.getNamespaceContext
   def buildEvent(input:XMLStreamReader) : XMLEvent = {
     val eventType = input.getEventType
 	  val event : XMLEvent = eventType match {
-	    case XMLStreamConstants.START_ELEMENT => new EvElemStart(input.getName,
+	    case XMLStreamConstants.START_ELEMENT => new EvElemStart(fromJavaQName(input.getName),
                                                                buildAttributes(input)
                                                                )
-      case XMLStreamConstants.END_ELEMENT => new EvElemEnd(input.getName)
+      case XMLStreamConstants.END_ELEMENT => new EvElemEnd(fromJavaQName(input.getName))
       case XMLStreamConstants.CHARACTERS => new EvText(input.getText)
       case XMLStreamConstants.COMMENT => new EvComment(input.getText)
       case XMLStreamConstants.PROCESSING_INSTRUCTION => new EvProcInstr(input.getPITarget, input.getPIData)
