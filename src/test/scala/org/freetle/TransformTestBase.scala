@@ -20,7 +20,7 @@ import Assert._
 import util.{Memoize1, XMLEventStream}
 import java.io.InputStream
 
-class TransformTestBase[Context] extends FreetleModel[Context] {
+class TransformTestBase[Context] extends TransformModel[Context] {
 
   def mloadStreamFromResource(resourceName: String, context : Option[Context]): XMLResultStream = {
     val src: InputStream = this.getClass().getResourceAsStream(resourceName)
@@ -65,11 +65,15 @@ class TransformTestBase[Context] extends FreetleModel[Context] {
   /**
    * Serialize ( not very efficient ).
    */
-  def serialize(x : XMLResultStream) : String = x.foldLeft("")( _ + _.subEvent.toString)
+  def serialize(x : XMLResultStream) : String =
+    (new StringBuilder()).appendAll(XMLResultStreamUtils.serializeXMLResultStream(x)).toString
 
    /**
    * Serialize ( not very efficient ).
    */
-  def serializeWithResult(x : XMLResultStream) : String = x.foldLeft("")(
-    (x,y) => x +  (if (y.isInstanceOf[Result]) "R" else "T") + y.subEvent.toString)
+  def serializeWithResult(x : XMLResultStream) : String = {
+    val charStream : Stream[Char] = (x map
+            (y => Stream.cons(if (y.isInstanceOf[Result]) 'R' else 'T', y.subEvent.toString.toList.toStream))).flatten
+    charStream.toString
+  }
 }

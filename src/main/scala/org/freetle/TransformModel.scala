@@ -15,6 +15,9 @@
   */
 package org.freetle
 
+import util.XMLEventStream
+import java.io.InputStream
+
 /**
  * Base model.
  */
@@ -22,4 +25,18 @@ package org.freetle
 trait TransformModel[Context] extends FreetleModel[Context] {
 	type CFilter =
 		XMLResultStream => XMLResultStream
+  /**
+   * Util class to build XMLResultStream, save etc...
+   */
+
+  object XMLResultStreamUtils {
+    def loadXMLResultStream(in : InputStream, context : Option[Context] = None) : XMLResultStream = {
+      Stream.fromIterator(new XMLEventStream(in) map (Tail(_, context)))
+    }
+
+    def serializeXMLResultStream(evStream : XMLResultStream) : Stream[Char] = {
+      (evStream map (_.subEvent.toString.toList.toStream)).flatten
+    }
+  }
+  
 }
