@@ -192,7 +192,10 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     val r = (new SpaceSkipingMetaProcessor())(t)(evStream)
     assertAllResult(r, "Result : [" + serializeWithResult(r) + "]" )
     assertEquals(evStream.length-8, r.length)
-    // TODO assertTrue(r.filter(_.subEvent match {}))
+    assertTrue(r.filter(x => (x.subEvent match {
+      case EvElemStart(QName(_, "value", _), _) => true
+      case _  => false
+    })).isEmpty)
   }
 
   @Test
