@@ -28,7 +28,7 @@ object Main extends Transform[MainContext] {
 
 
 	val el = Stream.concat("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<body>\n".toList.toStream,
-                         Stream.fill(10000000)("<msg/>\n".toList.toStream).flatten,
+                         Stream.fill(10000000)("<msg/>\n".toStream).flatten,
                          "</body>\n".toList.toStream).iterator
     val src = StreamSource.fromIterator(el)
     
