@@ -38,7 +38,7 @@ trait TransformModel[Context] extends FreetleModel[Context] {
       Stream.fromIterator(new XMLEventStream(src) map (Tail(_, context)))
     }
 
-    def serializeXMLResultStream(evStream : XMLResultStream) : Stream[Char] = {
+    def serializeXMLResultStream(evStream : =>XMLResultStream) : Stream[Char] = {
       (evStream map (_.subEvent.toStream)).flatten
     }
   }
