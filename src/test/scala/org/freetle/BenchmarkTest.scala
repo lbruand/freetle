@@ -21,15 +21,13 @@ import util._
 import javax.xml.transform.TransformerFactory
 import javax.xml.transform.stream.{StreamResult, StreamSource}
 import java.io.{StringWriter, StringReader}
-import java.lang.String
 import testing.Benchmark
 
-@serializable @SerialVersionUID(599494944949L + 20001L)
-case class BenchmarkTestContext (
-)
+@serializable @SerialVersionUID(599494944949L + 30000L)
+case class FreetleCaseBenchmarkContext(title : String = null, artist : String = null)
 
 @Test
-class BenchmarkTest extends TransformTestBase[TransformTestContext] with Meta[TransformTestContext] {
+class BenchmarkTest {
   val catalogHeader = """<?xml version="1.0" encoding="UTF-8"?>
 <catalog>""".toStream
 
@@ -82,8 +80,14 @@ class BenchmarkTest extends TransformTestBase[TransformTestContext] with Meta[Tr
                   Stream.fill(n)(buildRandomCD().toStream).flatten,
                   catalogFooter).mkString
   }
+  abstract class FreetleBenchmark(val nCatalog : Int = 3) extends Benchmark {
+    val catalogSource : String = buildRandomCatalog(nCatalog)
+    
+  }
 
-  class XSLTcaseBenchmark(val nCatalog : Int = 3) extends Benchmark {
+  
+  class XSLTCaseBenchmark(override val nCatalog : Int = 3) extends FreetleBenchmark(nCatalog : Int) {
+    override def prefix = "XSLT = "
     val xsltSource = """<?xml version="1.0" encoding="UTF-8"?>
   <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:template match="/">
@@ -104,7 +108,6 @@ class BenchmarkTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     val transformer = transFactory.newTransformer(transformerSource)
 
 
-    val catalogSource = buildRandomCatalog(nCatalog)
 
     var source : StreamSource = null
 
@@ -113,7 +116,7 @@ class BenchmarkTest extends TransformTestBase[TransformTestContext] with Meta[Tr
     var result : StreamResult = null
 
     def run() = {
-      source = new StreamSource(new StringReader(catalogSource))
+      source = new StreamSource(new StringReader(new String(catalogSource.getBytes)))
       resultStringWriter = new StringWriter()
       result = new StreamResult(resultStringWriter)
       transformer.transform(source, result)
@@ -127,11 +130,103 @@ class BenchmarkTest extends TransformTestBase[TransformTestContext] with Meta[Tr
       assertTrue("</html> not found!! [" + resultString + "]", resultString.indexOf("</html>") >= 0)
     }
   }
+
+
+
+  class FreetleCaseBenchmark(override val nCatalog : Int = 3) extends FreetleBenchmark(nCatalog : Int) {
+
+
+    
+    class FreetleCaseBenchmarkTransform
+            extends TransformModel[FreetleCaseBenchmarkContext]
+                with Meta[FreetleCaseBenchmarkContext] {
+      //def transform : CFilterBase = new IdTransform()
+      /**
+       * Real transform construction.
+       */
+      def transform : CFilterBase = {
+        
+        val titleTaker = new TakeDataToContext() {
+          def pushToContext(text : String, context : FreetleCaseBenchmarkContext) : FreetleCaseBenchmarkContext = {
+              context.copy(title = text)
+          }
+        }
+
+        val artistTaker = new TakeDataToContext() {
+          def pushToContext(text : String, context : FreetleCaseBenchmarkContext) : FreetleCaseBenchmarkContext = {
+              context.copy(artist = text)
+          }
+        }
+
+        val t = (<("catalog") -> new DropFilter() 
+                )~
+                    (((( (<("cd") ~
+                        <("title") ~
+                             titleTaker ~
+                        </("title") ~
+                        <("artist") ~
+                             artistTaker ~
+                        </("artist") ~
+                        <("country") ~
+                             new TakeText() ~
+                        </("country") ~
+                        <("company") ~
+                             new TakeText() ~
+                        </("company") ~
+                        <("price") ~
+                             new TakeText() ~
+                        </("price") ~
+                        <("year") ~
+                             new TakeText() ~
+                        </("year") ~
+                      </("cd")) -> new DropFilter()) ~ new PushNode(
+                         (x : Option[FreetleCaseBenchmarkContext]) => {                           
+                           x match {
+
+                                                      case Some(context) =>
+<cd>
+   <title>{context.title}</title>
+   <artist>{context.artist}</artist>
+</cd>
+                                                      case _ => <cd></cd>
+                           }
+                         }
+                      ))
+                    )*) ~
+                (</("catalog") -> new DropFilter()
+                        )
+        (new SpaceSkipingMetaProcessor())(t)
+      }
+
+      def run(catalogSource : String) : String = {
+        val context = new FreetleCaseBenchmarkContext()
+        val inStream = XMLResultStreamUtils.loadXMLResultStream(catalogSource, Some(context))
+        val outStream = transform(inStream)
+        result = XMLResultStreamUtils.serializeXMLResultStream(outStream).mkString
+        result
+      }
+      
+    }
+    val transformer : FreetleCaseBenchmarkTransform = new FreetleCaseBenchmarkTransform()
+    var result : String = null
+    
+    def run() = transformer.run(catalogSource = catalogSource)
+
+    def checkResult() = {
+      //assertEquals("", result)
+    }
+  }
+
   @Test
   def testXSLT() = {
-    val timing = new XSLTcaseBenchmark(nCatalog = 10000).runBenchmark(3)
+    val freetleBenchmark = new FreetleCaseBenchmark(nCatalog = 100)
+    val benchmarks = List( new XSLTCaseBenchmark(nCatalog = 100),
+                          freetleBenchmark)
+    val timings = benchmarks.map(_.runBenchmark(3))
 
-    println(timing.mkString(","))
+    freetleBenchmark.checkResult
+
+    println(timings)
 
   }
   
