@@ -15,8 +15,8 @@
   */
 package org.freetle
 
-import util.XMLEventStream
 import java.io.InputStream
+import util.{StreamSource, XMLEventStream}
 
 /**
  * Base model.
@@ -30,8 +30,12 @@ trait TransformModel[Context] extends FreetleModel[Context] {
    */
 
   object XMLResultStreamUtils {
-    def loadXMLResultStream(in : InputStream, context : Option[Context] = None) : XMLResultStream = {
+    def loadXMLResultStream(in : InputStream, context : Option[Context]) : XMLResultStream = {
       Stream.fromIterator(new XMLEventStream(in) map (Tail(_, context)))
+    }
+    def loadXMLResultStream(str : String, context : Option[Context]) : XMLResultStream = {
+      val src = StreamSource.fromIterator(str.toStream.iterator)
+      Stream.fromIterator(new XMLEventStream(src) map (Tail(_, context)))
     }
 
     def serializeXMLResultStream(evStream : XMLResultStream) : Stream[Char] = {

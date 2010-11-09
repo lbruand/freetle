@@ -158,8 +158,12 @@ class TransformTest extends TransformTestBase[TransformTestContext] with Meta[Tr
 
   @Test
   def testXMLExp() = {
-    val f : (String => Node) = variable => <message>{variable}</message>
-    val t = new PushNode(f("hello"))
+    val f : (Option[TransformTestContext] => Node) = optionContext =>
+                          optionContext match {
+                            case Some(context) => <message>{context.currentSum}</message>
+                            case _ => <message>hello</message>
+                          }
+    val t = new PushNode(f)
     assertEquals(3, t(Stream.empty).length)
   }
 

@@ -359,7 +359,12 @@ trait Transform[Context] extends TransformModel[Context] {
 		override def apply(in : XMLResultStream) : XMLResultStream = {
 		  val rightStream = right(in)
       val (rightResult, leftResult) = rightStream.span(_.isInstanceOf[Result])
-		  Stream.concat(left(rightResult), leftResult)
+      if (rightResult.isEmpty) { // Backtrack
+        new ZeroTransform().apply(in)
+      } else {
+        Stream.concat(left(rightResult), leftResult)
+      }
+
 		}	 				
  	}
 
@@ -480,38 +485,38 @@ trait Transform[Context] extends TransformModel[Context] {
    * Push a scala xml content down the pipeline.
    */
   @serializable @SerialVersionUID(599494944949L + 10 *19L)
-  case class PushNode(nodeSeq: NodeSeq) extends PushTransform {
+  case class PushNode(nodeSeq: Option[Context] => NodeSeq) extends PushTransform {
 
     def serializeXML(nodeSeq : NodeSeq, context : Option[Context]) : XMLResultStream = {
-      nodeSeq.foldLeft[XMLResultStream](Stream.empty)(
-        (x : XMLResultStream, y : Node) => Stream.concat(serializeXML(y, context), x))
+      (nodeSeq map( serializeNodeXML(_, context = context))).toStream.flatten
     }
 
     
     /*def buildAttributes(attributes : MetaData) : Map[QName, String] = {
       attributes.
     }*/
-    def serializeXML(node : Node, context : Option[Context]) : XMLResultStream = node match {
-      case Elem(prefix, label, attributes, scope, child)
+    def serializeNodeXML(node : Node, context : Option[Context]) : XMLResultStream =
+      node match {
+      case elem :  scala.xml.Elem //(prefix, label, attributes, scope, children)
             => {
-                  val qName: QName = if (prefix == null || prefix.isEmpty)
-                                        new QName(scope.getURI(null), label)
+                  val qName: QName = if (elem.prefix == null || elem.prefix.isEmpty)
+                                        new QName(elem.scope.getURI(null), elem.label)
                                      else
-                                        new QName(scope.getURI(prefix), label, prefix)
+                                        new QName(elem.scope.getURI(elem.prefix), elem.label, elem.prefix)
                   Stream.cons( Result(new EvElemStart(qName,  null), context),
-                          Stream.concat(serializeXML(child, context),
+                          Stream.concat(serializeXML(elem.child, context),
                             Stream(Result(new EvElemEnd(qName), context))))
                 }
-      case Text(text) => Stream(Result(new EvText(text), context))
-      case Comment(text) => Stream(Result(new EvComment(text), context))
-      case ProcInstr(target, procText) => Stream(Result(new EvProcInstr(target, procText), context))
-      case EntityRef(entityRef) => Stream(Result(new EvEntityRef(entityRef), context))
-      case node : Node => Stream(Result(new EvText(node.text), context))
+      case text : scala.xml.Text => Stream(Result(new EvText(text.text), context))
+      case comment : scala.xml.Comment => Stream(Result(new EvComment(comment.text), context))
+      case pi : scala.xml.ProcInstr => Stream(Result(new EvProcInstr(pi.target, pi.proctext), context))
+      case entityRef : scala.xml.EntityRef => Stream(Result(new EvEntityRef(entityRef.entityName), context))
+      case _ => Stream(Result(new EvText("error"), context))
     }
 
     override def apply(in : XMLResultStream) : XMLResultStream = {
         val context = if (in.isEmpty) None else in.head.context
-        Stream.concat(serializeXML(nodeSeq, context), in)
+        Stream.concat(serializeXML(nodeSeq.apply(context), context), in)
       }
   }
 
