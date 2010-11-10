@@ -27,26 +27,29 @@ It promotes established programming methodology, simplicity, modularity and open
 
 Because it relies on Scala, Freetle's design is oriented toward a tried and true approach of making software :
 
-    * Freetle boasts seamless integration with Java. Thus it is easy to package and reuse in bigger software.
-    * Textfile oriented vanilla programming language rather than exotic binary/XML programming language.
-    * Built-in plugin IDE support both for Eclipse and Intellij Idea with navigation between Freetle transformations
+* Freetle boasts seamless integration with Java. Thus it is easy to package and reuse in bigger software.
+* Textfile oriented vanilla programming language rather than exotic binary/XML programming language.
+* Built-in plugin IDE support both for Eclipse and Intellij Idea with navigation between Freetle transformations
       and Java code.
 
 While bringing in major new ideas from the functional programming world :
-    * Combinators and DeSL
-    * Lazyness and Streaming
+
+* Combinators and DeSL
+* Lazyness and Streaming
 
 Ultimately, Freetle's goal is to stay forever :
-    * Open-Sourced (Apache 2.0 license)
-    * Scalable
-    * Robust (in the sense that it will be easy to debug, refactorable and change-proof)
+
+* Open-Sourced (Apache 2.0 license)
+* Scalable
+* Robust (in the sense that it will be easy to debug, refactorable and change-proof)
  
 # Technical Overview
 
 ## Acknowledgement
 Freetle is deeply indebted to giants:
-    * The [Scala language](http://www.scala-lang.org/) being the most evident
-    * TODO ...
+
+* The [Scala language](http://www.scala-lang.org/) being the most evident
+* TODO ...
 
 ## Combinators : bottom-top approach
 Freetle Transformations are expressed in the Scala language with syntactic sugar from the Freetle library.
@@ -63,8 +66,7 @@ Freetle transformations are stream-oriented programming :
 Meaning that the XML document is viewed as a stream of (SAX) XML events.
 This goes contrary to most transformation systems in which Documents are viewed as trees.
 Stream oriented programming is theorized as being faster but harder to program.
-Thanks to Freetle's use of combinators, Freetle transformations are not harder to program than typically tree-
-oriented transformation such as XSL-T.
+Thanks to Freetle's use of combinators, Freetle transformations are not harder to program than typically tree-oriented transformations such as XSL-T.
 
 ## Connectors
 TODO
@@ -75,10 +77,10 @@ the Scala language.
  As a result, much of the tooling for development is pre existing:
 ### IDE Support
 #### Eclipse
-    Eclipse has scala-support in the form of the [Scala IDE](http://www.assembla.com/wiki/show/scala-ide)
+Eclipse has scala-support in the form of the [Scala IDE](http://www.assembla.com/wiki/show/scala-ide)
 
 #### Intellij Idea
-    Idea has scala-support in the form of the
+Idea has scala-support in the form of the
     [Scala Plugin for Intellij IDEA](http://confluence.jetbrains.net/display/SCA/Scala+Plugin+for+Intellij+IDEA)
 
 # Related work and links.
@@ -90,7 +92,7 @@ Freetle heavily draws on HaXML and combinators from Haskell.
 ## STX/Joost
 
 # Licensing
-Freetle is licensed under the Apache License 2.0 (See attached).
+Freetle is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) (See attached).
 
 
 # Copyright
