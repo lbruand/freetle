@@ -11,24 +11,24 @@ Freetle is written in the [Scala language](http://www.scala-lang.org/) and compi
 
 # What does Freetle mean ?
 
-Freetle is a contraction of Free ETL.
+Freetle is a contraction of Free ETL. A [ETL](http://en.wikipedia.org/wiki/Extract,_transform,_load) for Extract Transform and Load is a software tool used by companies to transfer datas (usually large chunks of it) from one system and one form to another system and another form.
 
 # What is the audience ?
 
 Those who are dissatisfied with existing transformation tools like XSLT.
 Freetle hopes to bring both simplicity of programming with advanced performance and modularity.
 Freetle favors Agile programming : It put emphases on Testing, Refactoring, Tooling.
-Java programmers will feel in known territory and be immediately productive.
+Java programmers will feel at home and be immediately productive.
 Rather than selling bells and whistle in the form of a visual IDE and _intuition_,
 Freetle leverages existing knowledge, tools, methodology daily used by Java developers.
-It promotes established programming methodology, simplicity, modularity and openness to achieve your goals.
+It promotes simplicity, modularity, openness and _established programming methodology_ to achieve your goals.
 
 # Vision
 
 Because it relies on Scala, Freetle's design is oriented toward a tried and true approach of making software :
 
-* Freetle boasts seamless integration with Java. Thus it is easy to package and reuse in bigger software.
-* Textfile oriented vanilla programming language rather than exotic binary/XML programming language.
+* Freetle boasts seamless integration with Java. Thus it is easy to package and reuse.
+* Freetle transformations are developed in a Textfile oriented vanilla programming language rather than exotic binary/XML programming language (Compare XSLT).
 * Built-in plugin IDE support both for Eclipse and Intellij Idea with navigation between Freetle transformations
       and Java code.
 
@@ -69,7 +69,11 @@ Stream oriented programming is theorized as being faster but harder to program.
 Thanks to Freetle's use of combinators, Freetle transformations are not harder to program than typically tree-oriented transformations such as XSL-T.
 
 ## Connectors
-TODO
+Freetle is bent to develop a set of connectors to technical system such as :
+
+* Databases (via JDBC)
+* Message Oriented Middleware (via JMS)
+* Content Management Systems.
 
 ## Leveraging existing tooling and standards.
 Rather than redeveloping everything from scratch, Freetle is standing on the shoulders of giants :
@@ -85,14 +89,22 @@ Idea has scala-support in the form of the
 
 # Related work and links.
 
-Freetle heavily draws on HaXML and combinators from Haskell.
-
 ## HaXML
+[HaXML](http://www.haskell.org/HaXml/) is a collection of many utilities for parsing, filtering, transforming, and generating XML documents using Haskell. Freetle heavily draws on HaXML and combinators from Haskell.
+
 ## XSLT
+[XSLT](http://en.wikipedia.org/wiki/XSLT) is the w3c initiative to standardise a XML transformation langage. There are a number of quality and opensource implementations in the java world. The main problem of XSLT is that it is tree-oriented and thus it implies that one cannot transform large documents easily. The input document is effectively first loaded into memory. XSLT suffers from the use of XML programming language which makes develop awkward and difficult (it lacks a proper IDE etc...).
+
 ## STX/Joost
+[STX/Joost](http://joost.sourceforge.net/) is an open source initiative to go beyond the large document problem inherent to XSLT. It is relatively slower than XSLT and lacks a number of features.(mainly a sort)
+
+# Benchmark
+Freetle strives to reach high performance.
+[Benchmark](http://yquem.inria.fr/~frisch/xstream/bench.html)
 
 # Licensing
 Freetle is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) (See attached).
+Commercial licensing and support can be obtained, please contact TODO.
 
 
 # Copyright
