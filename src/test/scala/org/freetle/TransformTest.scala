@@ -19,8 +19,7 @@ package org.freetle
 import meta.Meta
 import org.junit._
 import Assert._
-
-import scala.xml.{Atom, Unparsed, PCData, PrettyPrinter, EntityRef, ProcInstr, Comment, Text, Elem, Node, NodeSeq}
+import scala.xml.Node
 import util._
 
 @serializable @SerialVersionUID(599494944949L + 10000L)
