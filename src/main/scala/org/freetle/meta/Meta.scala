@@ -43,7 +43,7 @@ trait Meta[Context] extends Transform[Context] {
     def map(in: BaseTransform) = {
       if (!in.isInstanceOf[DropFilter]) {
         val takeSpc = new WhileNoResultOperator(new TakeSpace())
-        new SequenceOperator(takeSpc, new SequenceOperator(in, takeSpc) )
+        new SequenceOperatorNoBacktrack(takeSpc, new SequenceOperatorNoBacktrack(in, takeSpc) )
       } else {
         in
       }

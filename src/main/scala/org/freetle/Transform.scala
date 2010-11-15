@@ -619,7 +619,6 @@ trait Transform[Context] extends TransformModel[Context] {
    */
   @serializable @SerialVersionUID(599494944949L + 10 *26L)
   abstract case class TakeDataToContext() extends TakeTransform {
-    // TODO There is a problem with the fact that the context is mutable. (Really ?)
     def pushToContext(text : String, context : Context) : Context
 
 		override def apply(in : XMLResultStream) : XMLResultStream =
@@ -634,6 +633,8 @@ trait Transform[Context] extends TransformModel[Context] {
                   }
                   case None => None
                 }
+          // There is a huge problem with the fact that we are using map here.
+          // TODO Maybe we could make the context global rather local on the stream.
           Stream.cons( Result(in.head.subEvent, newContext), in.tail map (x => Tail(x.subEvent, newContext)))
         }
         case _ => new ZeroTransform().apply(in)
