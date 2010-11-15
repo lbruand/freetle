@@ -158,14 +158,16 @@ class BenchmarkTest {
           }
         }
 
-        val t = (<("catalog") -> new DropFilter() 
+        val t = (<("catalog") //-> new DropFilter()
                 )~
                     (((( (<("cd") ~
                         <("title") ~
-                             titleTaker ~
+                            new TakeSpace() ~
+                            //titleTaker ~
                         </("title") ~
                         <("artist") ~
-                             artistTaker ~
+                            new TakeSpace() ~
+                            //artistTaker ~
                         </("artist") ~
                         <("country") ~
                              new TakeText() ~
@@ -179,7 +181,7 @@ class BenchmarkTest {
                         <("year") ~
                              new TakeText() ~
                         </("year") ~
-                      </("cd")) -> new DropFilter()) ~ new PushNode(
+                      </("cd")) /* -> new DropFilter()) ~ new PushNode(
                          (x : Option[FreetleCaseBenchmarkContext]) => {                           
                            x match {
 
@@ -190,10 +192,11 @@ class BenchmarkTest {
 </cd>
                                                       case _ => <cd></cd>
                            }
-                         }
-                      ))
-                    )*) ~
-                (</("catalog") -> new DropFilter()
+                         } */
+                      ) 
+                      )
+                    )  *) ~
+                (</("catalog") //-> new DropFilter()
                         )
         (new SpaceSkipingMetaProcessor())(t)
       }
@@ -202,7 +205,7 @@ class BenchmarkTest {
         val context = new FreetleCaseBenchmarkContext()
         val inStream = XMLResultStreamUtils.loadXMLResultStream(catalogSource, Some(context))
         val outStream = transform(inStream)
-        result = XMLResultStreamUtils.serializeXMLResultStream(outStream).mkString
+        result = new StringBuilder().appendAll(XMLResultStreamUtils.serializeXMLResultStream(outStream)).toString
         result
       }
       
@@ -219,8 +222,8 @@ class BenchmarkTest {
 
   @Test
   def testXSLT() = {
-    val freetleBenchmark = new FreetleCaseBenchmark(nCatalog = 100)
-    val benchmarks = List( new XSLTCaseBenchmark(nCatalog = 100),
+    val freetleBenchmark = new FreetleCaseBenchmark(nCatalog = 10000)
+    val benchmarks = List( //new XSLTCaseBenchmark(nCatalog = 1000),
                           freetleBenchmark)
     val timings = benchmarks.map(_.runBenchmark(3))
 
