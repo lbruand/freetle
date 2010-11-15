@@ -28,13 +28,13 @@ trait FreetleModel[Context] {
   abstract class TransformResult(val subEvent : event, val context : Option[Context]) {
     def toTail() : TransformResult = {
       this match {
-        case Result(sub, context) => new Tail(sub, context)
+        case Result(subEvent, context) => new Tail(subEvent, context)
         case _ => this
       }
     }
     def toResult() : TransformResult = {
       this match {
-        case Tail(sub, context) => new Result(sub, context)
+        case Tail(subEvent, context) => new Result(subEvent, context)
         case _ => this
       }
     }
