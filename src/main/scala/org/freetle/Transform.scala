@@ -29,6 +29,8 @@ import scala.xml._
 //
 //  Functionalities
 //  ===============
+//  * There is a huge problem with the context system as it is :
+//  * It leads to stackoverflows because the TakeToContext use of map is too expensive.
 //  * Write a test checking that the Compose Operator (i.d. irish composition) works properly. (tail  of the first function)
 //  * Check that a SAXPath expression can be created using the unitary transformations and operator.
 //  * Is it possible to convert the framework into a real pipeline (with multiple threads) ?
