@@ -513,7 +513,8 @@ trait Transform[Context] extends TransformModel[Context] {
       case comment : scala.xml.Comment => Stream(Result(new EvComment(comment.text), context))
       case pi : scala.xml.ProcInstr => Stream(Result(new EvProcInstr(pi.target, pi.proctext), context))
       case entityRef : scala.xml.EntityRef => Stream(Result(new EvEntityRef(entityRef.entityName), context))
-      case _ => Stream(Result(new EvText("error"), context))
+      case atom : scala.xml.Atom[Any] => Stream(Result(new EvText(atom.text), context)) 
+      case _ => Stream(Result(new EvText("error" + node.getClass), context)) // TODO Throw exception.
     }
 
     override def apply(in : XMLResultStream) : XMLResultStream = {
