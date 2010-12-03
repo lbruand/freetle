@@ -112,25 +112,40 @@ class CPSModel[Element, Context] {
     }
   }
 
+  /**
+   * A transform that's context-free
+   * (Not using the context, either as input or ouput)
+   */
   abstract class ContextFreeTransform extends TransformBase {
     def partapply(s : CPSStream) : CPSStream
     def apply(s : CPSStream, c : Context) : (CPSStream, Context) = (partapply(s), c)
   }
 
+  /**
+   * A transform that's modifying the context but not the stream.
+   */
   abstract class ContextWritingTransform extends TransformBase {
     def partapply(s : CPSStream, c : Context) : Context
     def apply(s : CPSStream, c : Context) : (CPSStream, Context) = (s, partapply(s, c))
   }
 
+  /**
+   * A transform that's using the context to modify the stream.
+   */
   abstract class ContextReadingTransform extends TransformBase {
     def partapply(s : CPSStream, c : Context) : CPSStream
     def apply(s : CPSStream, c : Context) : (CPSStream, Context) = (partapply(s, c), c)
   }
 
-
+  /**
+   * A function that matches elements.
+   */
   type CPSElemMatcher = Element => Boolean
 
-  class Taker(matcher : CPSElemMatcher)  extends ContextFreeTransform {
+  /**
+   * A Context-free transform that matches elements.
+   */
+  class ElementMatcherTaker(matcher : CPSElemMatcher)  extends ContextFreeTransform {
     def partapply(s : CPSStream) : CPSStream = {
       if (s.isEmpty)
         s
