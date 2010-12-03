@@ -91,7 +91,14 @@ class CPSModel[Element, Context] {
   }
 
   /**
-   * Base class for cardinality operators.
+   * Composition Operator.
+   */
+  class ComposeOperator(left : =>ChainedTransform, right : =>ChainedTransform) extends BinaryOperator(left, right) {
+    def apply(success : =>CFilter, failure : =>CFilter) : CFilter = left(right(success, failure), failure)
+  }
+
+  /**
+   *  Base class for cardinality operators.
    */
   abstract class CardinalityOperator(underlying : =>ChainedTransform) extends UnaryOperator(underlying)
   
