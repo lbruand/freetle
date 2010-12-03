@@ -27,8 +27,8 @@ class CPSModel[Element, Context] {
   type CPSTupleElement = Tuple2[CPSElementOrPositive, Boolean]
   type CPSStream = Stream[CPSTupleElement]
 
-  type CFilter = (CPSStream, Context) => CPSStream //Function2[CPSStream, Context, CPSStream]
-
+  type CFilter = (CPSStream, Context) => CPSStream
+  
   type ChainedTransform = (=>CFilter, =>CFilter) => CFilter
 
   /**
