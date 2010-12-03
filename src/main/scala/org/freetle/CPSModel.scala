@@ -91,25 +91,25 @@ class CPSModel[Element, Context] {
   }
 
   abstract class ContextFreeTransform extends TransformBase {
-    def projapply(s : CPSStream) : CPSStream
-    def apply(s : CPSStream, c : Context) : (CPSStream, Context) = (projapply(s), c)
+    def partapply(s : CPSStream) : CPSStream
+    def apply(s : CPSStream, c : Context) : (CPSStream, Context) = (partapply(s), c)
   }
 
   abstract class ContextWritingTransform extends TransformBase {
-    def projapply(s : CPSStream, c : Context) : Context
-    def apply(s : CPSStream, c : Context) : (CPSStream, Context) = (s, projapply(s, c))
+    def partapply(s : CPSStream, c : Context) : Context
+    def apply(s : CPSStream, c : Context) : (CPSStream, Context) = (s, partapply(s, c))
   }
 
   abstract class ContextReadingTransform extends TransformBase {
-    def projapply(s : CPSStream, c : Context) : CPSStream
-    def apply(s : CPSStream, c : Context) : (CPSStream, Context) = (projapply(s, c), c)
+    def partapply(s : CPSStream, c : Context) : CPSStream
+    def apply(s : CPSStream, c : Context) : (CPSStream, Context) = (partapply(s, c), c)
   }
 
 
   type CPSElemMatcher = Element => Boolean
 
   class Taker(matcher : CPSElemMatcher)  extends ContextFreeTransform {
-    def projapply(s : CPSStream) : CPSStream = {
+    def partapply(s : CPSStream) : CPSStream = {
       if (s.isEmpty)
         s
       else
