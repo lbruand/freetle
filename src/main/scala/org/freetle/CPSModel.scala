@@ -84,9 +84,31 @@ class CPSModel[Element, Context] {
     }
   }
 
-  class RepeatingOperator(override val underlying : ChainedTransform) extends UnaryOperator(underlying : ChainedTransform) {
+  abstract class CardinalityOperator(override val underlying : ChainedTransform) extends UnaryOperator(underlying : ChainedTransform)
+  
+  /**
+   * Cardinality operator 1..*
+   */
+  class OneOrMoreOperator(override val underlying : ChainedTransform) extends CardinalityOperator(underlying : ChainedTransform) {
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       new SequenceOperator(underlying, this)(success, failure)
+    }
+  }
+  /**
+   * Cardinality operator 0..1
+   */
+  class ZeroOrOneOperator(override val underlying : ChainedTransform) extends CardinalityOperator(underlying : ChainedTransform) {
+    def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
+      underlying(success, success)
+    }
+  }
+
+  /**
+   * Cardinality operator 0..* 
+   */
+  class ZeroOrMoreOperator(override val underlying : ChainedTransform) extends CardinalityOperator(underlying : ChainedTransform) {
+    def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
+      new SequenceOperator(underlying, this)(success, success)
     }
   }
 

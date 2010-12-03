@@ -24,14 +24,14 @@ case class TestContext(a : Int = 0)
 @Test
 class CPSTest extends CPSModel[Char, TestContext] {
 
-  val max = 100000
+  val max = 10000000
 
 
   @Test
   def testTaker() = {
     def createStream : CPSStream = Stream.continually((Some('a'), false)).take(max)
 
-    val t = new RepeatingOperator(new Taker(_.equals('a')))
+    val t = new OneOrMoreOperator(new Taker(_.equals('a')))
     val filterIdentity = new CFilterIdentity()
     
     t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
