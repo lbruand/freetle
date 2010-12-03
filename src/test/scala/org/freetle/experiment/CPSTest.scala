@@ -21,6 +21,9 @@ import org.freetle.CPSModel
 
 case class TestContext(a : Int = 0)
 
+/**
+ * TODO : Explore backtracking.
+ */
 @Test
 class CPSTest extends CPSModel[Char, TestContext] {
 
