@@ -67,8 +67,14 @@ class CPSModel[Element, Context] {
    */
   abstract class Operator extends ChainedTransform
 
+  /**
+   * A Base class for Unary operators (which modify just one transform)
+   */
   abstract class UnaryOperator(val underlying : ChainedTransform) extends Operator
 
+  /**
+   * A base class for Binary operators (which combine two different transforms, named left and right)
+   */
   abstract class BinaryOperator(val left : ChainedTransform, val right : ChainedTransform) extends Operator
 
   /**
@@ -84,6 +90,9 @@ class CPSModel[Element, Context] {
     }
   }
 
+  /**
+   * Base class for cardinality operators.
+   */
   abstract class CardinalityOperator(override val underlying : ChainedTransform) extends UnaryOperator(underlying : ChainedTransform)
   
   /**
