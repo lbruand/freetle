@@ -52,8 +52,8 @@ class CPSTest extends CPSModel[Char, TestContext] {
                                                                          }
                                                                        }
                                                                   )
-
   }
+  
   @Test
   def testStream() = {
     def recurse(s : CPSStream, context : TestContext) : CPSStream = {
