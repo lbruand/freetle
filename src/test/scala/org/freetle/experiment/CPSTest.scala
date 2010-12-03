@@ -45,8 +45,25 @@ class CPSTest extends CPSModel[Char, TestContext] {
   }
 
   @Test
-  def testSequenceWithLength() = {
-    // TODO This test is not working : need to put it right!
+  def testSequenceWithZeroOrMore() = {
+    def createStream : CPSStream = {
+      Stream.continually((Some('a'), false)).take(max).append(
+          Stream.continually((Some('b'), false)).take(max)
+        )
+    }
+
+    val t = new SequenceOperator(new ZeroOrMoreOperator(new ElementMatcherTaker(_.equals('a'))),
+                                 new ZeroOrMoreOperator(new ElementMatcherTaker(_.equals('b'))))
+    val filterIdentity = new CFilterIdentity()
+
+    t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
+                                                                         assertTrue(" char : " + x._1, x._2)
+                                                                       }
+                                                                  )
+  }
+
+  @Test
+  def testSequenceWithOneOrMore() = {
     def createStream : CPSStream = {
       Stream.continually((Some('a'), false)).take(max).append(
           Stream.continually((Some('b'), false)).take(max)
@@ -61,7 +78,7 @@ class CPSTest extends CPSModel[Char, TestContext] {
                                                                          assertTrue(" char : " + x._1, x._2)
                                                                        }
                                                                   )
-  }
+  }  
 
   @Test
   def testTaker() = {
