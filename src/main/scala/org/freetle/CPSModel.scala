@@ -107,7 +107,7 @@ class CPSModel[Element, Context] {
    */
   class OneOrMoreOperator(underlying : =>ChainedTransform) extends CardinalityOperator(underlying) {
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      new SequenceOperator(underlying, this)(success, failure)
+      new SequenceOperator(underlying, new ZeroOrMoreOperator(underlying))(success, failure)
     }
   }
   /**
