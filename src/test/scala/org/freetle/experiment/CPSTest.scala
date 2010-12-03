@@ -16,8 +16,6 @@
 package org.freetle.experiment
 import org.junit._
 import Assert._
-import java.lang.String
-import annotation.tailrec
 import org.freetle.CPSModel
 
 
