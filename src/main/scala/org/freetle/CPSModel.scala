@@ -70,17 +70,17 @@ class CPSModel[Element, Context] {
   /**
    * A Base class for Unary operators (which modify just one transform)
    */
-  abstract class UnaryOperator(val underlying : ChainedTransform) extends Operator
+  abstract class UnaryOperator(underlying : =>ChainedTransform) extends Operator
 
   /**
    * A base class for Binary operators (which combine two different transforms, named left and right)
    */
-  abstract class BinaryOperator(val left : ChainedTransform, val right : ChainedTransform) extends Operator
+  abstract class BinaryOperator(left : =>ChainedTransform, right : =>ChainedTransform) extends Operator
 
   /**
    * We execute in sequence left and then right if left has returned a result. 
    */
-  class SequenceOperator(override val left : ChainedTransform, override val right : ChainedTransform) extends BinaryOperator(left : ChainedTransform, right : ChainedTransform) {
+  class SequenceOperator(left : =>ChainedTransform, right : =>ChainedTransform) extends BinaryOperator(left, right) {
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       left( (s : CPSStream, c : Context) => {
               val (hd, tl) = s.span(_._2)
@@ -93,12 +93,12 @@ class CPSModel[Element, Context] {
   /**
    * Base class for cardinality operators.
    */
-  abstract class CardinalityOperator(override val underlying : ChainedTransform) extends UnaryOperator(underlying : ChainedTransform)
+  abstract class CardinalityOperator(underlying : =>ChainedTransform) extends UnaryOperator(underlying)
   
   /**
    * Cardinality operator 1..*
    */
-  class OneOrMoreOperator(override val underlying : ChainedTransform) extends CardinalityOperator(underlying : ChainedTransform) {
+  class OneOrMoreOperator(underlying : =>ChainedTransform) extends CardinalityOperator(underlying) {
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       new SequenceOperator(underlying, this)(success, failure)
     }
@@ -106,7 +106,7 @@ class CPSModel[Element, Context] {
   /**
    * Cardinality operator 0..1
    */
-  class ZeroOrOneOperator(override val underlying : ChainedTransform) extends CardinalityOperator(underlying : ChainedTransform) {
+  class ZeroOrOneOperator(underlying : =>ChainedTransform) extends CardinalityOperator(underlying) {
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       underlying(success, success) // TODO Not enough I think... need to add a EmptyPositive to be sure.
     }
@@ -115,7 +115,7 @@ class CPSModel[Element, Context] {
   /**
    * Cardinality operator 0..* 
    */
-  class ZeroOrMoreOperator(override val underlying : ChainedTransform) extends CardinalityOperator(underlying : ChainedTransform) {
+  class ZeroOrMoreOperator(underlying : =>ChainedTransform) extends CardinalityOperator(underlying) {
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       new SequenceOperator(underlying, this)(success, success) // TODO Not enough I think... need to add a EmptyPositive to be sure.
     }
