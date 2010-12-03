@@ -21,7 +21,7 @@ package org.freetle
  * It is internally using continuations This was used to solve the stackoverflow problems
  * met in previous backtracking models. 
  */
-
+ // TODO : Explore if it is not possible to get rid of isPositive and the emptyPositive completely using CPS.
 class CPSModel[Element, Context] {
   type CPSElementOrPositive = Option[Element]
   type CPSTupleElement = Tuple2[CPSElementOrPositive, Boolean]
