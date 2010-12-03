@@ -26,7 +26,7 @@ case class TestContext(a : Int = 0)
 @Test
 class CPSTest extends CPSModel[Char, TestContext] {
 
-  val max = 1000000000
+  val max = 100000
 
 
   @Test
@@ -34,8 +34,27 @@ class CPSTest extends CPSModel[Char, TestContext] {
     def createStream : CPSStream = Stream.continually((Some('a'), false)).take(max)
 
     val t = new RepeatingOperator(new Taker(_.equals('a')))
-    t(new CFilterIdentity(), new CFilterIdentity())(createStream, null).foreach(x => assertTrue(x._2))
+    val filterIdentity = new CFilterIdentity()
     
+    t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
+                                                                         assertTrue(x._2)
+                                                                         assertEquals(Some('a'), x._1)
+                                                                       }
+                                                                  )
+    def createStreamWithFinalB : CPSStream = Stream.continually((Some('a'), false)).take(max).append(Stream((Some('b'), false)))
+
+    t(filterIdentity, filterIdentity)(createStreamWithFinalB, null).zipWithIndex.foreach(xi => {                                                                          
+                                                                         val (x, i) = xi 
+                                                                         if (i != max) {
+                                                                           assertTrue(x._2)
+                                                                           assertEquals(Some('a'), x._1)
+                                                                         } else {
+                                                                           assertFalse(x._2)
+                                                                           assertEquals(Some('b'), x._1)
+                                                                         }
+                                                                       }
+                                                                  )
+
   }
   @Test
   def testStream() = {
