@@ -24,8 +24,44 @@ case class TestContext(a : Int = 0)
 @Test
 class CPSTest extends CPSModel[Char, TestContext] {
 
-  val max = 100000
+  val max = 10000
 
+  @Test
+  def testSequence() = {
+    def createStream : CPSStream = {
+      Stream((Some('a'), false)).append(
+          Stream((Some('b'), false))
+        )
+    }
+
+    val t = new SequenceOperator(new ElementMatcherTaker(_.equals('a')),
+                                 new ElementMatcherTaker(_.equals('b')))
+    val filterIdentity = new CFilterIdentity()
+
+    t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
+                                                                         assertTrue(" char : " + x._1, x._2)
+                                                                       }
+                                                                  )
+  }
+
+  @Test
+  def testSequenceWithLength() = {
+    // TODO This test is not working : need to put it right!
+    def createStream : CPSStream = {
+      Stream.continually((Some('a'), false)).take(max).append(
+          Stream.continually((Some('b'), false)).take(max)
+        )
+    }
+
+    val t = new SequenceOperator(new OneOrMoreOperator(new ElementMatcherTaker(_.equals('a'))),
+                                 new OneOrMoreOperator(new ElementMatcherTaker(_.equals('b'))))
+    val filterIdentity = new CFilterIdentity()
+
+    t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
+                                                                         assertTrue(" char : " + x._1, x._2)
+                                                                       }
+                                                                  )
+  }
 
   @Test
   def testTaker() = {
@@ -39,6 +75,7 @@ class CPSTest extends CPSModel[Char, TestContext] {
                                                                          assertEquals(Some('a'), x._1)
                                                                        }
                                                                   )
+
     def createStreamWithFinalB : CPSStream = Stream.continually((Some('a'), false)).take(max).append(Stream((Some('b'), false)))
 
     t(filterIdentity, filterIdentity)(createStreamWithFinalB, null).zipWithIndex.foreach(xi => {                                                                          
