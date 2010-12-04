@@ -37,19 +37,26 @@ class CPSModel[Element, Context] {
   class CFilterIdentity extends CFilter {
     def apply(s : CPSStream, c : Context) : CPSStream = s
   }
+  abstract class ChainedTransformRoot extends ChainedTransform
 
   /**
-   *  Base class for all transforms.
+   * HelperMethods on CPSStream.
    */
-  abstract class TransformBase extends ChainedTransform {
-    def apply(s : CPSStream, c : Context) : (CPSStream, Context)
+  trait CPSStreamHelperMethods {
+    final def removeWhileEmptyPositive(s : CPSStream) : CPSStream = s.dropWhile( x =>  x.equals( (None, true) ))
 
-    def isPositive(s : CPSStream) : Boolean = {
+    final def isPositive(s : CPSStream) : Boolean = {
       if (s.isEmpty)
         false
       else
         s.head._2
-    }
+    }    
+  }
+  /**
+   *  Base class for all transforms.
+   */
+  abstract class TransformBase extends ChainedTransformRoot with CPSStreamHelperMethods {
+    def apply(s : CPSStream, c : Context) : (CPSStream, Context)
 
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       (s : CPSStream, c : Context) => {
@@ -65,22 +72,22 @@ class CPSModel[Element, Context] {
   /**
    * Base class for Operators. (Transforms that combine two transforms)
    */
-  abstract class Operator extends ChainedTransform
+  abstract class Operator extends ChainedTransformRoot
 
   /**
    * A Base class for Unary operators (which modify just one transform)
    */
-  abstract class UnaryOperator(underlying : =>ChainedTransform) extends Operator
+  abstract class UnaryOperator(underlying : =>ChainedTransformRoot) extends Operator
 
   /**
    * A base class for Binary operators (which combine two different transforms, named left and right)
    */
-  abstract class BinaryOperator(left : =>ChainedTransform, right : =>ChainedTransform) extends Operator
+  abstract class BinaryOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends Operator
 
   /**
    * We execute in sequence left and then right if left has returned a result. 
    */
-  class SequenceOperator(left : =>ChainedTransform, right : =>ChainedTransform) extends BinaryOperator(left, right) {
+  class SequenceOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       left( (s : CPSStream, c : Context) => {
               val (hd, tl) = s.span(_._2)
@@ -93,19 +100,19 @@ class CPSModel[Element, Context] {
   /**
    * Composition Operator.
    */
-  class ComposeOperator(left : =>ChainedTransform, right : =>ChainedTransform) extends BinaryOperator(left, right) {
+  class ComposeOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = left(right(success, failure), failure)
   }
 
   /**
    *  Base class for cardinality operators.
    */
-  abstract class CardinalityOperator(underlying : =>ChainedTransform) extends UnaryOperator(underlying)
+  abstract class CardinalityOperator(underlying : =>ChainedTransformRoot) extends UnaryOperator(underlying)
   
   /**
    * Cardinality operator 1..*
    */
-  class OneOrMoreOperator(underlying : =>ChainedTransform) extends CardinalityOperator(underlying) {
+  class OneOrMoreOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       new SequenceOperator(underlying, new ZeroOrMoreOperator(underlying))(success, failure)
     }
@@ -113,7 +120,7 @@ class CPSModel[Element, Context] {
   /**
    * Cardinality operator 0..1
    */
-  class ZeroOrOneOperator(underlying : =>ChainedTransform) extends CardinalityOperator(underlying) {
+  class ZeroOrOneOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       underlying(success, success) // TODO Not enough I think... need to add a EmptyPositive to be sure.
     }
@@ -122,7 +129,7 @@ class CPSModel[Element, Context] {
   /**
    * Cardinality operator 0..* 
    */
-  class ZeroOrMoreOperator(underlying : =>ChainedTransform) extends CardinalityOperator(underlying) {
+  class ZeroOrMoreOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       new SequenceOperator(underlying, this)(success, success) // TODO Not enough I think... need to add a EmptyPositive to be sure.
     }
@@ -162,14 +169,17 @@ class CPSModel[Element, Context] {
    * A Context-free transform that matches elements.
    */
   class ElementMatcherTaker(matcher : CPSElemMatcher)  extends ContextFreeTransform {
+    
     def partapply(s : CPSStream) : CPSStream = {
       if (s.isEmpty)
         s
-      else
-        if (matcher(s.head._1.get))
-          Stream.cons( (s.head._1, true), s.tail)
+      else {
+        val sr = removeWhileEmptyPositive(s)
+        if (matcher(sr.head._1.get))
+          Stream.cons( (sr.head._1, true), sr.tail)
         else
           s
+        }
     }
   }
 }
