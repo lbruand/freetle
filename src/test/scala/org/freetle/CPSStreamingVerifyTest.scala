@@ -13,19 +13,20 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
-package org.freetle.experiment
+package org.freetle
 import org.junit._
 import Assert._
-import org.freetle.CPSModel
 
 
 case class TestContext(a : Int = 0)
 
 /**
  * TODO : Explore backtracking.
+ *
+ * JVM Tuning : use a contrained JVM to test -Xmx10m -Xss100k in order to verify that we are streaming.
  */
 @Test
-class CPSTest extends CPSModel[Char, TestContext] {
+class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
 
   val max = 10000
 
