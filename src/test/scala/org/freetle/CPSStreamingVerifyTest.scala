@@ -38,8 +38,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
         )
     }
 
-    val t = new SequenceOperator(new ElementMatcherTaker(_.equals('a')),
-                                 new ElementMatcherTaker(_.equals('b')))
+    val t = (new ElementMatcherTaker(_.equals('a')) ~ new ElementMatcherTaker(_.equals('b')))
     val filterIdentity = new CFilterIdentity()
 
     t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
@@ -56,8 +55,8 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
         )
     }
 
-    val t = new SequenceOperator(new ZeroOrMoreOperator(new ElementMatcherTaker(_.equals('a'))),
-                                 new ZeroOrMoreOperator(new ElementMatcherTaker(_.equals('b'))))
+    val t = ((new ElementMatcherTaker(_.equals('a'))*) ~
+                                (new ElementMatcherTaker(_.equals('b')))*)
     val filterIdentity = new CFilterIdentity()
 
     t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
@@ -74,8 +73,8 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
         )
     }
 
-    val t = new SequenceOperator(new OneOrMoreOperator(new ElementMatcherTaker(_.equals('a'))),
-                                 new OneOrMoreOperator(new ElementMatcherTaker(_.equals('b'))))
+    val t = ((new ElementMatcherTaker(_.equals('a')))+) ~
+                                 ((new ElementMatcherTaker(_.equals('b')))+)
     val filterIdentity = new CFilterIdentity()
 
     t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
@@ -88,7 +87,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
   def testTaker() = {
     def createStream : CPSStream = Stream.continually((Some('a'), false)).take(max)
 
-    val t = new OneOrMoreOperator(new ElementMatcherTaker(_.equals('a')))
+    val t = (new ElementMatcherTaker(_.equals('a')))+
     val filterIdentity = new CFilterIdentity()
     
     t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {

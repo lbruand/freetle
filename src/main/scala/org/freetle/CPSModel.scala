@@ -37,8 +37,13 @@ class CPSModel[Element, Context] {
   class CFilterIdentity extends CFilter {
     def apply(s : CPSStream, c : Context) : CPSStream = s
   }
-  abstract class ChainedTransformRoot extends ChainedTransform
-
+  abstract class ChainedTransformRoot extends ChainedTransform {
+    final def ~(other : => ChainedTransformRoot) : ChainedTransformRoot = new SequenceOperator(this, other)
+    final def ->(other : => ChainedTransformRoot) : ChainedTransformRoot = new ComposeOperator(other, this)
+    final def * : ChainedTransformRoot = new ZeroOrMoreOperator(this)
+    final def + : ChainedTransformRoot = new OneOrMoreOperator(this)
+    final def ? : ChainedTransformRoot = new ZeroOrOneOperator(this)
+  }
   /**
    * HelperMethods on CPSStream.
    */
