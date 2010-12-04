@@ -27,7 +27,7 @@ case class TestContext(a : Int = 0)
 @Test
 class CPSTest extends CPSModel[Char, TestContext] {
 
-  val max = 1000000
+  val max = 10000
 
   @Test
   def testSequence() = {
