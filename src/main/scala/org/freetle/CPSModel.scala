@@ -109,8 +109,7 @@ class CPSModel[Element, Context] {
         val (hd, tl) = s.span(_._2)
         hd.append( { right(success, failure)(tl, c) })
       }
-      left( innerSequenceOperator
-            , failure)
+      left(innerSequenceOperator, failure)
     }
   }
 
