@@ -104,12 +104,12 @@ class CPSModel[Element, Context] {
    * We execute in sequence left and then right if left has returned a result. 
    */
   class SequenceOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
-    def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      def innerSequenceOperator(s : CPSStream, c : Context) : CPSStream = {
+    final private def innerSequenceOperator(input : =>CFilter)(s : CPSStream, c : Context) : CPSStream = {
         val (hd, tl) = s.span(_._2)
-        hd.append( { right(success, failure)(tl, c) })
-      }
-      left(innerSequenceOperator, failure)
+        hd.append( { input(tl, c) })
+    }
+    def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
+      left(innerSequenceOperator(right(success, failure)), failure)
     }
   }
 
