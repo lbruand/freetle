@@ -28,7 +28,7 @@ case class TestContext(a : Int = 0)
 @Test
 class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
 
-  val max = 10000
+  final val max = 10000
 
   @Test
   def testSequence() = {
@@ -92,20 +92,31 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
     
     t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
                                                                          assertTrue(x._2)
-                                                                         assertEquals(Some('a'), x._1)
+                                                                         x._1 match {
+                                                                           case None => assertTrue(true)
+                                                                           case Some(c) =>  assertEquals('a', c)
+                                                                         }
+
                                                                        }
                                                                   )
 
     def createStreamWithFinalB : CPSStream = Stream.continually((Some('a'), false)).take(max).append(Stream((Some('b'), false)))
 
     t(filterIdentity, filterIdentity)(createStreamWithFinalB, null).zipWithIndex.foreach(xi => {                                                                          
-                                                                         val (x, i) = xi 
-                                                                         if (i != max) {
-                                                                           assertTrue(x._2)
-                                                                           assertEquals(Some('a'), x._1)
-                                                                         } else {
-                                                                           assertFalse(x._2)
-                                                                           assertEquals(Some('b'), x._1)
+                                                                         val (x, i) = xi
+                                                                         i match {
+                                                                           case c if (c == max) => {
+                                                                             assertTrue(x._2)
+                                                                             assertEquals(None, x._1)
+                                                                           }
+                                                                           case c if (c == max+1) => {
+                                                                             assertFalse(x._2)
+                                                                             assertEquals(Some('b'), x._1)
+                                                                           }
+                                                                           case _ => {
+                                                                             assertTrue(x._2)
+                                                                             assertEquals(Some('a'), x._1)
+                                                                           }
                                                                          }
                                                                        }
                                                                   )
