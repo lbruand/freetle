@@ -40,6 +40,7 @@ class CPSModel[Element, Context] {
   abstract class ChainedTransformRoot extends ChainedTransform with CPSStreamHelperMethods {
     final def ~(other : => ChainedTransformRoot) : ChainedTransformRoot = new SequenceOperator(this, other)
     final def ->(other : => ChainedTransformRoot) : ChainedTransformRoot = new ComposeOperator(other, this)
+    final def |(other : => ChainedTransformRoot) : ChainedTransformRoot = new ChoiceOperator(this, other)
     final def * : ChainedTransformRoot = new ZeroOrMoreOperator(this)
     final def + : ChainedTransformRoot = new OneOrMoreOperator(this)
     final def ? : ChainedTransformRoot = new ZeroOrOneOperator(this)

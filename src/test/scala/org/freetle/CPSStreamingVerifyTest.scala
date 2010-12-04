@@ -29,6 +29,22 @@ case class TestContext(a : Int = 0)
 class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
 
   final val max = 10000
+  final val filterIdentity = new CFilterIdentity()
+
+  @Test
+  def testChoiceSimple() = {
+    def createStream : CPSStream = {
+      Stream.continually((Some('a'), false)).take(max).append(
+          Stream.continually((Some('b'), false)).take(max)
+        )
+    }
+    val t = (new ElementMatcherTaker(_.equals('a')) | new ElementMatcherTaker(_.equals('b')))+
+
+    t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
+                                                                         assertTrue(" char : " + x._1, x._2)
+                                                                       }
+                                                                  )
+  }
 
   @Test
   def testSequence() = {
@@ -39,7 +55,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
     }
 
     val t = (new ElementMatcherTaker(_.equals('a')) ~ new ElementMatcherTaker(_.equals('b')))
-    val filterIdentity = new CFilterIdentity()
+
 
     t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
                                                                          assertTrue(" char : " + x._1, x._2)
@@ -57,7 +73,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
 
     val t = ((new ElementMatcherTaker(_.equals('a'))*) ~
                                 (new ElementMatcherTaker(_.equals('b')))*)
-    val filterIdentity = new CFilterIdentity()
+
 
     t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
                                                                          assertTrue(" char : " + x._1, x._2)
@@ -75,7 +91,6 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
 
     val t = ((new ElementMatcherTaker(_.equals('a')))+) ~
                                  ((new ElementMatcherTaker(_.equals('b')))+)
-    val filterIdentity = new CFilterIdentity()
 
     t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
                                                                          assertTrue(" char : " + x._1, x._2)
@@ -88,7 +103,6 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
     def createStream : CPSStream = Stream.continually((Some('a'), false)).take(max)
 
     val t = (new ElementMatcherTaker(_.equals('a')))+
-    val filterIdentity = new CFilterIdentity()
     
     t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
                                                                          assertTrue(x._2)
