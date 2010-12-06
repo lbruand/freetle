@@ -39,7 +39,26 @@ class CPSModel[Element, Context] {
   class CFilterIdentity extends CFilter {
     def apply(s : CPSStream, c : Context) : CPSStream = s
   }
-  abstract class ChainedTransformRoot extends ChainedTransform with CPSStreamHelperMethods {
+
+  type InstantiateTransform = (()=>TransformBase)
+  type InstantiateUnaryOperator = ((=>ChainedTransformRoot) => ChainedTransformRoot)
+  type InstantiateBinaryOperator = ((=>ChainedTransformRoot, =>ChainedTransformRoot) => ChainedTransformRoot)
+  
+  trait MetaProcessor {
+    def processTransform(instantiate : InstantiateTransform) : ChainedTransformRoot
+    def processUnaryOperator(instantiate : InstantiateUnaryOperator, underlying : =>ChainedTransformRoot) : ChainedTransformRoot
+    def processBinaryOperator(instantiate : InstantiateBinaryOperator, left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) : ChainedTransformRoot
+  }
+  /**
+   *       t
+   */
+  trait MetaProcessable {
+    def metaProcess(metaProcessor : MetaProcessor) : ChainedTransformRoot
+  }
+  /**
+   * Abstract class for all transformations.
+   */
+  abstract class ChainedTransformRoot extends ChainedTransform with CPSStreamHelperMethods with MetaProcessable {
     final def ~(other : => ChainedTransformRoot) : ChainedTransformRoot = new SequenceOperator(this, other)
     final def ->(other : => ChainedTransformRoot) : ChainedTransformRoot = new ComposeOperator(other, this)
     final def |(other : => ChainedTransformRoot) : ChainedTransformRoot = new ChoiceOperator(this, other)
@@ -60,7 +79,7 @@ class CPSModel[Element, Context] {
         s.head._2
     }
 
-    final private def appendPositiveStream(s : CPSStream) : CPSStream = if (!isPositive(s))
+    final def appendPositiveStream(s : CPSStream) : CPSStream = if (!isPositive(s))
                                                                           Stream.cons((None, true), s)
                                                                         else
                                                                           s
@@ -107,6 +126,10 @@ class CPSModel[Element, Context] {
    * We execute in sequence left and then right if left has returned a result. 
    */
   class SequenceOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
+    final def metaProcess(metaProcessor : MetaProcessor) =
+              metaProcessor.processBinaryOperator(new SequenceOperator(_, _), left, right)
+
+
     final private def innerSequenceOperator(input : =>CFilter)(s : CPSStream, c : Context) : CPSStream = {
         val (hd, tl) = s.span(_._2)
         hd.append( { input(tl, c) })
@@ -120,6 +143,9 @@ class CPSModel[Element, Context] {
    * Composition Operator.
    */
   class ComposeOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
+    final def metaProcess(metaProcessor : MetaProcessor) =
+              metaProcessor.processBinaryOperator(new ComposeOperator(_, _), left, right)
+    
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = left(right(success, failure), failure)
   }
 
@@ -127,6 +153,9 @@ class CPSModel[Element, Context] {
    * Choice Operator
    */
   class ChoiceOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
+    final def metaProcess(metaProcessor : MetaProcessor) =
+              metaProcessor.processBinaryOperator(new ChoiceOperator(_, _), left, right)
+    
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = left(success, right(success, failure))
   }
 
@@ -139,6 +168,9 @@ class CPSModel[Element, Context] {
    * Cardinality operator 1..*
    */
   class OneOrMoreOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
+    final def metaProcess(metaProcessor : MetaProcessor) =
+              metaProcessor.processUnaryOperator(new OneOrMoreOperator(_), underlying)
+    
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       new SequenceOperator(underlying, new ZeroOrMoreOperator(underlying))(success, failure)
     }
@@ -147,7 +179,9 @@ class CPSModel[Element, Context] {
    * Cardinality operator 0..1
    */
   class ZeroOrOneOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
-
+    final def metaProcess(metaProcessor : MetaProcessor) =
+              metaProcessor.processUnaryOperator(new ZeroOrOneOperator(_), underlying)
+    
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       underlying(success, appendPositive(success)) // TODO Not enough I think... need to add a EmptyPositive to be sure.
     }
@@ -157,6 +191,9 @@ class CPSModel[Element, Context] {
    * Cardinality operator 0..* 
    */
   class ZeroOrMoreOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
+    final def metaProcess(metaProcessor : MetaProcessor) =
+              metaProcessor.processUnaryOperator(new ZeroOrMoreOperator(_), underlying)
+    
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       new SequenceOperator(underlying, this)(success, appendPositive(success)) // TODO Not enough I think... need to add a EmptyPositive to be sure.
     }
@@ -196,6 +233,8 @@ class CPSModel[Element, Context] {
    * A Context-free transform that matches elements.
    */
   class ElementMatcherTaker(matcher : CPSElemMatcher)  extends ContextFreeTransform {
+    final def metaProcess(metaProcessor : MetaProcessor) =
+              metaProcessor.processTransform( () => { new ElementMatcherTaker(matcher) })
     
     def partialapply(s : CPSStream) : CPSStream = {
       if (s.isEmpty)
@@ -208,5 +247,41 @@ class CPSModel[Element, Context] {
           s
         }
     }
+  }
+
+  /**
+   * A context-free transform, that drops all previous results.
+   * It adds a EmptyPositive result if there was something to drop.
+   */
+  class DropFilter extends ContextFreeTransform {
+    final def metaProcess(metaProcessor : MetaProcessor) =
+              metaProcessor.processTransform( () => { new DropFilter() })
+    def partialapply(s : CPSStream) : CPSStream = {
+      if (isPositive(s))
+        appendPositiveStream(s.dropWhile(_._2))
+      else
+        s
+    }
+  }
+
+  /**
+   * This is a template transform to select in the stream using an accumulator.
+   */
+  abstract class StatefulSelector[State] extends ContextFreeTransform {
+    def conditionToStop(state : State) : Boolean
+    def accumulate(state : State, element : CPSElementOrPositive) : State
+    def initialState : State
+    final private def recurse(in : CPSStream, currentState : State) : CPSStream = {
+      if (in.isEmpty)
+        Stream.empty
+      else
+      if (conditionToStop(currentState))
+        in
+      else
+        Stream.cons( (in.head._1, true),
+                    recurse(in.tail, accumulate(currentState, in.head._1)))
+    }
+    
+    override def partialapply(in : CPSStream) : CPSStream = recurse(in, initialState)
   }
 }
