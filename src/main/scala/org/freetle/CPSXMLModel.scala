@@ -15,7 +15,8 @@
   */
 package org.freetle
 
-import util.{EvElemEnd, EvElemStart, XMLEvent}
+import java.io.InputStream
+import util._
 
 /**
  * This is a streaming Continuation Passing Transformation model.
@@ -23,16 +24,66 @@ import util.{EvElemEnd, EvElemStart, XMLEvent}
  */
 
 class CPSXMLModel[Context] extends CPSModel[XMLEvent, Context] {
+  /**
+   * Used for backward compatibility.
+   */
+  type XMLResultStream = CPSStream
+
+  /**
+   * Take all the underlying nodes of the current event.
+   * The deepfilter does return the matching end bracket.
+   */
   class DeepFilter extends StatefulSelector[Int] {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(() => { new DeepFilter() })
     def conditionToStop(depth: Int) = depth < 0
 
     def accumulate(depth: Int, element: CPSElementOrPositive) : Int = depth + (element match {
-      case e: EvElemStart => +1
-      case e: EvElemEnd => -1
+      case Some(EvElemStart(_, _)) => +1
+      case Some(EvElemEnd(_)) => -1
       case _ => 0
     })
     
     def initialState = 1
   }
+
+  object < {
+    def evStartEvMatcher(name : String)(event : XMLEvent) = {
+      event match {
+        case EvElemStart(testName,_) if (name.equals(testName.localPart)) => true
+        case _ => false
+      }
+    }
+    def apply(name : String) = {
+      new ElementMatcherTaker(evStartEvMatcher(name))
+    }
+  }
+  object </ {
+    def evEndEvMatcher(name : String)(event : XMLEvent) = {
+      event match {
+        case EvElemEnd(testName) if (name.equals(testName.localPart)) => true
+        case _ => false
+      }
+    }
+    def apply(name : String) = {
+      new ElementMatcherTaker(evEndEvMatcher(name))
+    }
+  }
+  /**
+   * Util class to build XMLResultStream, save etc...
+   */
+
+  object XMLResultStreamUtils {
+    def loadXMLResultStream(in : InputStream, context : Option[Context]) : XMLResultStream = {
+      Stream.fromIterator(new XMLEventStream(in) map (x => (Some(x), false)))
+    }
+    def loadXMLResultStream(str : String, context : Option[Context]) : XMLResultStream = {
+      val src = StreamSource.fromIterator(str.toStream.iterator)
+      Stream.fromIterator(new XMLEventStream(src) map (x => (Some(x), false)))
+    }
+
+    def serializeXMLResultStream(evStream : =>XMLResultStream) : Stream[Char] = {
+      (evStream map (_._1.get.toStream)).flatten
+    }
+  }
+  
 }
