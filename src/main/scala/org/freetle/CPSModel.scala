@@ -22,7 +22,7 @@ package org.freetle
  * met in previous backtracking models. 
  */
  // TODO : Explore if it is not possible to get rid of isPositive and the emptyPositive completely using CPS.
- // TODO : Explore the possibility of serilizing the transforms with call-by-name member (left, right, underlying)
+ // TODO : Explore the possibility of serializing the transforms with call-by-name member (left, right, underlying)
  // TODO : Explore the possibility of Meta programming the transforms. 
 class CPSModel[Element, Context] {
   type CPSElementOrPositive = Option[Element]
@@ -45,9 +45,9 @@ class CPSModel[Element, Context] {
   type InstantiateBinaryOperator = ((=>ChainedTransformRoot, =>ChainedTransformRoot) => ChainedTransformRoot)
   
   trait MetaProcessor {
-    def processTransform(instantiate : InstantiateTransform) : ChainedTransformRoot
-    def processUnaryOperator(instantiate : InstantiateUnaryOperator, underlying : =>ChainedTransformRoot) : ChainedTransformRoot
-    def processBinaryOperator(instantiate : InstantiateBinaryOperator, left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) : ChainedTransformRoot
+    def processTransform(th :TransformBase, instantiate : InstantiateTransform) : ChainedTransformRoot
+    def processUnaryOperator(th : UnaryOperator, instantiate : InstantiateUnaryOperator, underlying : =>ChainedTransformRoot) : ChainedTransformRoot
+    def processBinaryOperator(th : BinaryOperator, instantiate : InstantiateBinaryOperator, left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) : ChainedTransformRoot
   }
   /**
    *       t
@@ -58,9 +58,9 @@ class CPSModel[Element, Context] {
   /**
    * Abstract class for all transformations.
    */
-  abstract class ChainedTransformRoot extends ChainedTransform with CPSStreamHelperMethods with MetaProcessable {
+  abstract sealed class ChainedTransformRoot extends ChainedTransform with CPSStreamHelperMethods with MetaProcessable {
     final def ~(other : => ChainedTransformRoot) : ChainedTransformRoot = new SequenceOperator(this, other)
-    final def ->(other : => ChainedTransformRoot) : ChainedTransformRoot = new ComposeOperator(other, this)
+    final def ->(other : => ChainedTransformRoot) : ChainedTransformRoot = new ComposeOperator(this, other)
     final def |(other : => ChainedTransformRoot) : ChainedTransformRoot = new ChoiceOperator(this, other)
     final def * : ChainedTransformRoot = new ZeroOrMoreOperator(this)
     final def + : ChainedTransformRoot = new OneOrMoreOperator(this)
@@ -127,12 +127,12 @@ class CPSModel[Element, Context] {
    */
   class SequenceOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
     final def metaProcess(metaProcessor : MetaProcessor) =
-              metaProcessor.processBinaryOperator(new SequenceOperator(_, _), left, right)
+              metaProcessor.processBinaryOperator(this, new SequenceOperator(_, _), left, right)
 
 
     final private def innerSequenceOperator(input : =>CFilter)(s : CPSStream, c : Context) : CPSStream = {
         val (hd, tl) = s.span(_._2)
-        hd.append( { input(tl, c) })
+        removeWhileEmptyPositive(hd).append( { input(tl, c) })
     }
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       left(innerSequenceOperator(right(success, failure)), failure)
@@ -144,9 +144,10 @@ class CPSModel[Element, Context] {
    */
   class ComposeOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
     final def metaProcess(metaProcessor : MetaProcessor) =
-              metaProcessor.processBinaryOperator(new ComposeOperator(_, _), left, right)
+              metaProcessor.processBinaryOperator(this, new ComposeOperator(_, _), left, right)
     
-    def apply(success : =>CFilter, failure : =>CFilter) : CFilter = left(right(success, failure), failure)
+    def apply(success : =>CFilter, failure : =>CFilter) : CFilter =
+      left(right(success, failure), failure)
   }
 
   /**
@@ -154,7 +155,7 @@ class CPSModel[Element, Context] {
    */
   class ChoiceOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
     final def metaProcess(metaProcessor : MetaProcessor) =
-              metaProcessor.processBinaryOperator(new ChoiceOperator(_, _), left, right)
+              metaProcessor.processBinaryOperator(this, new ChoiceOperator(_, _), left, right)
     
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = left(success, right(success, failure))
   }
@@ -169,7 +170,7 @@ class CPSModel[Element, Context] {
    */
   class OneOrMoreOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
     final def metaProcess(metaProcessor : MetaProcessor) =
-              metaProcessor.processUnaryOperator(new OneOrMoreOperator(_), underlying)
+              metaProcessor.processUnaryOperator(this, new OneOrMoreOperator(_), underlying)
     
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       new SequenceOperator(underlying, new ZeroOrMoreOperator(underlying))(success, failure)
@@ -180,7 +181,7 @@ class CPSModel[Element, Context] {
    */
   class ZeroOrOneOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
     final def metaProcess(metaProcessor : MetaProcessor) =
-              metaProcessor.processUnaryOperator(new ZeroOrOneOperator(_), underlying)
+              metaProcessor.processUnaryOperator(this, new ZeroOrOneOperator(_), underlying)
     
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       underlying(success, appendPositive(success)) // TODO Not enough I think... need to add a EmptyPositive to be sure.
@@ -192,7 +193,7 @@ class CPSModel[Element, Context] {
    */
   class ZeroOrMoreOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
     final def metaProcess(metaProcessor : MetaProcessor) =
-              metaProcessor.processUnaryOperator(new ZeroOrMoreOperator(_), underlying)
+              metaProcessor.processUnaryOperator(this, new ZeroOrMoreOperator(_), underlying)
     
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       new SequenceOperator(underlying, this)(success, appendPositive(success)) // TODO Not enough I think... need to add a EmptyPositive to be sure.
@@ -234,7 +235,7 @@ class CPSModel[Element, Context] {
    */
   class ElementMatcherTaker(matcher : CPSElemMatcher)  extends ContextFreeTransform {
     final def metaProcess(metaProcessor : MetaProcessor) =
-              metaProcessor.processTransform( () => { new ElementMatcherTaker(matcher) })
+              metaProcessor.processTransform(this, () => { new ElementMatcherTaker(matcher) })
     
     def partialapply(s : CPSStream) : CPSStream = {
       if (s.isEmpty)
@@ -255,7 +256,8 @@ class CPSModel[Element, Context] {
    */
   class DropFilter extends ContextFreeTransform {
     final def metaProcess(metaProcessor : MetaProcessor) =
-              metaProcessor.processTransform( () => { new DropFilter() })
+              metaProcessor.processTransform(this, () => { this })
+    
     def partialapply(s : CPSStream) : CPSStream = {
       if (isPositive(s))
         appendPositiveStream(s.dropWhile(_._2))

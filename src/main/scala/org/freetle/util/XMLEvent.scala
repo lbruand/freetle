@@ -146,7 +146,8 @@ class EvElemEndTypeMatcher extends TypeMatcher[EvElemEnd] {
   override def apply(event : XMLEvent) : Boolean = event.isInstanceOf[EvElemEnd]
 }
 class EvTextTypeMatcher extends TypeMatcher[EvText] {
-  override def apply(event : XMLEvent) : Boolean = event.isInstanceOf[EvText]
+  override def apply(event : XMLEvent) : Boolean =
+    event.isInstanceOf[EvText]
 }
 class EvEntityRefTypeMatcher extends TypeMatcher[EvEntityRef] {
   override def apply(event : XMLEvent) : Boolean = event.isInstanceOf[EvEntityRef]

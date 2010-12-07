@@ -34,7 +34,7 @@ class CPSXMLModel[Context] extends CPSModel[XMLEvent, Context] {
    * The deepfilter does return the matching end bracket.
    */
   class DeepFilter extends StatefulSelector[Int] {
-    def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(() => { new DeepFilter() })
+    def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { new DeepFilter() })
     def conditionToStop(depth: Int) = depth < 0
 
     def accumulate(depth: Int, element: CPSElementOrPositive) : Int = depth + (element match {
@@ -46,6 +46,9 @@ class CPSXMLModel[Context] extends CPSModel[XMLEvent, Context] {
     def initialState = 1
   }
 
+  /**
+   * Shortcut to take an opening tag based on the localpart.
+   */
   object < {
     def evStartEvMatcher(name : String)(event : XMLEvent) = {
       event match {
@@ -57,6 +60,10 @@ class CPSXMLModel[Context] extends CPSModel[XMLEvent, Context] {
       new ElementMatcherTaker(evStartEvMatcher(name))
     }
   }
+
+  /**
+   * Shortcut to take a closing tag based on the localpart.
+   */
   object </ {
     def evEndEvMatcher(name : String)(event : XMLEvent) = {
       event match {
@@ -66,6 +73,23 @@ class CPSXMLModel[Context] extends CPSModel[XMLEvent, Context] {
     }
     def apply(name : String) = {
       new ElementMatcherTaker(evEndEvMatcher(name))
+    }
+  }
+  /**
+   * Shortcut to take text.
+   */
+  object TakeText {
+    def apply() = {
+      new ElementMatcherTaker(new EvTextTypeMatcher())
+    }
+  }
+
+  /**
+   * Shortcut to take space or comment.
+   */
+  object TakeSpace {
+    def apply() = {
+      new ElementMatcherTaker(new SpaceOrCommentMatcher())
     }
   }
   /**

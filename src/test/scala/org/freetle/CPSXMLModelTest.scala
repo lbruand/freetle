@@ -1,4 +1,21 @@
+ /*
+  * Copyright 2010 Lucas Bruand
+  *
+  * Licensed under the Apache License, Version 2.0 (the "License");
+  * you may not use this file except in compliance with the License.
+  * You may obtain a copy of the License at
+  *
+  *     http://www.apache.org/licenses/LICENSE-2.0
+  *
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
 package org.freetle
+
+import meta.CPSMeta
 import org.junit._
 import Assert._
 import java.io.InputStream
@@ -58,7 +75,7 @@ trait TestXMLHelperMethods[Context] extends CPSXMLModel[Context] {
    */
   def serializeWithResult(x : XMLResultStream) : String = {
     val charStream : Stream[Char] = (x map
-            (y => Stream.cons(if (y._2) 'R' else 'T', y._1.get.toStream))).flatten
+            (y => Stream.cons(if (y._2) 'R' else 'T', y._1.getOrElse(new EvComment("EvEmptyPositive")).toStream))).flatten
     charStream.mkString
   }
   final def createStartElem(s : String) = new EvElemStart(new QName(NAMESPACE, s, PREFIX), null)
@@ -66,21 +83,21 @@ trait TestXMLHelperMethods[Context] extends CPSXMLModel[Context] {
   final val filterIdentity = new CFilterIdentity()
 }
 @Test
-class CPSXMLModelTest extends CPSXMLModel[TestContext] with TestXMLHelperMethods[TestContext] {
- @Test
+class CPSXMLModelTest extends CPSXMLModel[TestContext] with TestXMLHelperMethods[TestContext] with CPSMeta[TestContext] {
+  @Test
   def testDeepFilter() {
-   val s : CPSStream = List(
-        createStartElem("body"),
-        createStartElem("body"),
-        createStartElem("a"),
-        createStartElem("a"),
-        createEndElem("a"),
-        createEndElem("a"),
-        createStartElem("a"),
-        createEndElem("a"),
-        createEndElem("body"),
-        createEndElem("body")
-    ).toStream map (x => (Some(x), false))
+    val s : CPSStream = List(
+      createStartElem("body"),
+      createStartElem("body"),
+      createStartElem("a"),
+      createStartElem("a"),
+      createEndElem("a"),
+      createEndElem("a"),
+      createStartElem("a"),
+      createEndElem("a"),
+      createEndElem("body"),
+      createEndElem("body")
+      ).toStream map (x => (Some(x), false))
 
     val t = <("body") ~ <("body") ~ new DeepFilter()
     val r = t(filterIdentity, filterIdentity)(s, new TestContext())
@@ -88,5 +105,26 @@ class CPSXMLModelTest extends CPSXMLModel[TestContext] with TestXMLHelperMethods
     val t2 = <("body") ~ <("body") ~ <("a") ~ new DeepFilter()
     val r2 = t2(filterIdentity, filterIdentity)(s, new TestContext())
     assertEquals(serializeWithResult(r2), 9, lengthResult(r2))
- }
+  }
+  
+  @Test
+  def testDropFilter() = {
+    val evStream = loadStreamFromResource("/org/freetle/input.xml")
+
+    val t = <("input") ~
+                (( <("message") ~
+                   ((<("value") ~
+                   TakeText()   ~
+                   </("value")) -> new DropFilter()) ~
+                  </("message")
+                )+) ~ </("input")
+    val tmeta = t.metaProcess(new SpaceSkipingMetaProcessor())
+    val r = tmeta(filterIdentity, filterIdentity)(evStream, new TestContext())
+    assertAllResult(r, "Result : [" + serializeWithResult(r) + "]" )
+    assertEquals("Result : [" + serializeWithResult(r) + "]", evStream.length-8, r.length)
+    assertTrue(r.filter(x => (x._1 match {
+      case Some(EvElemStart(QName(_, "value", _), _)) => true
+      case _  => false
+    })).isEmpty)
+  }  
 }
