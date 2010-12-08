@@ -63,6 +63,7 @@ class CPSModel[Element, Context] {
    * A type to be used only as a trait for the ChainedTransformRoot
    */
   type ChainedTransform = (=>CFilter, =>CFilter) => CFilter
+  
   /**
    * Abstract class for all transformations.
    */
@@ -74,6 +75,7 @@ class CPSModel[Element, Context] {
     final def + : ChainedTransformRoot = new OneOrMoreOperator(this)
     final def ? : ChainedTransformRoot = new ZeroOrOneOperator(this)
   }
+  
   /**
    * HelperMethods on CPSStream.
    */
