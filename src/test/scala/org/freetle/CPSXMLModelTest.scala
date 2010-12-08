@@ -21,7 +21,7 @@ import Assert._
 import java.io.InputStream
 import util._
 
-case class TestContext(a : Int = 0)
+case class TestXMLContext(a : Int = 0)
 
 trait TestXMLHelperMethods[Context] extends CPSXMLModel[Context] {
   val PREFIX : String = "p"
@@ -83,7 +83,7 @@ trait TestXMLHelperMethods[Context] extends CPSXMLModel[Context] {
   final val filterIdentity = new CFilterIdentity()
 }
 @Test
-class CPSXMLModelTest extends CPSXMLModel[TestContext] with TestXMLHelperMethods[TestContext] with CPSMeta[TestContext] {
+class CPSXMLModelTest extends CPSXMLModel[TestXMLContext] with TestXMLHelperMethods[TestXMLContext] with CPSMeta[TestXMLContext] {
   @Test
   def testDeepFilter() {
     val s : CPSStream = List(
@@ -100,10 +100,10 @@ class CPSXMLModelTest extends CPSXMLModel[TestContext] with TestXMLHelperMethods
       ).toStream map (x => (Some(x), false))
 
     val t = <("body") ~ <("body") ~ new DeepFilter()
-    val r = t(filterIdentity, filterIdentity)(s, new TestContext())
+    val r = t(filterIdentity, filterIdentity)(s, new TestXMLContext())
     assertEquals(10, lengthResult(r))
     val t2 = <("body") ~ <("body") ~ <("a") ~ new DeepFilter()
-    val r2 = t2(filterIdentity, filterIdentity)(s, new TestContext())
+    val r2 = t2(filterIdentity, filterIdentity)(s, new TestXMLContext())
     assertEquals(serializeWithResult(r2), 9, lengthResult(r2))
   }
   
@@ -119,7 +119,7 @@ class CPSXMLModelTest extends CPSXMLModel[TestContext] with TestXMLHelperMethods
                   </("message")
                 )+) ~ </("input")
     val tmeta = t.metaProcess(new SpaceSkipingMetaProcessor())
-    val r = tmeta(filterIdentity, filterIdentity)(evStream, new TestContext())
+    val r = tmeta(filterIdentity, filterIdentity)(evStream, new TestXMLContext())
     assertAllResult(r, "Result : [" + serializeWithResult(r) + "]" )
     assertEquals("Result : [" + serializeWithResult(r) + "]", evStream.length-8, r.length)
     assertTrue(r.filter(x => (x._1 match {
