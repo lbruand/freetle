@@ -31,7 +31,7 @@ class CPSModel[Element, Context] {
 
   type CFilter = (CPSStream, Context) => CPSStream
   
-  type ChainedTransform = (=>CFilter, =>CFilter) => CFilter
+
 
   /**
    * An identity CFilter.
@@ -43,7 +43,10 @@ class CPSModel[Element, Context] {
   type InstantiateTransform = (()=>TransformBase)
   type InstantiateUnaryOperator = ((=>ChainedTransformRoot) => ChainedTransformRoot)
   type InstantiateBinaryOperator = ((=>ChainedTransformRoot, =>ChainedTransformRoot) => ChainedTransformRoot)
-  
+
+  /**
+   * A metaProcessor to metatransform the transformations themselves. 
+   */
   trait MetaProcessor {
     def processTransform(th :TransformBase, instantiate : InstantiateTransform) : ChainedTransformRoot
     def processUnaryOperator(th : UnaryOperator, instantiate : InstantiateUnaryOperator, underlying : =>ChainedTransformRoot) : ChainedTransformRoot
@@ -55,6 +58,11 @@ class CPSModel[Element, Context] {
   trait MetaProcessable {
     def metaProcess(metaProcessor : MetaProcessor) : ChainedTransformRoot
   }
+
+  /**
+   * A type to be used only as a trait for the ChainedTransformRoot
+   */
+  type ChainedTransform = (=>CFilter, =>CFilter) => CFilter
   /**
    * Abstract class for all transformations.
    */
