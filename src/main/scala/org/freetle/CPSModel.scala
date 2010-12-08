@@ -40,6 +40,8 @@ class CPSModel[Element, Context] {
     def apply(s : CPSStream, c : Context) : CPSStream = s
   }
 
+
+
   type InstantiateTransform = (()=>TransformBase)
   type InstantiateUnaryOperator = ((=>ChainedTransformRoot) => ChainedTransformRoot)
   type InstantiateBinaryOperator = ((=>ChainedTransformRoot, =>ChainedTransformRoot) => ChainedTransformRoot)
@@ -67,7 +69,7 @@ class CPSModel[Element, Context] {
   /**
    * Abstract class for all transformations.
    */
-  abstract sealed class ChainedTransformRoot extends ChainedTransform with CPSStreamHelperMethods with MetaProcessable {
+  abstract sealed class ChainedTransformRoot extends ChainedTransform with MetaProcessable {
     final def ~(other : => ChainedTransformRoot) : ChainedTransformRoot = new SequenceOperator(this, other)
     final def ->(other : => ChainedTransformRoot) : ChainedTransformRoot = new ComposeOperator(this, other)
     final def |(other : => ChainedTransformRoot) : ChainedTransformRoot = new ChoiceOperator(this, other)
@@ -79,7 +81,7 @@ class CPSModel[Element, Context] {
   /**
    * HelperMethods on CPSStream.
    */
-  trait CPSStreamHelperMethods {
+  object CPSStreamHelperMethods {
     final def removeWhileEmptyPositive(s : CPSStream) : CPSStream = s.dropWhile( x =>  x.equals( (None, true) ))
 
     final def isPositive(s : CPSStream) : Boolean = {
@@ -88,7 +90,7 @@ class CPSModel[Element, Context] {
       else
         s.head._2
     }
-    
+
     final def isEmptyPositive(s : CPSStream) : Boolean = {
       isPositive(s) && removeWhileEmptyPositive(s).isEmpty
     }
@@ -109,14 +111,17 @@ class CPSModel[Element, Context] {
    */
   abstract class TransformBase extends ChainedTransformRoot  {
     def apply(s : CPSStream, c : Context) : (CPSStream, Context)
-    final def innerTransformBase(success : =>CFilter, failure : =>CFilter)(s : CPSStream, c : Context) : CPSStream = {
+
+    def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
+      (s : CPSStream, c : Context) => {
         val (rs, rc) = apply(s, c)
-        if (isPositive(rs))
+        if (CPSStreamHelperMethods.isPositive(rs))
           success(rs, rc)
         else
           failure(s, c)
       }
-    def apply(success : =>CFilter, failure : =>CFilter) : CFilter = innerTransformBase(success, failure)
+    }
+
   }
 
   /**
@@ -141,22 +146,26 @@ class CPSModel[Element, Context] {
     final def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processBinaryOperator(this, new SequenceOperator(_, _), left, right)
 
-    final private def appendInnerSeqOperator(str : CPSStream)(input : =>CFilter) : CFilter = {
-      (tl : CPSStream, c : Context) => {
-        input(str.append(tl), c)
-      }
-    }
-    final private def innerSequenceOperator(input : =>ChainedTransformRoot, success : =>CFilter, failure : =>CFilter)(s : CPSStream, c : Context) : CPSStream = {
-      val (hd, tl) = s.span(_._2)
-      val removedHd = removeWhileEmptyPositive(hd)
-      val appendOp = appendInnerSeqOperator(removedHd)(_)
-      input(appendOp(success), appendOp(failure))(tl, c)
-    }
+
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      left(innerSequenceOperator(right, success, failure), failure)
+      left(SequenceOperator.innerSequenceOperator(right(success, failure)), failure)
     }
   }
-
+  object SequenceOperator {
+    final private def innerSequenceOperator(input : =>CFilter)(s : CPSStream, c : Context) : CPSStream = {
+      val (hd, tl) = s.span(_._2)
+      CPSStreamHelperMethods.removeWhileEmptyPositive(hd).append({input(tl, c)})
+    }
+  }
+  
+  class CFilterIdentityWithContext extends CFilter {
+    var context : Option[Context] = None
+    def isApplied : Boolean = !(None.equals(context))
+    def apply(s : CPSStream, c : Context) : CPSStream = {
+      context = Some(c)
+      s
+    }
+  }
   /**
    * Composition Operator.
    */
@@ -164,8 +173,21 @@ class CPSModel[Element, Context] {
     final def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processBinaryOperator(this, new ComposeOperator(_, _), left, right)
     
-    def apply(success : =>CFilter, failure : =>CFilter) : CFilter =
-      left(right(success, failure), failure)
+    def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
+      (tl : CPSStream, c : Context) => {
+        val identitySuccess = new CFilterIdentityWithContext()
+        val identityFailure = new CFilterIdentityWithContext()
+        val result = left(identitySuccess, identityFailure)(tl, c)
+        if (identitySuccess.isApplied) {
+          right(success, failure)(result, identitySuccess.context.get)
+        } else {
+          failure(tl, c)
+        }
+      }
+
+    }
+      //left(right(success, failure), failure)
+
   }
 
   /**
@@ -202,7 +224,7 @@ class CPSModel[Element, Context] {
               metaProcessor.processUnaryOperator(this, new ZeroOrOneOperator(_), underlying)
     
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      underlying(success, appendPositive(success)) // TODO Not enough I think... need to add a EmptyPositive to be sure.
+      underlying(success, CPSStreamHelperMethods.appendPositive(success)) // TODO Not enough I think... need to add a EmptyPositive to be sure.
     }
   }
 
@@ -214,7 +236,7 @@ class CPSModel[Element, Context] {
               metaProcessor.processUnaryOperator(this, new ZeroOrMoreOperator(_), underlying)
     
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      new SequenceOperator(underlying, this)(success, appendPositive(success)) // TODO Not enough I think... need to add a EmptyPositive to be sure.
+      new SequenceOperator(underlying, this)(success, CPSStreamHelperMethods.appendPositive(success)) // TODO Not enough I think... need to add a EmptyPositive to be sure.
     }
   }
 
@@ -229,7 +251,7 @@ class CPSModel[Element, Context] {
 
   /**
    * A transform that's modifying the context but not the stream.
-   */
+   */                                          CPSStreamHelperMethods
   abstract class ContextWritingTransform extends TransformBase {
     def partialapply(s : CPSStream, c : Context) : Context
     final def apply(s : CPSStream, c : Context) : (CPSStream, Context) = (s, partialapply(s, c))
@@ -259,7 +281,7 @@ class CPSModel[Element, Context] {
       if (s.isEmpty)
         s
       else {
-        val sr = removeWhileEmptyPositive(s)
+        val sr = CPSStreamHelperMethods.removeWhileEmptyPositive(s)
         if (matcher(sr.head._1.get))
           Stream.cons( (sr.head._1, true), sr.tail)
         else
@@ -277,8 +299,8 @@ class CPSModel[Element, Context] {
               metaProcessor.processTransform(this, () => { this })
     
     def partialapply(s : CPSStream) : CPSStream = {
-      if (isPositive(s))
-        appendPositiveStream(s.dropWhile(_._2))
+      if (CPSStreamHelperMethods.isPositive(s))
+        CPSStreamHelperMethods.appendPositiveStream(s.dropWhile(_._2))
       else
         s
     }
