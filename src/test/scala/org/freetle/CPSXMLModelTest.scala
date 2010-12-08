@@ -23,7 +23,7 @@ import util._
 
 case class TestXMLContext(a : Int = 0)
 
-trait TestXMLHelperMethods[Context] extends CPSXMLModel[Context] {
+trait TestXMLHelperMethods[Context] extends CPSXMLModel[Context] with TestHelperMethods[XMLEvent, Context]{
   val PREFIX : String = "p"
   val NAMESPACE : String = "http://freetle.sf.net/"
 
@@ -34,35 +34,6 @@ trait TestXMLHelperMethods[Context] extends CPSXMLModel[Context] {
   def sloadStreamFromResource(resourceName: String) = mloadStreamFromResource(resourceName, null)
   def loadStreamFromResource = new Memoize1(sloadStreamFromResource)
   // Utility methods used to test XMLResultStream
-  /**
-   * Asserts that there are only Results in the stream.
-   */
-  def assertAllResult( r : XMLResultStream, str : String = null) :Unit = r.foreach(x => assertTrue(str, x._2))
-
-  /**
-   * Asserts that there are only Tails in the stream.
-   */
-  def assertAllTail(r : XMLResultStream) :Unit = r.foreach(x => assertTrue(!x._2))
-
-  /**
-   * Return the longest substream that begins very a Tail.
-   */
-  def findFirstTail(r : XMLResultStream) : XMLResultStream = if (r.head._2) findFirstTail(r.tail) else r
-
-  /**
-   * Constrains that after the first Tail, there is only Tails.
-   */
-  def constraintResultsThenTails(x : XMLResultStream) : Unit = assertAllTail(findFirstTail(x))
-
-  /**
-   * Number of Results in the Stream.
-   */
-  def lengthResult(r : XMLResultStream) : Int = r.filter(_._2).length
-
-  /**
-   * Number of Tails in the Stream.
-   */
-  def lengthTail(r : XMLResultStream) : Int = r.filter(_._2).length
 
   /**
    * Serialize ( not very efficient ).

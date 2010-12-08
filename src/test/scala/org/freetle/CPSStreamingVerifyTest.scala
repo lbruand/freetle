@@ -28,9 +28,23 @@ case class TestContext(a : Int = 0)
 @Test
 class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
 
-  final val max = 10000
+  final val max = 100
   final val filterIdentity = new CFilterIdentity()
 
+
+  
+  @Test
+  def testCompose() = {
+    def createStream : CPSStream = {
+      Stream.continually((Some('a'), false)).take(max).append(
+          Stream.continually((Some('b'), false)).take(max)
+        )
+    }
+    val t = ((new ElementMatcherTaker(_.equals('a'))*) ~ (new ElementMatcherTaker(_.equals('b'))*)) -> new DropFilter()
+    val r = t(filterIdentity, filterIdentity)(createStream, null)
+    assertTrue(""+r, t.isEmptyPositive(r))
+
+  }
   @Test
   def testChoiceSimple() = {
     def createStream : CPSStream = {

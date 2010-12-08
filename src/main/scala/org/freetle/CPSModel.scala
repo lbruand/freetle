@@ -88,6 +88,10 @@ class CPSModel[Element, Context] {
       else
         s.head._2
     }
+    
+    final def isEmptyPositive(s : CPSStream) : Boolean = {
+      isPositive(s) && removeWhileEmptyPositive(s).isEmpty
+    }
 
     final def appendPositiveStream(s : CPSStream) : CPSStream = if (!isPositive(s))
                                                                           Stream.cons((None, true), s)
@@ -139,13 +143,19 @@ class CPSModel[Element, Context] {
     final def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processBinaryOperator(this, new SequenceOperator(_, _), left, right)
 
-
-    final private def innerSequenceOperator(input : =>CFilter)(s : CPSStream, c : Context) : CPSStream = {
-        val (hd, tl) = s.span(_._2)
-        removeWhileEmptyPositive(hd).append( { input(tl, c) })
+    final private def appendInnerSeqOperator(str : CPSStream)(input : =>CFilter) : CFilter = {
+      (tl : CPSStream, c : Context) => {
+        input(str.append(tl), c)
+      }
+    }
+    final private def innerSequenceOperator(input : =>ChainedTransformRoot, success : =>CFilter, failure : =>CFilter)(s : CPSStream, c : Context) : CPSStream = {
+      val (hd, tl) = s.span(_._2)
+      val removedHd = removeWhileEmptyPositive(hd)
+      val appendOp = appendInnerSeqOperator(removedHd)(_)
+      input(appendOp(success), appendOp(failure))(tl, c)
     }
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      left(innerSequenceOperator(right(success, failure)), failure)
+      left(innerSequenceOperator(right, success, failure), failure)
     }
   }
 
