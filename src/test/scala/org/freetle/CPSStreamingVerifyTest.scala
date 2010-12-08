@@ -18,7 +18,7 @@ import org.junit._
 import Assert._
 
 
-case class TestContext(a : Int = 0)
+case class TestCPSStreamingContext(a : Int = 0)
 
 /**
  * TODO : Explore backtracking.
@@ -26,7 +26,7 @@ case class TestContext(a : Int = 0)
  * JVM Tuning : use a contrained JVM to test -Xmx10m -Xss100k in order to verify that we are streaming.
  */
 @Test
-class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
+class CPSStreamingVerifyTest extends CPSModel[Char, TestCPSStreamingContext] {
 
   final val max = 100
   final val filterIdentity = new CFilterIdentity()
@@ -152,7 +152,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
   
   @Test
   def testStream() = {
-    def recurse(s : CPSStream, context : TestContext) : CPSStream = {
+    def recurse(s : CPSStream, context : TestCPSStreamingContext) : CPSStream = {
       if (s.isEmpty)
         s
       else
@@ -169,7 +169,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
 
   @Test
   def testStreamSequence() = {
-    def recurse(s : CPSStream, context : TestContext) : CPSStream = {
+    def recurse(s : CPSStream, context : TestCPSStreamingContext) : CPSStream = {
       if (s.isEmpty)
         s
       else
@@ -187,7 +187,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
 
   @Test
   def testStreamContext() = {
-      def recurse(s : CPSStream, context : TestContext) : CPSStream = {
+      def recurse(s : CPSStream, context : TestCPSStreamingContext) : CPSStream = {
         if (s.isEmpty)
           s
         else
@@ -200,7 +200,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestContext] {
       }
       
     (recurse(
-      Stream.continually((Some('a'), false)).take(max).append(Stream((Some('b'), false))), new TestContext(a=0))).foreach( x => assertEquals(Some('b'), x._1))
+      Stream.continually((Some('a'), false)).take(max).append(Stream((Some('b'), false))), new TestCPSStreamingContext(a=0))).foreach( x => assertEquals(Some('b'), x._1))
   }
 
 }
