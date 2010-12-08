@@ -109,16 +109,14 @@ class CPSModel[Element, Context] {
    */
   abstract class TransformBase extends ChainedTransformRoot  {
     def apply(s : CPSStream, c : Context) : (CPSStream, Context)
-
-    def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      (s : CPSStream, c : Context) => {
+    final def innerTransformBase(success : =>CFilter, failure : =>CFilter)(s : CPSStream, c : Context) : CPSStream = {
         val (rs, rc) = apply(s, c)
         if (isPositive(rs))
           success(rs, rc)
         else
           failure(s, c)
       }
-    }
+    def apply(success : =>CFilter, failure : =>CFilter) : CFilter = innerTransformBase(success, failure)
   }
 
   /**
