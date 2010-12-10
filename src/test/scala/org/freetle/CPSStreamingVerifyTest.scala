@@ -28,7 +28,7 @@ case class TestCPSStreamingContext(a : Int = 0)
 @Test
 class CPSStreamingVerifyTest extends CPSModel[Char, TestCPSStreamingContext] {
 
-  final val max = 100000
+  final val max = 10000
   final val filterIdentity = new CFilterIdentity()
 
 

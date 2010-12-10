@@ -171,16 +171,22 @@ class CPSModel[Element, Context] {
   /**
    * Composition Operator.
    */
+
   class ComposeOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
     final def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processBinaryOperator(this, new ComposeOperator(_, _), left, right)
-    
+
+    final private def forceStream(result: CPSStream, identitySuccess: CFilterIdentityWithContext, identityFailure: CFilterIdentityWithContext): Unit = {
+      var these = result
+      while (!identitySuccess.isApplied && !identityFailure.isApplied && !these.tail.isEmpty) these = these.tail
+    }
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       (tl : CPSStream, c : Context) => {
         val identitySuccess = new CFilterIdentityWithContext()
         val identityFailure = new CFilterIdentityWithContext()
         val result = left(identitySuccess, identityFailure)(tl, c)
-        result.force // This is needed because identitySuccess is only called at the end of the result Stream,
+        forceStream(result, identitySuccess, identityFailure)
+                     // This is needed because identitySuccess is only called at the end of the result Stream,
                      // as a side effect.
                      // But it is suboptimal in term of memory usage.
         if (identitySuccess.isApplied) {
