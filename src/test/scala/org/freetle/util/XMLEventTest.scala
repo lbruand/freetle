@@ -22,4 +22,17 @@ class XMLEventTest extends CPSXMLModel[XMLEventTestContext] with TestXMLHelperMe
       }
     ) > 0)
   }
+
+  @Test
+  def testSerialize() {
+    val evStream = loadStreamFromResource("/org/freetle/input.xml")
+    assertEquals("""<input>
+    <message pid="hello">
+        <value>10010</value>
+    </message>
+    <message>
+        <value>10010</value>
+    </message>
+</input>""", serialize(evStream))
+  }  
 }
