@@ -21,7 +21,7 @@ import Assert._
 import java.io.InputStream
 import util._
 
-case class TestXMLContext(name :String ="name")
+case class TestXMLContext(name :String ="name", totalSum : Int = 0, currentSum : Int = 0)
 
 trait TestXMLHelperMethods[Context] extends CPSXMLModel[Context] with TestHelperMethods[XMLEvent, Context]{
   val PREFIX : String = "p"
@@ -130,4 +130,45 @@ class CPSXMLModelTest extends CPSXMLModel[TestXMLContext] with TestXMLHelperMeth
     assertEquals(0, lengthResult(t(filterIdentity, filterIdentity)(Stream((Some(new EvText("p")), false)), null)))
     assertEquals(1, lengthResult(t(filterIdentity, filterIdentity)(Stream((Some(new EvText("        \t        ")), false)), null)))
   }
+
+  @Test
+  def testSumming() = {
+    val c = new TestXMLContext()
+    val evStream = loadStreamFromResource("/org/freetle/input2.xml")
+    val totalSumTaker = new TakeTextToContext() {
+      def pushToContext(text : String, context : TestXMLContext) : TestXMLContext = {
+          context.copy(totalSum = Integer.parseInt(text))
+      }
+    }
+
+    val sumTaker = new TakeTextToContext() {
+      def pushToContext(text : String, context : TestXMLContext) : TestXMLContext = {
+          context.copy(currentSum = context.currentSum + Integer.parseInt(text))
+      }
+    }
+
+    val t = <("input") ~
+                (
+                 <("groupheader") ~
+                         <("totalSum") ~
+                         totalSumTaker ~
+                         </("totalSum") ~
+                 </("groupheader")
+                ) ~
+                (( <("message") ~
+                    <("value") ~
+                         sumTaker ~
+                    </("value") ~
+                  </("message")
+                )*) ~
+            </("input")
+    val tmeta = t.metaProcess(new SpaceSkipingMetaProcessor())
+    val cfilterIdentityWithContextSuccess = new CFilterIdentityWithContext()
+    val cfilterIdentityWithContextFailure = new CFilterIdentityWithContext()    
+    val r = (tmeta)(cfilterIdentityWithContextSuccess, cfilterIdentityWithContextFailure)(evStream, c)
+    assertAllResult(r)
+    val cout = cfilterIdentityWithContextSuccess.context.get
+    assertEquals(20030, cout.totalSum)
+    assertEquals(20030, cout.currentSum)
+  }  
 }
