@@ -83,6 +83,8 @@ class CPSModel[Element, Context] {
    */
   object CPSStreamHelperMethods {
     final def removeWhileEmptyPositive(s : CPSStream) : CPSStream = s.dropWhile( x =>  x.equals( (None, true) ))
+    
+    final def removeAllEmptyPositive(s : CPSStream) : CPSStream = s.filter( x =>  !(x.equals( (None, true) )))
 
     final def isPositive(s : CPSStream) : Boolean = {
       if (s.isEmpty)

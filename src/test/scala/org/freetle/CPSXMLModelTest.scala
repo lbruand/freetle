@@ -90,7 +90,7 @@ class CPSXMLModelTest extends CPSXMLModel[TestXMLContext] with TestXMLHelperMeth
                   </("message")
                 )+) ~ </("input")
     val tmeta = t.metaProcess(new SpaceSkipingMetaProcessor())
-    val r = tmeta(filterIdentity, filterIdentity)(evStream, new TestXMLContext())
+    val r = CPSStreamHelperMethods.removeAllEmptyPositive(tmeta(filterIdentity, filterIdentity)(evStream, new TestXMLContext()))
     assertAllResult(r, "Result : [" + serializeWithResult(r) + "]" )
     assertEquals("Result : [" + serializeWithResult(r) + "]", evStream.length-8, r.length)
     assertTrue(r.filter(x => (x._1 match {
