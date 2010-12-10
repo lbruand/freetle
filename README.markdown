@@ -38,7 +38,7 @@ While bringing in major new ideas from the functional programming world :
 * Lazyness and Streaming
 
 Ultimately, Freetle's goal is to stay forever :
-
+* Free
 * Open-Sourced (Apache 2.0 license)
 * Scalable
 * Robust (in the sense that it will be easy to debug, refactorable and change-proof)
@@ -49,7 +49,8 @@ Ultimately, Freetle's goal is to stay forever :
 Freetle is deeply indebted to giants:
 
 * The [Scala language](http://www.scala-lang.org/) being the most evident
-* TODO ...
+* Haskell
+* HaXML
 
 ## Combinators : bottom-top approach
 Freetle Transformations are expressed in the Scala language with syntactic sugar from the Freetle library.
