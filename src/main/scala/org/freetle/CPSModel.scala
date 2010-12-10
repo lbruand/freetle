@@ -81,30 +81,30 @@ class CPSModel[Element, Context] {
    * HelperMethods on CPSStream.
    */
   object CPSStreamHelperMethods {
-    final def removeWhileEmptyPositive(s : CPSStream) : CPSStream = s.dropWhile( x =>  x.equals( (None, true) ))
-    
-    final def removeAllEmptyPositive(s : CPSStream) : CPSStream = s.filter( x =>  !(x.equals( (None, true) )))
+    def removeWhileEmptyPositive(s : CPSStream) : CPSStream = s.dropWhile( x =>  x.equals( (None, true) ))
 
-    final def isPositive(s : CPSStream) : Boolean = {
+    def removeAllEmptyPositive(s : CPSStream) : CPSStream = s.filter( x =>  !(x.equals( (None, true) )))
+
+    def isPositive(s : CPSStream) : Boolean = {
       if (s.isEmpty)
         false
       else
         s.head._2
     }
 
-    final def isEmptyPositive(s : CPSStream) : Boolean = {
+    def isEmptyPositive(s : CPSStream) : Boolean = {
       isPositive(s) && removeWhileEmptyPositive(s).isEmpty
     }
 
-    final def appendPositiveStream(s : CPSStream) : CPSStream = if (!isPositive(s))
+    def appendPositiveStream(s : CPSStream) : CPSStream = if (!isPositive(s))
                                                                           Stream.cons((None, true), s)
                                                                         else
                                                                           s
     
-    final private def innerAppendPositive(input : =>CFilter)(str : CPSStream, c : Context) : CPSStream =
+    private def innerAppendPositive(input : =>CFilter)(str : CPSStream, c : Context) : CPSStream =
                                                                         input(appendPositiveStream(str), c)
 
-    final def appendPositive(input : =>CFilter) : CFilter = innerAppendPositive(input)
+    def appendPositive(input : =>CFilter) : CFilter = innerAppendPositive(input)
     
   }
   /**
@@ -153,7 +153,7 @@ class CPSModel[Element, Context] {
     }
   }
   object SequenceOperator {
-    final private def innerSequenceOperator(input : =>CFilter)(s : CPSStream, c : Context) : CPSStream = {
+    private def innerSequenceOperator(input : =>CFilter)(s : CPSStream, c : Context) : CPSStream = {
       val (hd, tl) = s.span(_._2)
       val removedHd = CPSStreamHelperMethods.removeWhileEmptyPositive(hd)
       removedHd.append({input(tl, c)})
