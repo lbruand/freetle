@@ -35,13 +35,14 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestCPSStreamingContext] {
   
   @Test
   def testCompose() = {
+    val localMax = max.max(1000) // This is to prevent OutOfMemory problems.
     def createStream : CPSStream = {
-      Stream.continually((Some('a'), false)).take(1).append(
-          Stream.continually((Some('b'), false)).take(1)
+      Stream.continually((Some('a'), false)).take(localMax).append(
+          Stream.continually((Some('b'), false)).take(localMax)
         )
     }
     val s = createStream
-    val t = ((new ElementMatcherTaker(_.equals('a'))) ~ (new ElementMatcherTaker(_.equals('b')))) -> new DropFilter()
+    val t = ((new ElementMatcherTaker(_.equals('a'))*) ~ (new ElementMatcherTaker(_.equals('b')))*) -> new DropFilter()
     val r = t(filterIdentity, filterIdentity)(createStream, new TestCPSStreamingContext())
     assertTrue(""+r, CPSStreamHelperMethods.isEmptyPositive(r))
 
