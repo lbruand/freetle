@@ -36,12 +36,13 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestCPSStreamingContext] {
   @Test
   def testCompose() = {
     def createStream : CPSStream = {
-      Stream.continually((Some('a'), false)).take(max).append(
-          Stream.continually((Some('b'), false)).take(max)
+      Stream.continually((Some('a'), false)).take(1).append(
+          Stream.continually((Some('b'), false)).take(1)
         )
     }
-    val t = ((new ElementMatcherTaker(_.equals('a'))*) ~ (new ElementMatcherTaker(_.equals('b'))*)) -> new DropFilter()
-    val r = t(filterIdentity, filterIdentity)(createStream, null)
+    val s = createStream
+    val t = ((new ElementMatcherTaker(_.equals('a'))) ~ (new ElementMatcherTaker(_.equals('b')))) -> new DropFilter()
+    val r = t(filterIdentity, filterIdentity)(createStream, new TestCPSStreamingContext())
     assertTrue(""+r, CPSStreamHelperMethods.isEmptyPositive(r))
 
   }

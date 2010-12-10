@@ -154,7 +154,8 @@ class CPSModel[Element, Context] {
   object SequenceOperator {
     final private def innerSequenceOperator(input : =>CFilter)(s : CPSStream, c : Context) : CPSStream = {
       val (hd, tl) = s.span(_._2)
-      CPSStreamHelperMethods.removeWhileEmptyPositive(hd).append({input(tl, c)})
+      val removedHd = CPSStreamHelperMethods.removeWhileEmptyPositive(hd)
+      removedHd.append({input(tl, c)})
     }
   }
   
@@ -178,6 +179,7 @@ class CPSModel[Element, Context] {
         val identitySuccess = new CFilterIdentityWithContext()
         val identityFailure = new CFilterIdentityWithContext()
         val result = left(identitySuccess, identityFailure)(tl, c)
+        val resultForced = result.force
         if (identitySuccess.isApplied) {
           right(success, failure)(result, identitySuccess.context.get)
         } else {
@@ -224,7 +226,7 @@ class CPSModel[Element, Context] {
               metaProcessor.processUnaryOperator(this, new ZeroOrOneOperator(_), underlying)
     
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      underlying(success, CPSStreamHelperMethods.appendPositive(success)) // TODO Not enough I think... need to add a EmptyPositive to be sure.
+      underlying(success, CPSStreamHelperMethods.appendPositive(success))
     }
   }
 
@@ -236,7 +238,7 @@ class CPSModel[Element, Context] {
               metaProcessor.processUnaryOperator(this, new ZeroOrMoreOperator(_), underlying)
     
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      new SequenceOperator(underlying, this)(success, CPSStreamHelperMethods.appendPositive(success)) // TODO Not enough I think... need to add a EmptyPositive to be sure.
+      new SequenceOperator(underlying, this)(success, CPSStreamHelperMethods.appendPositive(success))
     }
   }
 
