@@ -56,8 +56,8 @@ Freetle is deeply indebted to giants:
 Freetle Transformations are expressed in the Scala language with syntactic sugar from the Freetle library.
 In effect, transformations are expressed as algebra expressions of unitary transformations and operators.
 This approach, called _combinators_, gives almost infinite expressivity while retaining simplicity.
-It is a reaction to the top-down approach of many ETLs which hide the great complexity of their code behind
-with complex concepts like Cards, Maps, etc...
+/* TODO reformulated :  It is a reaction to the top-down approach of many ETLs which hide the great complexity of their code behind
+complex concepts such like Cards, Maps, etc... */
 With Freetle, the basic concepts to understand are few, simple, already well established in the functional
 software industry.
 (See Architecture)
