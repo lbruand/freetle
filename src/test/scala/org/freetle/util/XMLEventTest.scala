@@ -2,7 +2,7 @@ package org.freetle.util
 
 import org.junit._
 import Assert._
-import org.freetle.{TestXMLHelperMethods, CPSXMLModel, TestHelperMethods}
+import org.freetle.{TestXMLHelperMethods, CPSXMLModel}
 
 case class XMLEventTestContext
 @Test
