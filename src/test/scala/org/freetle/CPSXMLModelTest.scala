@@ -53,6 +53,7 @@ trait TestXMLHelperMethods[Context] extends CPSXMLModel[Context] with TestHelper
   final def createEndElem(s : String) = new EvElemEnd(new QName(NAMESPACE, s, PREFIX))
   final val filterIdentity = new CFilterIdentity()
 }
+
 @Test
 class CPSXMLModelTest extends CPSXMLModel[TestXMLContext] with TestXMLHelperMethods[TestXMLContext] with CPSMeta[TestXMLContext] {
   @Test
@@ -97,5 +98,16 @@ class CPSXMLModelTest extends CPSXMLModel[TestXMLContext] with TestXMLHelperMeth
       case Some(EvElemStart(QName(_, "value", _), _)) => true
       case _  => false
     })).isEmpty)
-  }  
+  }
+
+  @Test
+  def testTakeSpace() {
+    val ev = createStartElem("a")
+    assertFalse(new EvCommentTypeMatcher()(ev))
+    assertFalse(new SpaceOrCommentMatcher()(ev))
+    val t = TakeSpace()
+    assertEquals("EvElemStart", 0, lengthResult(t(filterIdentity, filterIdentity)(Stream((Some(ev), false)), null)))
+    assertEquals(0, lengthResult(t(filterIdentity, filterIdentity)(Stream((Some(new EvText("p")), false)), null)))
+    assertEquals(1, lengthResult(t(filterIdentity, filterIdentity)(Stream((Some(new EvText("        \t        ")), false)), null)))
+  }
 }
