@@ -180,7 +180,9 @@ class CPSModel[Element, Context] {
         val identitySuccess = new CFilterIdentityWithContext()
         val identityFailure = new CFilterIdentityWithContext()
         val result = left(identitySuccess, identityFailure)(tl, c)
-        val resultForced = result.force
+        result.force // This is needed because identitySuccess is only called at the ended of the result Stream,
+                     // as a side effect.
+                     // But it is suboptimal in term of memory usage.
         if (identitySuccess.isApplied) {
           right(success, failure)(result, identitySuccess.context.get)
         } else {
