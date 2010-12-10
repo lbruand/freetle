@@ -258,8 +258,7 @@ class CPSModel[Element, Context] {
    * A transform that's modifying the context but not the stream.
    */                                          CPSStreamHelperMethods
   abstract class ContextWritingTransform extends TransformBase {
-    def partialapply(s : CPSStream, c : Context) : Context
-    final def apply(s : CPSStream, c : Context) : (CPSStream, Context) = (s, partialapply(s, c))
+    def apply(s : CPSStream, c : Context) : (CPSStream, Context)
   }
 
   /**

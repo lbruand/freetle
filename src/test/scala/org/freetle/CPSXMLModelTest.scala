@@ -21,7 +21,7 @@ import Assert._
 import java.io.InputStream
 import util._
 
-case class TestXMLContext(a : Int = 0)
+case class TestXMLContext(name :String ="name")
 
 trait TestXMLHelperMethods[Context] extends CPSXMLModel[Context] with TestHelperMethods[XMLEvent, Context]{
   val PREFIX : String = "p"
@@ -98,6 +98,26 @@ class CPSXMLModelTest extends CPSXMLModel[TestXMLContext] with TestXMLHelperMeth
       case Some(EvElemStart(QName(_, "value", _), _)) => true
       case _  => false
     })).isEmpty)
+  }
+
+  @Test
+  def testPushToContext() {
+    val cfilterIdentityWithContextSuccess = new CFilterIdentityWithContext()
+    val cfilterIdentityWithContextFailure = new CFilterIdentityWithContext()
+    val c = new TestXMLContext(name = "before")
+    val s = List(
+              new EvText("after"),
+              new EvText(" night")
+            ).toStream.map(x => (Some(x), false))
+    val t = new TakeTextToContext() {
+      def pushToContext(text : String, context : TestXMLContext) : TestXMLContext = {
+          context.copy(name = text)
+      }
+    }
+    val r = t(cfilterIdentityWithContextSuccess, cfilterIdentityWithContextFailure)(s, c)
+    r.force
+
+    assertEquals("after", cfilterIdentityWithContextSuccess.context.get.name)
   }
 
   @Test

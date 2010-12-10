@@ -46,6 +46,25 @@ class CPSXMLModel[Context] extends CPSModel[XMLEvent, Context] {
     def initialState = 1
   }
 
+  abstract class TakeTextToContext extends ContextWritingTransform {
+    def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
+    
+    def apply(s : CPSStream, c : Context) : (CPSStream, Context) = {
+      if (s.isEmpty)
+        (s, c)
+      else {
+        val sr = CPSStreamHelperMethods.removeWhileEmptyPositive(s)
+        (sr.head._1.get) match {
+          case EvText(txt) =>
+            (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(txt, c)) 
+          case _ => (s, c)
+        }
+      }
+    }
+
+    def pushToContext(text : String, context : Context) : Context
+  }
+
   /**
    * Shortcut to take an opening tag based on the localpart.
    */
