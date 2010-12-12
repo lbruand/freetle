@@ -14,7 +14,8 @@
   * limitations under the License.
   */
 package org.freetle
-import meta.Meta
+
+import meta.CPSMeta
 import org.junit._
 import Assert._
 import util._
@@ -138,50 +139,48 @@ class BenchmarkTest {
 
     
     class FreetleCaseBenchmarkTransform
-            extends TransformModel[FreetleCaseBenchmarkContext]
-                with Meta[FreetleCaseBenchmarkContext] {
+            extends CPSXMLModel[FreetleCaseBenchmarkContext]
+                with CPSMeta[FreetleCaseBenchmarkContext] {
       //def transform : CFilterBase = new IdTransform()
       /**
        * Real transform construction.
        */
-      def transform : CFilterBase = {
+      def transform : ChainedTransformRoot = {
         
-        val titleTaker = new TakeDataToContext() {
+        val titleTaker = new TakeTextToContext() {
           def pushToContext(text : String, context : FreetleCaseBenchmarkContext) : FreetleCaseBenchmarkContext = {
               context.copy(title = text)
           }
         }
 
-        val artistTaker = new TakeDataToContext() {
+        val artistTaker = new TakeTextToContext() {
           def pushToContext(text : String, context : FreetleCaseBenchmarkContext) : FreetleCaseBenchmarkContext = {
               context.copy(artist = text)
           }
         }
 
-        val t = (<("catalog") //-> new DropFilter()
+        val t = (<("catalog") -> new DropFilter()
                 )~
                     (((( (<("cd") ~
                         <("title") ~
-                            new TakeSpace() ~
-                            //titleTaker ~
+                            titleTaker ~
                         </("title") ~
                         <("artist") ~
-                            new TakeSpace() ~
-                            //artistTaker ~
+                            artistTaker ~
                         </("artist") ~
                         <("country") ~
-                             new TakeText() ~
+                             TakeText() ~
                         </("country") ~
                         <("company") ~
-                             new TakeText() ~
+                             TakeText() ~
                         </("company") ~
                         <("price") ~
-                             new TakeText() ~
+                             TakeText() ~
                         </("price") ~
                         <("year") ~
-                             new TakeText() ~
+                             TakeText() ~
                         </("year") ~
-                      </("cd")) /* -> new DropFilter()) ~ new PushNode(
+                      </("cd"))  -> new DropFilter()) ~ new PushNode(
                          (x : Option[FreetleCaseBenchmarkContext]) => {                           
                            x match {
 
@@ -192,19 +191,20 @@ class BenchmarkTest {
 </cd>
                                                       case _ => <cd></cd>
                            }
-                         } */
+                         }
                       ) 
                       )
                     )  *) ~
-                (</("catalog") //-> new DropFilter()
+                (</("catalog") -> new DropFilter()
                         )
-        (new SpaceSkipingMetaProcessor())(t)
+        t.metaProcess(new SpaceSkipingMetaProcessor())
       }
 
       def run(catalogSource : String) : String = {
+        val filterIdentity = new CFilterIdentity()
         val context = new FreetleCaseBenchmarkContext()
         val inStream = XMLResultStreamUtils.loadXMLResultStream(catalogSource, Some(context))
-        val outStream = transform(inStream)
+        val outStream = transform(filterIdentity, filterIdentity)(inStream, context)
         result = new StringBuilder().appendAll(XMLResultStreamUtils.serializeXMLResultStream(outStream)).toString
         result
       }
@@ -222,10 +222,10 @@ class BenchmarkTest {
 
   @Test
   def testXSLT() = {
-    val freetleBenchmark = new FreetleCaseBenchmark(nCatalog = 10000)
-    val benchmarks = List( //new XSLTCaseBenchmark(nCatalog = 1000),
+    val freetleBenchmark = new FreetleCaseBenchmark(nCatalog = 1000)
+    val benchmarks = List( new XSLTCaseBenchmark(nCatalog = 1000),
                           freetleBenchmark)
-    val timings = benchmarks.map(_.runBenchmark(3))
+    val timings = benchmarks.map(_.runBenchmark(5))
 
     freetleBenchmark.checkResult
 

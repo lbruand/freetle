@@ -17,6 +17,7 @@ package org.freetle
 
 import java.io.InputStream
 import util._
+import xml.{Node, NodeSeq}
 
 /**
  * This is a streaming Continuation Passing Transformation model.
@@ -49,21 +50,61 @@ class CPSXMLModel[Context] extends CPSModel[XMLEvent, Context] {
   abstract class TakeTextToContext extends ContextWritingTransform {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
     
-    def apply(s : CPSStream, c : Context) : (CPSStream, Context) = {
-      if (s.isEmpty)
-        (s, c)
+    def apply(stream : CPSStream, context : Context) : (CPSStream, Context) = {
+      if (stream.isEmpty)
+        (stream, context)
       else {
-        val sr = CPSStreamHelperMethods.removeWhileEmptyPositive(s)
+        val sr = CPSStreamHelperMethods.removeWhileEmptyPositive(stream)
         (sr.head._1.get) match {
           case EvText(txt) =>
-            (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(txt, c)) 
-          case _ => (s, c)
+            (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(txt, context))
+          case _ => (stream, context)
         }
       }
     }
 
     def pushToContext(text : String, context : Context) : Context
   }
+
+  /**
+   * Push a scala xml content down the pipeline.
+   */
+  @serializable @SerialVersionUID(599494944949L + 10 *19L)
+  class PushNode(nodeSeq: Option[Context] => NodeSeq) extends ContextReadingTransform {
+    def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
+    def serializeXML(nodeSeq : NodeSeq) : CPSStream = {
+      (nodeSeq map( serializeNodeXML(_))).toStream.flatten
+    }
+
+
+    /*def buildAttributes(attributes : MetaData) : Map[QName, String] = {
+      attributes.
+    }*/
+    def serializeNodeXML(node : Node) : CPSStream =
+      node match {
+      case elem :  scala.xml.Elem //(prefix, label, attributes, scope, children)
+            => {
+                  val qName: QName = if (elem.prefix == null || elem.prefix.isEmpty)
+                                        new QName(elem.scope.getURI(null), elem.label)
+                                     else
+                                        new QName(elem.scope.getURI(elem.prefix), elem.label, elem.prefix)
+                  Stream.cons( (Some(new EvElemStart(qName,  null)), true),
+                          Stream.concat(serializeXML(elem.child),
+                            Stream((Some(new EvElemEnd(qName)), true))))
+                }
+      case text : scala.xml.Text => Stream((Some(new EvText(text.text)), true))
+      case comment : scala.xml.Comment => Stream((Some(new EvComment(comment.text)), true))
+      case pi : scala.xml.ProcInstr => Stream((Some(new EvProcInstr(pi.target, pi.proctext)), true))
+      case entityRef : scala.xml.EntityRef => Stream((Some(new EvEntityRef(entityRef.entityName)), true))
+      case atom : scala.xml.Atom[Any] => Stream((Some(new EvText(atom.text)), true))
+      case _ => Stream((Some(new EvText("error" + node.getClass)), true)) // TODO Throw exception.
+    }
+
+    def partialapply(in : CPSStream, context : Context) : CPSStream = {
+        serializeXML(nodeSeq.apply(Some(context))).append(in)
+      }
+  }
+  
 
   /**
    * Shortcut to take an opening tag based on the localpart.
@@ -125,8 +166,12 @@ class CPSXMLModel[Context] extends CPSModel[XMLEvent, Context] {
     }
 
     def serializeXMLResultStream(evStream : =>XMLResultStream) : Stream[Char] = {
-      (evStream map (_._1.get.toStream)).flatten
-    }
+      (evStream map (_._1 match {
+                case Some(x) => x.toStream
+                case _ => (new EvComment("EmptyPositive")).toStream
+              })).flatten
   }
+    }
+  
   
 }
