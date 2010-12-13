@@ -18,6 +18,9 @@ package org.freetle
 import java.io.InputStream
 import util._
 
+/**
+ * Various methods to load data from files.
+ */
 trait TestXMLHelperMethods[Context] extends CPSXMLModel[Context] with TestHelperMethods[XMLEvent, Context]{
   val PREFIX : String = "p"
   val NAMESPACE : String = "http://freetle.sf.net/"
