@@ -16,7 +16,6 @@
  
 package org.freetle.util
 
-import scala.xml.{MetaData, NamespaceBinding}
 import javax.xml.stream.Location
 import javax.xml.namespace.NamespaceContext
 import javax.xml.XMLConstants
