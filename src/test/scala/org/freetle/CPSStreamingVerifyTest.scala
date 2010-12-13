@@ -21,6 +21,7 @@ import Assert._
 case class TestCPSStreamingContext(a : Int = 0)
 
 /**
+ * These tests are asserting the capability of the transformation to work in streaming mode.
  * TODO : Explore backtracking.
  *
  * JVM Tuning : use a contrained JVM to test -Xmx10m -Xss100k in order to verify that we are streaming.
