@@ -24,9 +24,13 @@ import javax.xml.transform.stream.{StreamResult, StreamSource}
 import java.io.{StringWriter, StringReader}
 import testing.Benchmark
 
+
 @serializable @SerialVersionUID(599494944949L + 30000L)
 case class FreetleCaseBenchmarkContext(title : String = null, artist : String = null)
 
+/**
+ * A test to benchmark the performance of the system.
+ */
 @Test
 class BenchmarkTest {
   val catalogHeader = """<?xml version="1.0" encoding="UTF-8"?>
