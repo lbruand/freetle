@@ -25,7 +25,7 @@ package org.freetle
  // TODO : Explore the possibility of serializing the transforms with call-by-name member (left, right, underlying)
 class CPSModel[Element, Context] {
   type CPSElementOrPositive = Option[Element]
-  type CPSTupleElement = Tuple2[CPSElementOrPositive, Boolean]
+  type CPSTupleElement = (CPSElementOrPositive, Boolean)
   type CPSStream = Stream[CPSTupleElement]
 
   type CFilter = (CPSStream, Context) => CPSStream
