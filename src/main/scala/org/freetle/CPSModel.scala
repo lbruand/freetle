@@ -245,9 +245,9 @@ class CPSModel[Element, Context] {
   class ZeroOrMoreOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
     final def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processUnaryOperator(this, new ZeroOrMoreOperator(_), underlying)
-    
+    lazy val sequenceOperator = new SequenceOperator(underlying, this)
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      new SequenceOperator(underlying, this)(success, CPSStreamHelperMethods.appendPositive(success))
+      sequenceOperator(success, CPSStreamHelperMethods.appendPositive(success))
     }
   }
 
