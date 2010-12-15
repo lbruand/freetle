@@ -170,6 +170,6 @@ class CPSXMLModel[Context] extends CPSModel[XMLEvent, Context] {
                 case _ => (new EvComment("EmptyPositive")).appendWriter(writer)
               })
     }
-  
+  }
   
 }
