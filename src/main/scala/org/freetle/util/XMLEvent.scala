@@ -114,14 +114,6 @@ case class EvComment(text: String) extends XMLEvent {
     (new StringBuilder()).append("<!-- ").append(text).append(" -->").toStream
 }
 
-/** Used when we want a empty but yet positive result */
-case class EvPositiveResult() extends XMLEvent {
-  override final def toStream() : Stream[Char] = toString.toStream
-  override final def toString() = "<!-- EvPositiveResult -->"
-}
-
-
-
 abstract class XMLEventMatcher extends (XMLEvent => Boolean)
 
 class NeverMatcher extends XMLEventMatcher {
