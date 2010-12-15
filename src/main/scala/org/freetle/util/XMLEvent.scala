@@ -19,6 +19,7 @@ package org.freetle.util
 import javax.xml.stream.Location
 import javax.xml.namespace.NamespaceContext
 import javax.xml.XMLConstants
+import java.io.{StringWriter, Writer}
 
 /** This class represents an XML event for pull parsing.
  *  Pull parsing means that during the traversal of the XML
@@ -30,7 +31,7 @@ sealed abstract class XMLEvent {
   var namespaceContext : NamespaceContext = null
   override def toString() : String = toStream.mkString
   def toStream : Stream[Char] = toString.toStream
-
+  def appendWriter(writer : Writer) : Unit
 }
 
 case class QName(namespaceURI : String = XMLConstants.NULL_NS_URI,
@@ -40,7 +41,7 @@ case class QName(namespaceURI : String = XMLConstants.NULL_NS_URI,
 }
 /** An element is encountered the first time */
 case class EvElemStart(name : QName, attributes : Map[QName, String]) extends XMLEvent {
-  private final def buildAttrStringBuffer(sb :StringBuilder)(j : Tuple2[QName, String]): Unit = {
+  private final def buildAttrStringBuffer(sb :Writer)(j : Tuple2[QName, String]): Unit = {
     sb.append(' ')
     if (!j._1.prefix.isEmpty) {
       sb.append(j._1.prefix)
@@ -52,8 +53,8 @@ case class EvElemStart(name : QName, attributes : Map[QName, String]) extends XM
     sb.append(j._2)
     sb.append('"')
   }
-  override final def toStream() :  Stream[Char] = {
-    var sb = new StringBuilder()
+
+  final def appendWriter(sb: Writer): Unit = {
     sb.append('<')
     if (!name.prefix.isEmpty) {
       sb.append(name.prefix)
@@ -64,18 +65,22 @@ case class EvElemStart(name : QName, attributes : Map[QName, String]) extends XM
     // Attributes
     if (attributes != null) {
       attributes.foreach(
-         buildAttrStringBuffer(sb)
-      )
+        buildAttrStringBuffer(sb)
+        )
     }
     sb.append('>')
-    sb.toStream
+  }
+
+  override final def toStream() :  Stream[Char] = {
+    var sb = new StringWriter()
+    appendWriter(sb)
+    sb.toString.toStream
   }
 }
 
 /** An element is encountered the last time */
 case class EvElemEnd(name : QName) extends XMLEvent {
-  override final def toStream() :  Stream[Char] = {
-    var sb = new StringBuilder()
+  final def appendWriter(sb: Writer): Unit = {
     sb.append('<')
     sb.append('/')
     if (!name.prefix.isEmpty) {
@@ -84,34 +89,57 @@ case class EvElemEnd(name : QName) extends XMLEvent {
     }
     sb.append(name.localPart)
     sb.append('>')
-    sb.toStream
+  }
+
+  override final def toStream() :  Stream[Char] = {
+    var sb = new StringWriter()
+    appendWriter(sb)
+    sb.toString.toStream
   }
 }
 /** A text node is encountered */
 case class EvText(text : String) extends XMLEvent {
+  final def appendWriter(sb: Writer): Unit = {
+    sb.append(text)
+  }
   override final def toStream() :  Stream[Char] = text.toStream
 }
 
 /** An entity reference is encountered */
 case class EvEntityRef(entity: String) extends XMLEvent {
-  override final def toStream() :  Stream[Char] = {
-    var sb = new StringBuilder()
+  final def appendWriter(sb: Writer): Unit = {
     sb.append('&')
     sb.append(entity)
     sb.append(';')
-    sb.toStream
+  }
+
+  override final def toStream() :  Stream[Char] = {
+    var sb = new StringWriter()
+    appendWriter(sb)
+    sb.toString.toStream
   }
 }
 
 /** A processing instruction is encountered */
 case class EvProcInstr(target: String, text: String) extends XMLEvent {
+  final def appendWriter(sb: Writer): Unit = {}
   override final def toStream() : Stream[Char] = Stream.empty
 }
 
 /** A comment is encountered */
 case class EvComment(text: String) extends XMLEvent {
-  override final def toStream() : Stream[Char] =
-    (new StringBuilder()).append("<!-- ").append(text).append(" -->").toStream
+  final def appendWriter(sb: Writer): Unit = {
+    sb.append("<!-- ")
+    sb.append(text)
+    sb.append(" -->")
+  }
+
+  override final def toStream() : Stream[Char] = {
+    var sb: StringWriter = new StringWriter()
+
+    appendWriter(sb)
+    sb.toString.toStream
+  }
 }
 
 abstract class XMLEventMatcher extends (XMLEvent => Boolean)
