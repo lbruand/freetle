@@ -15,9 +15,9 @@
   */
 package org.freetle
 
-import java.io.InputStream
 import util._
 import xml.{Node, NodeSeq}
+import java.io.{Writer, InputStream}
 
 /**
  * This is a streaming Continuation Passing Transformation model.
@@ -164,13 +164,11 @@ class CPSXMLModel[Context] extends CPSModel[XMLEvent, Context] {
       val src = StreamSource.fromIterator(str.toStream.iterator)
       Stream.fromIterator(new XMLEventStream(src) map (x => (Some(x), false)))
     }
-
-    def serializeXMLResultStream(evStream : =>XMLResultStream) : Stream[Char] = {
-      (evStream map (_._1 match {
-                case Some(x) => x.toStream
-                case _ => (new EvComment("EmptyPositive")).toStream
-              })).flatten
-  }
+    def serializeXMLResultStream(evStream : =>XMLResultStream, writer : Writer) : Unit = {
+      evStream foreach (_._1 match {
+                case Some(x : XMLEvent) => x.appendWriter(writer)
+                case _ => (new EvComment("EmptyPositive")).appendWriter(writer)
+              })
     }
   
   

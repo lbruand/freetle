@@ -15,8 +15,8 @@
   */
 package org.freetle
 
-import java.io.InputStream
 import util._
+import java.io.{StringWriter, InputStream}
 
 /**
  * Various methods to load data from files.
@@ -36,8 +36,11 @@ trait TestXMLHelperMethods[Context] extends CPSXMLModel[Context] with TestHelper
   /**
    * Serialize ( not very efficient ).
    */
-  def serialize(x : XMLResultStream) : String =
-    (new StringBuilder()).appendAll(XMLResultStreamUtils.serializeXMLResultStream(x)).toString
+  def serialize(x : XMLResultStream) : String = {
+    var sb = new StringWriter()
+    XMLResultStreamUtils.serializeXMLResultStream(x, sb)
+    sb.toString
+  }
 
    /**
    * Serialize ( not very efficient ).
