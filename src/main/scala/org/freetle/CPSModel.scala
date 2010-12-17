@@ -146,7 +146,7 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
   /**
    * We execute in sequence left and then right if left has returned a result. 
    */
-  class SequenceOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
+  final class SequenceOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
     final def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processBinaryOperator(this, new SequenceOperator(_, _), left, right)
 
@@ -163,7 +163,7 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
     }
   }
   
-  class CFilterIdentityWithContext extends CFilter {
+  final class CFilterIdentityWithContext extends CFilter {
     var context : Option[Context] = None
     def isApplied : Boolean = !(None.equals(context))
     def apply(s : CPSStream, c : Context) : CPSStream = {
@@ -175,7 +175,7 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
    * Composition Operator.
    */
 
-  class ComposeOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
+  final class ComposeOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
     final def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processBinaryOperator(this, new ComposeOperator(_, _), left, right)
 
@@ -207,7 +207,7 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
   /**
    * Choice Operator
    */
-  class ChoiceOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
+  final class ChoiceOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
     final def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processBinaryOperator(this, new ChoiceOperator(_, _), left, right)
     
@@ -233,7 +233,7 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
   /**
    * Cardinality operator 0..1
    */
-  class ZeroOrOneOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
+  final class ZeroOrOneOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
     final def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processUnaryOperator(this, new ZeroOrOneOperator(_), underlying)
     
@@ -245,10 +245,11 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
   /**
    * Cardinality operator 0..* 
    */
-  class ZeroOrMoreOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
+  final class ZeroOrMoreOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
     final def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processUnaryOperator(this, new ZeroOrMoreOperator(_), underlying)
-    lazy val sequenceOperator = new SequenceOperator(underlying, this)
+    lazy val underlyingRealized : ChainedTransformRoot = underlying
+    lazy val sequenceOperator = new SequenceOperator(underlyingRealized, this)
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       sequenceOperator(success, appendPositive(success))
     }
@@ -286,7 +287,7 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
   /**
    * A Context-free transform that matches elements.
    */
-  class ElementMatcherTaker(matcher : CPSElemMatcher)  extends ContextFreeTransform {
+  final class ElementMatcherTaker(matcher : CPSElemMatcher)  extends ContextFreeTransform {
     final def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processTransform(this, () => { new ElementMatcherTaker(matcher) })
     
@@ -307,7 +308,7 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
    * A context-free transform, that drops all previous results.
    * It adds a EmptyPositive result if there was something to drop.
    */
-  class DropFilter extends ContextFreeTransform {
+  final class DropFilter extends ContextFreeTransform {
     final def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processTransform(this, () => { this })
     
