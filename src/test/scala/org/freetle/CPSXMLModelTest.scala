@@ -56,7 +56,7 @@ class CPSXMLModelTest extends CPSXMLModel[TestXMLContext] with TestXMLHelperMeth
     val t = <("input") ~
                 (( <("message") ~
                    ((<("value") ~
-                   TakeText()   ~
+                   takeText   ~
                    </("value")) -> new DropFilter()) ~
                   </("message")
                 )+) ~ </("input")
@@ -95,7 +95,7 @@ class CPSXMLModelTest extends CPSXMLModel[TestXMLContext] with TestXMLHelperMeth
     val ev = createStartElem("a")
     assertFalse(new EvCommentTypeMatcher()(ev))
     assertFalse(new SpaceOrCommentMatcher()(ev))
-    val t = TakeSpace()
+    val t = takeSpace
     assertEquals("EvElemStart", 0, lengthResult(t(filterIdentity, filterIdentity)(Stream((Some(ev), false)), null)))
     assertEquals(0, lengthResult(t(filterIdentity, filterIdentity)(Stream((Some(new EvText("p")), false)), null)))
     assertEquals(1, lengthResult(t(filterIdentity, filterIdentity)(Stream((Some(new EvText("        \t        ")), false)), null)))

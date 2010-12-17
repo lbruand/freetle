@@ -138,20 +138,13 @@ class CPSXMLModel[Context] extends CPSModel[XMLEvent, Context] {
   /**
    * Shortcut to take text.
    */
-  object TakeText {
-    def apply() = {
-      new ElementMatcherTaker(new EvTextTypeMatcher())
-    }
-  }
+  val takeText = new ElementMatcherTaker(new EvTextTypeMatcher())
 
   /**
    * Shortcut to take space or comment.
    */
-  object TakeSpace {
-    def apply() = {
-      new ElementMatcherTaker(new SpaceOrCommentMatcher())
-    }
-  }
+  val takeSpace = new ElementMatcherTaker(new SpaceOrCommentMatcher())
+  
   /**
    * Util class to build XMLResultStream, save etc...
    */

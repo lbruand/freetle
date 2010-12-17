@@ -57,16 +57,16 @@ class FreetleCaseBenchmarkTransform
                           artistTaker ~
                       </("artist") ~
                       <("country") ~
-                           TakeText() ~
+                           takeText ~
                       </("country") ~
                       <("company") ~
-                           TakeText() ~
+                           takeText ~
                       </("company") ~
                       <("price") ~
-                           TakeText() ~
+                           takeText ~
                       </("price") ~
                       <("year") ~
-                           TakeText() ~
+                           takeText ~
                       </("year") ~
                     </("cd"))  -> new DropFilter()) ~ new PushNode(
                        (x : Option[FreetleCaseBenchmarkContext]) => {

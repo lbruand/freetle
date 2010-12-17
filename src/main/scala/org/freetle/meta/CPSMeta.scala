@@ -27,7 +27,7 @@ trait CPSMeta[Context] extends CPSXMLModel[Context] {
       if (th.isInstanceOf[DropFilter]) {
         th
       } else {
-        ((TakeSpace())*) ~ instantiate() ~ ((TakeSpace())*)
+        ((takeSpace)*) ~ instantiate() ~ ((takeSpace)*)
       }
     }
     def processUnaryOperator(th : UnaryOperator, instantiate : InstantiateUnaryOperator, underlying : =>ChainedTransformRoot) : ChainedTransformRoot = {
