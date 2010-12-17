@@ -28,6 +28,80 @@ import testing.Benchmark
 @serializable @SerialVersionUID(599494944949L + 30000L)
 case class FreetleCaseBenchmarkContext(title : String = null, artist : String = null)
 
+class FreetleCaseBenchmarkTransform
+          extends CPSXMLModel[FreetleCaseBenchmarkContext]
+              with CPSMeta[FreetleCaseBenchmarkContext] {
+    /**
+     * Real transform construction.
+     */
+    val transform = {
+      val titleTaker = new TakeTextToContext() {
+        def pushToContext(text : String, context : FreetleCaseBenchmarkContext) : FreetleCaseBenchmarkContext = {
+            context.copy(title = text)
+        }
+      }
+
+      val artistTaker = new TakeTextToContext() {
+        def pushToContext(text : String, context : FreetleCaseBenchmarkContext) : FreetleCaseBenchmarkContext = {
+            context.copy(artist = text)
+        }
+      }
+
+      val t = (<("catalog") -> new DropFilter()
+              )~
+                  (((( (<("cd") ~
+                      <("title") ~
+                          titleTaker ~
+                      </("title") ~
+                      <("artist") ~
+                          artistTaker ~
+                      </("artist") ~
+                      <("country") ~
+                           TakeText() ~
+                      </("country") ~
+                      <("company") ~
+                           TakeText() ~
+                      </("company") ~
+                      <("price") ~
+                           TakeText() ~
+                      </("price") ~
+                      <("year") ~
+                           TakeText() ~
+                      </("year") ~
+                    </("cd"))  -> new DropFilter()) ~ new PushNode(
+                       (x : Option[FreetleCaseBenchmarkContext]) => {
+                         x match {
+
+                                                    case Some(context) =>
+<cd>
+ <title>{context.title}</title>
+ <artist>{context.artist}</artist>
+</cd>
+                                                    case _ => <cd></cd>
+                         }
+                       }
+                    )
+                    )
+                  )  *) ~
+              (</("catalog") -> new DropFilter()
+                      )
+      val filterIdentity = new CFilterIdentity()
+      val m = t.metaProcess(new SpaceSkipingMetaProcessor())
+      m(filterIdentity, filterIdentity)
+    }
+
+    def run(catalogSource : String) : String = {
+
+      val context = new FreetleCaseBenchmarkContext()
+      val inStream = XMLResultStreamUtils.loadXMLResultStream(catalogSource, Some(context))
+      val outStream = transform(inStream, context)
+      val sb = new StringWriter()
+      XMLResultStreamUtils.serializeXMLResultStream(outStream, sb)      
+      sb.toString
+    }
+
+  }
+
 /**
  * A test to benchmark the performance of the system.
  */
@@ -86,12 +160,14 @@ class BenchmarkTest {
                   catalogFooter).mkString
   }
   abstract class FreetleBenchmark(val nCatalog : Int = 3) extends Benchmark {
+    val name : String
     val catalogSource : String = buildRandomCatalog(nCatalog)
     
   }
 
   
   class XSLTCaseBenchmark(override val nCatalog : Int = 3) extends FreetleBenchmark(nCatalog : Int) {
+    override val name = "xslt"
     override def prefix = "XSLT = "
     val xsltSource = """<?xml version="1.0" encoding="UTF-8"?>
   <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -118,120 +194,53 @@ class BenchmarkTest {
 
     
     var resultStringWriter: StringWriter = null
-    var result : StreamResult = null
+
 
     def run() = {
       source = new StreamSource(new StringReader(new String(catalogSource.getBytes)))
       resultStringWriter = new StringWriter()
-      result = new StreamResult(resultStringWriter)
+      val result = new StreamResult(resultStringWriter)
       transformer.transform(source, result)
     }
 
     def checkResult() = {
       // Finished Run.
-      val resultString: String = resultStringWriter.toString
+      /*val resultString: String = resultStringWriter.toString
 
       assertTrue("<html> not found!! [" + resultString + "]", resultString.indexOf("<html>") >= 0)
-      assertTrue("</html> not found!! [" + resultString + "]", resultString.indexOf("</html>") >= 0)
+      assertTrue("</html> not found!! [" + resultString + "]", resultString.indexOf("</html>") >= 0)*/
     }
   }
 
 
-
   class FreetleCaseBenchmark(override val nCatalog : Int = 3) extends FreetleBenchmark(nCatalog : Int) {
+    override val name = "freetle"
+
+    
+
 
 
     
-    class FreetleCaseBenchmarkTransform
-            extends CPSXMLModel[FreetleCaseBenchmarkContext]
-                with CPSMeta[FreetleCaseBenchmarkContext] {
-      //def transform : CFilterBase = new IdTransform()
-      /**
-       * Real transform construction.
-       */
-      def transform : ChainedTransformRoot = {
-        
-        val titleTaker = new TakeTextToContext() {
-          def pushToContext(text : String, context : FreetleCaseBenchmarkContext) : FreetleCaseBenchmarkContext = {
-              context.copy(title = text)
-          }
-        }
-
-        val artistTaker = new TakeTextToContext() {
-          def pushToContext(text : String, context : FreetleCaseBenchmarkContext) : FreetleCaseBenchmarkContext = {
-              context.copy(artist = text)
-          }
-        }
-
-        val t = (<("catalog") -> new DropFilter()
-                )~
-                    (((( (<("cd") ~
-                        <("title") ~
-                            titleTaker ~
-                        </("title") ~
-                        <("artist") ~
-                            artistTaker ~
-                        </("artist") ~
-                        <("country") ~
-                             TakeText() ~
-                        </("country") ~
-                        <("company") ~
-                             TakeText() ~
-                        </("company") ~
-                        <("price") ~
-                             TakeText() ~
-                        </("price") ~
-                        <("year") ~
-                             TakeText() ~
-                        </("year") ~
-                      </("cd"))  -> new DropFilter()) ~ new PushNode(
-                         (x : Option[FreetleCaseBenchmarkContext]) => {                           
-                           x match {
-
-                                                      case Some(context) =>
-<cd>
-   <title>{context.title}</title>
-   <artist>{context.artist}</artist>
-</cd>
-                                                      case _ => <cd></cd>
-                           }
-                         }
-                      ) 
-                      )
-                    )  *) ~
-                (</("catalog") -> new DropFilter()
-                        )
-        t.metaProcess(new SpaceSkipingMetaProcessor())
-      }
-
-      def run(catalogSource : String) : String = {
-        val filterIdentity = new CFilterIdentity()
-        val context = new FreetleCaseBenchmarkContext()
-        val inStream = XMLResultStreamUtils.loadXMLResultStream(catalogSource, Some(context))
-        val outStream = transform(filterIdentity, filterIdentity)(inStream, context)
-        result = new StringBuilder().appendAll(XMLResultStreamUtils.serializeXMLResultStream(outStream)).toString
-        result
-      }
-      
-    }
-    val transformer : FreetleCaseBenchmarkTransform = new FreetleCaseBenchmarkTransform()
-    var result : String = null
-    
-    def run() = transformer.run(catalogSource = catalogSource)
+    def run() = FreetleCaseBenchmark.transformer.run(catalogSource = catalogSource)
 
     def checkResult() = {
       //assertEquals("", result)
     }
   }
+  object FreetleCaseBenchmark {
+    val transformer : FreetleCaseBenchmarkTransform = new FreetleCaseBenchmarkTransform()
+  }
 
   @Test
   def testXSLT() = {
-    val freetleBenchmark = new FreetleCaseBenchmark(nCatalog = 1000)
-    val benchmarks = List( new XSLTCaseBenchmark(nCatalog = 1000),
-                          freetleBenchmark)
-    val timings = benchmarks.map(_.runBenchmark(5))
+    val sizes = (2 to 4).map(_ * 2500)
+    //val sizes = List(8000)
+    val benchmarks = List.concat(
+                    (sizes).map(x => new FreetleCaseBenchmark(nCatalog = x))
+                    /*,
+                    (sizes).map(x => new XSLTCaseBenchmark(nCatalog = x))*/)
+    val timings = benchmarks.map(x => (x.name, x.nCatalog, x.runBenchmark(1)))
 
-    freetleBenchmark.checkResult
 
     println(timings)
 
