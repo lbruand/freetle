@@ -200,7 +200,6 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
       }
 
     }
-      //left(right(success, failure), failure)
 
   }
 
