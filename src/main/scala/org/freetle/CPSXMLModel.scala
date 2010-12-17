@@ -157,10 +157,10 @@ class CPSXMLModel[Context] extends CPSModel[XMLEvent, Context] {
    */
 
   object XMLResultStreamUtils {
-    def loadXMLResultStream(in : InputStream, context : Option[Context]) : XMLResultStream = {
+    def loadXMLResultStream(in : InputStream) : XMLResultStream = {
       Stream.fromIterator(new XMLEventStream(in) map (x => (Some(x), false)))
     }
-    def loadXMLResultStream(str : String, context : Option[Context]) : XMLResultStream = {
+    def loadXMLResultStream(str : String) : XMLResultStream = {
       val src = StreamSource.fromIterator(str.toStream.iterator)
       Stream.fromIterator(new XMLEventStream(src) map (x => (Some(x), false)))
     }

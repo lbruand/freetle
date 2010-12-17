@@ -93,7 +93,7 @@ class FreetleCaseBenchmarkTransform
     def run(catalogSource : String) : String = {
 
       val context = new FreetleCaseBenchmarkContext()
-      val inStream = XMLResultStreamUtils.loadXMLResultStream(catalogSource, Some(context))
+      val inStream = XMLResultStreamUtils.loadXMLResultStream(catalogSource)
       val outStream = transform(inStream, context)
       val sb = new StringWriter()
       XMLResultStreamUtils.serializeXMLResultStream(outStream, sb)      
@@ -233,13 +233,13 @@ class BenchmarkTest {
 
   @Test
   def testXSLT() = {
-    val sizes = (2 to 4).map(_ * 2500)
-    //val sizes = List(8000)
+    //val sizes = (2 to 4).map(_ * 2500)
+    val sizes = List(10000)
     val benchmarks = List.concat(
                     (sizes).map(x => new FreetleCaseBenchmark(nCatalog = x))
                     /*,
                     (sizes).map(x => new XSLTCaseBenchmark(nCatalog = x))*/)
-    val timings = benchmarks.map(x => (x.name, x.nCatalog, x.runBenchmark(1)))
+    val timings = benchmarks.map(x => (x.name, x.nCatalog, x.runBenchmark(5)))
 
 
     println(timings)
