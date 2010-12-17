@@ -23,6 +23,7 @@ import javax.xml.transform.TransformerFactory
 import javax.xml.transform.stream.{StreamResult, StreamSource}
 import java.io.{StringWriter, StringReader}
 import testing.Benchmark
+import compat.Platform
 
 
 @serializable @SerialVersionUID(599494944949L + 30000L)
@@ -171,8 +172,7 @@ class BenchmarkTest {
   }
   abstract class FreetleBenchmark(val nCatalog : Int = 3) extends Benchmark {
     val name : String
-    val catalogSource : String = buildRandomCatalog(nCatalog)
-    
+    var catalogSource : String = null
   }
 
   
@@ -212,6 +212,7 @@ class BenchmarkTest {
       val result = new StreamResult(resultStringWriter)
       transformer.transform(source, result)
       val resultString: String = resultStringWriter.toString
+      //assertEquals("", resultString) 
     }
 
     def checkResult() = {
@@ -236,7 +237,7 @@ class BenchmarkTest {
   class IdentityCaseBenchmark(override val nCatalog : Int = 3) extends FreetleBenchmark(nCatalog : Int) {
     override val name = "identity"
 
-    def run() = FreetleCaseBenchmark.transformer.run(catalogSource = catalogSource)
+    def run() = IdentityCaseBenchmark.transformer.run(catalogSource = catalogSource)
 
     def checkResult() = {
       //assertEquals("", result)
@@ -252,20 +253,24 @@ class BenchmarkTest {
   @Test
   def testXSLT() = {
     //val sizes = (2 to 4).map(_ * 2500)
-    val sizes = List(5000)
-    val benchmarks = List.concat(
-                    (sizes).map(x => new FreetleCaseBenchmark(nCatalog = x))
-                    ,
+    val sizes = Stream(500,1000,5000)
+    val benchmarks = Stream.concat(
+                    (sizes).map(x => new XSLTCaseBenchmark(nCatalog = x)),
+                    (sizes).map(x => new FreetleCaseBenchmark(nCatalog = x)),
                     (sizes).map(x => new IdentityCaseBenchmark(nCatalog = x))
-                    ,
-                    (sizes).map(x => new XSLTCaseBenchmark(nCatalog = x))
+                    
                   )
-    println(benchmarks.head.catalogSource.length)
-    val timings = benchmarks.map(x => (x.name, x.nCatalog, x.runBenchmark(5)))
 
-
+    val timings = benchmarks.map(x => {
+        x.catalogSource = buildRandomCatalog(x.nCatalog)
+        Platform.collectGarbage
+        val r = (x.name, x.nCatalog, x.catalogSource.length, x.runBenchmark(8).min)
+        x.catalogSource = null
+        r
+      }).toList
     println(timings)
-
   }
-  
+
+
+
 }
