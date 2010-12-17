@@ -149,10 +149,11 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
   final class SequenceOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
     final def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processBinaryOperator(this, new SequenceOperator(_, _), left, right)
-
+    lazy val leftRealized : ChainedTransformRoot = left
+    lazy val rightRealized : ChainedTransformRoot = right
 
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      left(SequenceOperator.innerSequenceOperator(right(success, failure)), failure)
+      leftRealized(SequenceOperator.innerSequenceOperator(rightRealized(success, failure)), failure)
     }
   }
   object SequenceOperator extends CPSStreamHelperMethodsTrait {
@@ -178,7 +179,8 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
   final class ComposeOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
     final def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processBinaryOperator(this, new ComposeOperator(_, _), left, right)
-
+    lazy val leftRealized : ChainedTransformRoot = left
+    lazy val rightRealized : ChainedTransformRoot = right
     final private def forceStream(result: CPSStream, identitySuccess: CFilterIdentityWithContext, identityFailure: CFilterIdentityWithContext): Unit = {
       var these = result
       while (!identitySuccess.isApplied && !identityFailure.isApplied && !these.tail.isEmpty) these = these.tail
@@ -187,13 +189,13 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
       (tl : CPSStream, c : Context) => {
         val identitySuccess = new CFilterIdentityWithContext()
         val identityFailure = new CFilterIdentityWithContext()
-        val result = left(identitySuccess, identityFailure)(tl, c)
+        val result = leftRealized(identitySuccess, identityFailure)(tl, c)
         forceStream(result, identitySuccess, identityFailure)
                      // This is needed because identitySuccess is only called at the end of the result Stream,
                      // as a side effect.
                      // But it is suboptimal in term of memory usage.
         if (identitySuccess.isApplied) {
-          right(success, failure)(result, identitySuccess.context.get)
+          rightRealized(success, failure)(result, identitySuccess.context.get)
         } else {
           failure(tl, c)
         }
@@ -224,9 +226,10 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
   class OneOrMoreOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
     final def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processUnaryOperator(this, new OneOrMoreOperator(_), underlying)
-    
+    lazy val underlyingRealized : ChainedTransformRoot = underlying
+    lazy val seqOneOrMoreOperator : ChainedTransformRoot = new SequenceOperator(underlyingRealized, new ZeroOrMoreOperator(underlying))
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      new SequenceOperator(underlying, new ZeroOrMoreOperator(underlying))(success, failure)
+      seqOneOrMoreOperator(success, failure)
     }
   }
   /**
@@ -235,9 +238,9 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
   final class ZeroOrOneOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
     final def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processUnaryOperator(this, new ZeroOrOneOperator(_), underlying)
-    
+    lazy val underlyingRealized : ChainedTransformRoot = underlying
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      underlying(success, appendPositive(success))
+      underlyingRealized(success, appendPositive(success))
     }
   }
 
@@ -287,7 +290,7 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
    * A Context-free transform that matches elements.
    */
   final class ElementMatcherTaker(matcher : CPSElemMatcher)  extends ContextFreeTransform {
-    final def metaProcess(metaProcessor : MetaProcessor) =
+    def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processTransform(this, () => { new ElementMatcherTaker(matcher) })
     
     @inline def partialapply(s : CPSStream) : CPSStream = {
@@ -308,7 +311,7 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
    * It adds a EmptyPositive result if there was something to drop.
    */
   final class DropFilter extends ContextFreeTransform {
-    final def metaProcess(metaProcessor : MetaProcessor) =
+    def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processTransform(this, () => { this })
     
     def partialapply(s : CPSStream) : CPSStream = {
