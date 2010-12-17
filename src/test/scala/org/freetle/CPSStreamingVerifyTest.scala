@@ -45,7 +45,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestCPSStreamingContext] {
     val s = createStream
     val t = ((new ElementMatcherTaker(_.equals('a'))*) ~ (new ElementMatcherTaker(_.equals('b')))*) -> new DropFilter()
     val r = t(filterIdentity, filterIdentity)(createStream, new TestCPSStreamingContext())
-    assertTrue(""+r, CPSStreamHelperMethods.isEmptyPositive(r))
+    assertTrue(""+r, CPSStreamHelperMethods.isOnlyEmptyPositiveStream(r))
 
   }
   @Test

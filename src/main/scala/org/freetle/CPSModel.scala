@@ -23,15 +23,16 @@ package org.freetle
  */
  // TODO : Explore if it is not possible to get rid of isPositive and the emptyPositive completely using CPS.
  // TODO : Explore the possibility of serializing the transforms with call-by-name member (left, right, underlying)
-class CPSModel[Element, Context] {
+
+trait CPSModelTypeDefinition[Element, Context] {
   type CPSElementOrPositive = Option[Element]
   type CPSTupleElement = (CPSElementOrPositive, Boolean)
   type CPSStream = Stream[CPSTupleElement]
 
   type CFilter = (CPSStream, Context) => CPSStream
-  
-
-
+   
+}
+class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context] {
   /**
    * An identity CFilter.
    */
@@ -68,7 +69,7 @@ class CPSModel[Element, Context] {
   /**
    * Abstract class for all transformations.
    */
-  abstract sealed class ChainedTransformRoot extends ChainedTransform with MetaProcessable {
+  abstract sealed class ChainedTransformRoot extends ChainedTransform with MetaProcessable with CPSStreamHelperMethodsTrait {
     final def ~(other : => ChainedTransformRoot) : ChainedTransformRoot = new SequenceOperator(this, other)
     final def ->(other : => ChainedTransformRoot) : ChainedTransformRoot = new ComposeOperator(this, other)
     final def |(other : => ChainedTransformRoot) : ChainedTransformRoot = new ChoiceOperator(this, other)
@@ -76,27 +77,29 @@ class CPSModel[Element, Context] {
     final def + : ChainedTransformRoot = new OneOrMoreOperator(this)
     final def ? : ChainedTransformRoot = new ZeroOrOneOperator(this)
   }
-  
+  object CPSStreamHelperMethods extends CPSStreamHelperMethodsTrait
   /**
    * HelperMethods on CPSStream.
    */
-  object CPSStreamHelperMethods {
-    def removeWhileEmptyPositive(s : CPSStream) : CPSStream = s.dropWhile( x =>  x.equals( (None, true) ))
+  trait CPSStreamHelperMethodsTrait {
+    @inline final def isEmptyPositive(x : CPSTupleElement) : Boolean = x.equals( (None, true) )
+    @inline final def isNotEmptyPositive(x : CPSTupleElement) : Boolean = !(isEmptyPositive(x))
+    @inline final def removeWhileEmptyPositive(s : CPSStream) : CPSStream = s.dropWhile( isEmptyPositive )
 
-    def removeAllEmptyPositive(s : CPSStream) : CPSStream = s.filter( x =>  !(x.equals( (None, true) )))
+    def removeAllEmptyPositive(s : CPSStream) : CPSStream = s.filter( isNotEmptyPositive )
 
-    def isPositive(s : CPSStream) : Boolean = {
+    @inline final def isPositive(s : CPSStream) : Boolean = {
       if (s.isEmpty)
         false
       else
         s.head._2
     }
 
-    def isEmptyPositive(s : CPSStream) : Boolean = {
+    def isOnlyEmptyPositiveStream(s : CPSStream) : Boolean = {
       isPositive(s) && removeWhileEmptyPositive(s).isEmpty
     }
 
-    def appendPositiveStream(s : CPSStream) : CPSStream = if (!isPositive(s))
+    @inline final def appendPositiveStream(s : CPSStream) : CPSStream = if (!isPositive(s))
                                                                           Stream.cons((None, true), s)
                                                                         else
                                                                           s
@@ -104,7 +107,7 @@ class CPSModel[Element, Context] {
     private def innerAppendPositive(input : =>CFilter)(str : CPSStream, c : Context) : CPSStream =
                                                                         input(appendPositiveStream(str), c)
 
-    def appendPositive(input : =>CFilter) : CFilter = innerAppendPositive(input)
+    @inline final def appendPositive(input : =>CFilter) : CFilter = innerAppendPositive(input)
     
   }
   /**
@@ -116,7 +119,7 @@ class CPSModel[Element, Context] {
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       (s : CPSStream, c : Context) => {
         val (rs, rc) = apply(s, c)
-        if (CPSStreamHelperMethods.isPositive(rs))
+        if (isPositive(rs))
           success(rs, rc)
         else
           failure(s, c)
@@ -152,10 +155,10 @@ class CPSModel[Element, Context] {
       left(SequenceOperator.innerSequenceOperator(right(success, failure)), failure)
     }
   }
-  object SequenceOperator {
-    private def innerSequenceOperator(input : =>CFilter)(s : CPSStream, c : Context) : CPSStream = {
+  object SequenceOperator extends CPSStreamHelperMethodsTrait {
+    @inline private def innerSequenceOperator(input : =>CFilter)(s : CPSStream, c : Context) : CPSStream = {
       val (hd, tl) = s.span(_._2)
-      val removedHd = CPSStreamHelperMethods.removeWhileEmptyPositive(hd)
+      val removedHd = removeWhileEmptyPositive(hd)
       removedHd.append({input(tl, c)})
     }
   }
@@ -235,7 +238,7 @@ class CPSModel[Element, Context] {
               metaProcessor.processUnaryOperator(this, new ZeroOrOneOperator(_), underlying)
     
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      underlying(success, CPSStreamHelperMethods.appendPositive(success))
+      underlying(success, appendPositive(success))
     }
   }
 
@@ -247,7 +250,7 @@ class CPSModel[Element, Context] {
               metaProcessor.processUnaryOperator(this, new ZeroOrMoreOperator(_), underlying)
     lazy val sequenceOperator = new SequenceOperator(underlying, this)
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      sequenceOperator(success, CPSStreamHelperMethods.appendPositive(success))
+      sequenceOperator(success, appendPositive(success))
     }
   }
 
@@ -287,11 +290,11 @@ class CPSModel[Element, Context] {
     final def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processTransform(this, () => { new ElementMatcherTaker(matcher) })
     
-    def partialapply(s : CPSStream) : CPSStream = {
+    @inline def partialapply(s : CPSStream) : CPSStream = {
       if (s.isEmpty)
         s
       else {
-        val sr = CPSStreamHelperMethods.removeWhileEmptyPositive(s)
+        val sr = removeWhileEmptyPositive(s)
         if (matcher(sr.head._1.get))
           Stream.cons( (sr.head._1, true), sr.tail)
         else
@@ -309,8 +312,8 @@ class CPSModel[Element, Context] {
               metaProcessor.processTransform(this, () => { this })
     
     def partialapply(s : CPSStream) : CPSStream = {
-      if (CPSStreamHelperMethods.isPositive(s))
-        CPSStreamHelperMethods.appendPositiveStream(s.dropWhile(_._2))
+      if (isPositive(s))
+        appendPositiveStream(s.dropWhile(_._2))
       else
         s
     }

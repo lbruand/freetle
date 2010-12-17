@@ -50,11 +50,11 @@ class CPSXMLModel[Context] extends CPSModel[XMLEvent, Context] {
   abstract class TakeTextToContext extends ContextWritingTransform {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
     
-    def apply(stream : CPSStream, context : Context) : (CPSStream, Context) = {
+    @inline def apply(stream : CPSStream, context : Context) : (CPSStream, Context) = {
       if (stream.isEmpty)
         (stream, context)
       else {
-        val sr = CPSStreamHelperMethods.removeWhileEmptyPositive(stream)
+        val sr = removeWhileEmptyPositive(stream)
         (sr.head._1.get) match {
           case EvText(txt) =>
             (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(txt, context))
