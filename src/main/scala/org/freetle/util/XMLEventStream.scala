@@ -68,19 +68,19 @@ class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
   }
   type Attributes = Map[QName, String]
 
-  final private def fromJavaQName(qn : javax.xml.namespace.QName) : org.freetle.util.QName = {
+  @inline final private def fromJavaQName(qn : javax.xml.namespace.QName) : org.freetle.util.QName = {
     new QName(namespaceURI = qn.getNamespaceURI,
       localPart = qn.getLocalPart,
       prefix = qn.getPrefix)
   }
   
-  final private def buildAttributes(input : XMLStreamReader) : Attributes = {
+  @inline final private def buildAttributes(input : XMLStreamReader) : Attributes = {
     List.range(0, input.getAttributeCount).map(
       x => (fromJavaQName(input.getAttributeName(x)), input.getAttributeValue(x))
       ).toMap    
   }
 
-  final private def buildEvent(input:XMLStreamReader) : XMLEvent = {
+  @inline final private def buildEvent(input:XMLStreamReader) : XMLEvent = {
     val eventType = input.getEventType
 	  val event : XMLEvent = eventType match {
 	    case XMLStreamConstants.START_ELEMENT => new EvElemStart(fromJavaQName(input.getName),
