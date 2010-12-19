@@ -255,8 +255,8 @@ class BenchmarkTest {
     //val sizes = (2 to 4).map(_ * 2500)
     val sizes = Stream(2000)
     val benchmarks = Stream.concat(
-                    //(sizes).map(x => new XSLTCaseBenchmark(nCatalog = x)),
-                    //(sizes).map(x => new IdentityCaseBenchmark(nCatalog = x)),
+                    (sizes).map(x => new XSLTCaseBenchmark(nCatalog = x)),
+                    (sizes).map(x => new IdentityCaseBenchmark(nCatalog = x)),
                     (sizes).map(x => new FreetleCaseBenchmark(nCatalog = x))
                     
                   )
@@ -264,7 +264,7 @@ class BenchmarkTest {
     val timings = benchmarks.map(x => {
         x.catalogSource = buildRandomCatalog(x.nCatalog)
         Platform.collectGarbage
-        val r = (x.name, x.nCatalog, x.catalogSource.length, x.runBenchmark(8).min)
+        val r = (x.name, x.nCatalog, x.catalogSource.length, (x.runBenchmark(8).drop(3).sum/5))
         x.catalogSource = null
         r
       }).toList
