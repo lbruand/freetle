@@ -39,7 +39,7 @@ abstract class BaseCaseBenchmarkTransform
     def run(catalogSource : String) : String = {
 
       val context = new FreetleCaseBenchmarkContext()
-      val inStream = XMLResultStreamUtils.loadXMLResultStream(catalogSource)
+      def inStream = XMLResultStreamUtils.loadXMLResultStream(catalogSource)
       def outStream = transform(inStream, context)
       val sb = new StringWriter()
       XMLResultStreamUtils.serializeXMLResultStream(outStream, sb)      
