@@ -24,7 +24,7 @@ package org.freetle
  // TODO : Explore if it is not possible to get rid of isPositive and the emptyPositive completely using CPS.
  // TODO : Explore the possibility of serializing the transforms with call-by-name member (left, right, underlying)
 
-trait CPSModelTypeDefinition[Element, Context] {
+trait CPSModelTypeDefinition[@specialized Element, @specialized Context] {
   type CPSElementOrPositive = Option[Element]
   type CPSTupleElement = (CPSElementOrPositive, Boolean)
   type CPSStream = Stream[CPSTupleElement]
@@ -32,7 +32,7 @@ trait CPSModelTypeDefinition[Element, Context] {
   type CFilter = (CPSStream, Context) => CPSStream
    
 }
-class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context] {
+class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeDefinition[Element, Context] {
   /**
    * An identity CFilter.
    */

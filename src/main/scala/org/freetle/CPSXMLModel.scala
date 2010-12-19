@@ -24,7 +24,7 @@ import java.io.{ByteArrayInputStream, Writer, InputStream}
  * It is capable of working over XML Events.
  */
 
-class CPSXMLModel[Context] extends CPSModel[XMLEvent, Context] {
+class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
   /**
    * Used for backward compatibility.
    */
