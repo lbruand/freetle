@@ -40,7 +40,7 @@ abstract class BaseCaseBenchmarkTransform
 
       val context = new FreetleCaseBenchmarkContext()
       val inStream = XMLResultStreamUtils.loadXMLResultStream(catalogSource)
-      val outStream = transform(inStream, context)
+      def outStream = transform(inStream, context)
       val sb = new StringWriter()
       XMLResultStreamUtils.serializeXMLResultStream(outStream, sb)      
       var r = sb.toString
@@ -253,11 +253,11 @@ class BenchmarkTest {
   @Test
   def testXSLT() = {
     //val sizes = (2 to 4).map(_ * 2500)
-    val sizes = Stream(500,1000,5000)
+    val sizes = Stream(2000)
     val benchmarks = Stream.concat(
-                    (sizes).map(x => new XSLTCaseBenchmark(nCatalog = x)),
-                    (sizes).map(x => new FreetleCaseBenchmark(nCatalog = x)),
-                    (sizes).map(x => new IdentityCaseBenchmark(nCatalog = x))
+                    //(sizes).map(x => new XSLTCaseBenchmark(nCatalog = x)),
+                    //(sizes).map(x => new IdentityCaseBenchmark(nCatalog = x)),
+                    (sizes).map(x => new FreetleCaseBenchmark(nCatalog = x))
                     
                   )
 
