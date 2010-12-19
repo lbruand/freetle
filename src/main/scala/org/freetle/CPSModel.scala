@@ -77,14 +77,16 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
     final def + : ChainedTransformRoot = new OneOrMoreOperator(this)
     final def ? : ChainedTransformRoot = new ZeroOrOneOperator(this)
   }
-  object CPSStreamHelperMethods extends CPSStreamHelperMethodsTrait
+  object CPSStreamHelperMethods extends CPSStreamHelperMethodsTrait {
+    val isEmptyPositiveFunc = isEmptyPositive(_)
+  }
   /**
    * HelperMethods on CPSStream.
    */
   trait CPSStreamHelperMethodsTrait {
     @inline final def isEmptyPositive(x : CPSTupleElement) : Boolean = x.equals( (None, true) )
     @inline final def isNotEmptyPositive(x : CPSTupleElement) : Boolean = !(isEmptyPositive(x))
-    @inline final def removeWhileEmptyPositive(s : CPSStream) : CPSStream = s.dropWhile( isEmptyPositive )
+    @inline final def removeWhileEmptyPositive(s : CPSStream) : CPSStream = s.dropWhile( CPSStreamHelperMethods.isEmptyPositiveFunc )
 
     def removeAllEmptyPositive(s : CPSStream) : CPSStream = s.filter( isNotEmptyPositive )
 
@@ -147,7 +149,7 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
    * We execute in sequence left and then right if left has returned a result. 
    */
   final class SequenceOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
-    final def metaProcess(metaProcessor : MetaProcessor) =
+    def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processBinaryOperator(this, new SequenceOperator(_, _), left, right)
     lazy val leftRealized : ChainedTransformRoot = left
     lazy val rightRealized : ChainedTransformRoot = right
@@ -209,7 +211,7 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
    * Choice Operator
    */
   final class ChoiceOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
-    final def metaProcess(metaProcessor : MetaProcessor) =
+    def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processBinaryOperator(this, new ChoiceOperator(_, _), left, right)
     
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = left(success, right(success, failure))
@@ -236,7 +238,7 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
    * Cardinality operator 0..1
    */
   final class ZeroOrOneOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
-    final def metaProcess(metaProcessor : MetaProcessor) =
+    def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processUnaryOperator(this, new ZeroOrOneOperator(_), underlying)
     lazy val underlyingRealized : ChainedTransformRoot = underlying
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
@@ -248,7 +250,7 @@ class CPSModel[Element, Context] extends CPSModelTypeDefinition[Element, Context
    * Cardinality operator 0..* 
    */
   final class ZeroOrMoreOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
-    final def metaProcess(metaProcessor : MetaProcessor) =
+    def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processUnaryOperator(this, new ZeroOrMoreOperator(_), underlying)
     lazy val underlyingRealized : ChainedTransformRoot = underlying
     lazy val sequenceOperator = new SequenceOperator(underlyingRealized, this)
