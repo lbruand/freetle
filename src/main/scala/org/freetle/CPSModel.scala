@@ -78,7 +78,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
     final def ? : ChainedTransformRoot = new ZeroOrOneOperator(this)
   }
   object CPSStreamHelperMethods extends CPSStreamHelperMethodsTrait {
-    val isEmptyPositiveFunc = isEmptyPositive(_)
+    val constantEmptyPositive : CPSTupleElement = (None, true)
   }
   /**
    * HelperMethods on CPSStream.
@@ -86,7 +86,14 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
   trait CPSStreamHelperMethodsTrait {
     @inline final def isEmptyPositive(x : CPSTupleElement) : Boolean = x.equals( (None, true) )
     @inline final def isNotEmptyPositive(x : CPSTupleElement) : Boolean = !(isEmptyPositive(x))
-    @inline final def removeWhileEmptyPositive(s : CPSStream) : CPSStream = s.dropWhile( CPSStreamHelperMethods.isEmptyPositiveFunc )
+    @inline final def removeWhileEmptyPositive(s : CPSStream) : CPSStream = {
+      var cs : CPSStream = s
+      while ( CPSStreamHelperMethods.constantEmptyPositive.equals(cs.head) ) {
+        cs = cs.tail
+      }
+      cs
+    }
+    //s.dropWhile( CPSStreamHelperMethods.isEmptyPositiveFunc )
 
     def removeAllEmptyPositive(s : CPSStream) : CPSStream = s.filter( isNotEmptyPositive )
 
