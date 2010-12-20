@@ -160,9 +160,18 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
   }
   object SequenceOperator extends CPSStreamHelperMethodsTrait {
     @inline private def innerSequenceOperator(input : =>CFilter)(s : CPSStream, c : Context) : CPSStream = {
-      val (hd, tl) = s.span(_._2)
-      val removedHd = removeWhileEmptyPositive(hd)
-      removedHd.append({input(tl, c)})
+      if (s.isEmpty) {
+        input(s, c)
+      } else {
+        if (s.head._2) { // It is Result.
+          s.head._1 match {
+            case None => innerSequenceOperator(input)(s.tail, c) // Empty positive to trim.
+            case Some(_) => Stream.cons(s.head, innerSequenceOperator(input)(s.tail, c)) // Non empty positive to skip.
+          }
+        } else {
+          input(s, c)
+        }
+      }
     }
   }
   
