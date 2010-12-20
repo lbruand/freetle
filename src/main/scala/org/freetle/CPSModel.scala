@@ -231,8 +231,9 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
   final class ChoiceOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
     def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processBinaryOperator(this, new ChoiceOperator(_, _), left, right)
-    
-    def apply(success : =>CFilter, failure : =>CFilter) : CFilter = left(success, right(success, failure))
+    lazy val leftRealized : ChainedTransformRoot = left
+    lazy val rightRealized : ChainedTransformRoot = right
+    def apply(success : =>CFilter, failure : =>CFilter) : CFilter = leftRealized(success, rightRealized(success, failure))
   }
 
   /**
