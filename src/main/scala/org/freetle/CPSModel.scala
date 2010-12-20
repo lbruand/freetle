@@ -322,7 +322,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
           Stream.cons( (sr.head._1, true), sr.tail)
         else
           s
-        }
+      }
     }
   }
 
