@@ -92,7 +92,6 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
       }
       cs
     }
-    //s.dropWhile( CPSStreamHelperMethods.isEmptyPositiveFunc )
 
     def removeAllEmptyPositive(s : CPSStream) : CPSStream = s.filter( isNotEmptyPositive )
 
