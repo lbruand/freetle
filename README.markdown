@@ -64,7 +64,7 @@ an other.
 
 ## Stream-oriented
 Freetle transformations are stream-oriented programming :
-Meaning that the XML document is viewed as a stream of (SAX) XML events.
+Meaning that the XML document is viewed as a stream of (STAX) XML events.
 This goes contrary to most transformation systems in which Documents are viewed as trees.
 Stream oriented programming is theorized as being faster but harder to program.
 Thanks to Freetle's use of combinators, Freetle transformations are not harder to program than typically tree-oriented transformations such as XSL-T.
