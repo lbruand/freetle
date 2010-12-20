@@ -54,33 +54,35 @@ object StreamSource {
   }
 }
 
-
+object XMLEventStream {
+  val factory = XMLInputFactory.newInstance()
+}
 /**
  * Transform a Source a XMLEvent Iterator for the purpose of making it a Stream afterward.
  * NB: You can create a stream from this using Stream.fromIterator().
  */
-class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
+final class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
 
-  lazy val factory = XMLInputFactory.newInstance()
-  lazy val input : XMLStreamReader = src match {
-      case in : InputStream => factory.createXMLStreamReader(in)
-      case src :Source => factory.createXMLStreamReader("default.xml", new SourceReader(src))
+
+  val input : XMLStreamReader = src match {
+      case in : InputStream => XMLEventStream.factory.createXMLStreamReader(in)
+      case src :Source => XMLEventStream.factory.createXMLStreamReader("default.xml", new SourceReader(src))
   }
   type Attributes = Map[QName, String]
 
-  @inline final private def fromJavaQName(qn : javax.xml.namespace.QName) : org.freetle.util.QName = {
+  @inline private def fromJavaQName(qn : javax.xml.namespace.QName) : org.freetle.util.QName = {
     new QName(namespaceURI = qn.getNamespaceURI,
       localPart = qn.getLocalPart,
       prefix = qn.getPrefix)
   }
   
-  @inline final private def buildAttributes(input : XMLStreamReader) : Attributes = {
+  @inline private def buildAttributes(input : XMLStreamReader) : Attributes = {
     List.range(0, input.getAttributeCount).map(
       x => (fromJavaQName(input.getAttributeName(x)), input.getAttributeValue(x))
-      ).toMap    
+      ).toMap
   }
 
-  @inline final private def buildEvent(input:XMLStreamReader) : XMLEvent = {
+  @inline private def buildEvent(input:XMLStreamReader) : XMLEvent = {
     val eventType = input.getEventType
 	  val event : XMLEvent = eventType match {
 	    case XMLStreamConstants.START_ELEMENT => new EvElemStart(fromJavaQName(input.getName),
