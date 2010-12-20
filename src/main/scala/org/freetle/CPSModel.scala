@@ -22,7 +22,6 @@ package org.freetle
  * met in previous backtracking models. 
  */
  // TODO : Explore if it is not possible to get rid of isPositive and the emptyPositive completely using CPS.
- // TODO : Explore the possibility of serializing the transforms with call-by-name member (left, right, underlying)
 
 trait CPSModelTypeDefinition[@specialized Element, @specialized Context] {
   type CPSElementOrPositive = Option[Element]
