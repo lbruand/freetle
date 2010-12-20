@@ -22,8 +22,14 @@ import util.Random
  */
 
 class RandomUtils extends Random {
-  def nextStringLetterOrDigit(i : Int) : String = {
-      val myStr = Stream.continually(this.nextPrintableChar()) filter (_.isLetterOrDigit)
-      myStr.slice(0, i).mkString
+  def nextStringLetterOrDigit(sb :StringBuilder, i : Int) : Unit = {
+     (1 to i).foreach(x => {
+        var c = this.nextPrintableChar()
+        while (!c.isLetterOrDigit) {
+          c = this.nextPrintableChar()
+        }
+       sb.append(c)
+     })
+    
   }
 }

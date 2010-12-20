@@ -119,57 +119,51 @@ class FreetleCaseBenchmarkTransform extends BaseCaseBenchmarkTransform {
 @Test
 class BenchmarkTest {
   val catalogHeader = """<?xml version="1.0" encoding="UTF-8"?>
-<catalog>""".toStream
+<catalog>"""
 
   val catalogFooter = """</catalog>
-""".toStream
+"""
 
-  def buildCD(title : String, artist : String, country : String, company : String, price : String, year : String) : String = {
-    var sb = new StringBuilder()
+  val random = new RandomUtils()
+  def buildRandomCD(sb : StringBuilder) : Unit = {
     sb.append("<cd>\n")
 
-    sb.append("<title>")
-    sb.append(title)
-    sb.append("</title>\n")
+    sb.append("<title>the ")
+    random.nextStringLetterOrDigit(sb, 22)
+    sb.append(" album</title>\n")
 
     sb.append("<artist>")
-    sb.append(artist)
-    sb.append("</artist>\n")
+    random.nextStringLetterOrDigit(sb, 15)
+    sb.append(" and the band</artist>\n")
 
     sb.append("<country>")
-    sb.append(country)
+    random.nextStringLetterOrDigit(sb, 2)
     sb.append("</country>\n")
 
     sb.append("<company>")
-    sb.append(company)
-    sb.append("</company>\n")
+    random.nextStringLetterOrDigit(sb, 15)
+    sb.append(" inc.</company>\n")
 
     sb.append("<price>")
-    sb.append(price)
+    sb.append("" + (random.nextInt(1000) + 1000))
     sb.append("</price>\n")
 
     sb.append("<year>")
-    sb.append(year)
+    sb.append("" + (1950 + random.nextInt(60)))
     sb.append("</year>\n")
 
     sb.append("</cd>\n")
-    sb.toString
   }
-  val random = new RandomUtils()
-  def buildRandomCD() : String = {
-    buildCD("the " + random.nextStringLetterOrDigit(22) + " album",
-            random.nextStringLetterOrDigit(15) + " and the band",
-            random.nextStringLetterOrDigit(2),
-            random.nextStringLetterOrDigit(15) + " inc.",
-            "" + (random.nextInt(2000) * 1.0 / 100),
-            "" + (1950 + random.nextInt(60))
-        )
-  }
+  
   def buildRandomCatalog(n : Int) : String = {
-    Stream.concat(catalogHeader,
-                  Stream.fill(n)(buildRandomCD().toStream).flatten,
-                  catalogFooter).mkString
+    var sb = new StringBuilder(catalogHeader.length+ catalogFooter.length +
+                              n*205)
+    sb.append(catalogHeader)
+    (0 to n-1).foreach(x => buildRandomCD(sb))
+    sb.append(catalogFooter)
+    sb.result
   }
+  
   abstract class FreetleBenchmark(val nCatalog : Int = 3) extends Benchmark {
     val name : String
     var catalogSource : String = null
@@ -255,7 +249,7 @@ class BenchmarkTest {
     val warmup = 4
     val testRetries = 5
     //val sizes = (2 to 4).map(_ * 2500)
-    val sizes = Stream(2000, 5000, 10000, 12500)
+    val sizes = Stream(10000)
     val benchmarks = Stream.concat(
                     (sizes).map(x => new XSLTCaseBenchmark(nCatalog = x)),
                     (sizes).map(x => new IdentityCaseBenchmark(nCatalog = x)),
