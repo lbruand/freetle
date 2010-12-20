@@ -31,7 +31,7 @@ sealed abstract class XMLEvent {
   var namespaceContext : NamespaceContext = null
   override def toString() : String = toStream.mkString
 
-  override final def toStream() :  Stream[Char] = {
+  final def toStream() :  Stream[Char] = {
     var sb = new StringWriter()
     appendWriter(sb)
     sb.toString.toStream
@@ -97,7 +97,6 @@ case class EvText(text : String) extends XMLEvent {
   final def appendWriter(sb: Writer): Unit = {
     sb.append(text)
   }
-  override final def toStream() :  Stream[Char] = text.toStream
 }
 
 /** An entity reference is encountered */
@@ -112,7 +111,6 @@ case class EvEntityRef(entity: String) extends XMLEvent {
 /** A processing instruction is encountered */
 case class EvProcInstr(target: String, text: String) extends XMLEvent {
   final def appendWriter(sb: Writer): Unit = {}
-  override final def toStream() : Stream[Char] = Stream.empty
 }
 
 /** A comment is encountered */
