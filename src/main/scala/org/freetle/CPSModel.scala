@@ -78,7 +78,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
     final def ? : ChainedTransformRoot = new ZeroOrOneOperator(this)
   }
   object CPSStreamHelperMethods extends CPSStreamHelperMethodsTrait {
-    val constantEmptyPositive : CPSTupleElement = (None, true)
+    @inline val constantEmptyPositive : CPSTupleElement = (None, true)
   }
   /**
    * HelperMethods on CPSStream.
@@ -109,7 +109,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
     }
 
     @inline final def appendPositiveStream(s : CPSStream) : CPSStream = if (!isPositive(s))
-                                                                          Stream.cons((None, true), s)
+                                                                          Stream.cons(CPSStreamHelperMethods.constantEmptyPositive, s)
                                                                         else
                                                                           s
     
