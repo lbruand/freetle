@@ -30,7 +30,13 @@ sealed abstract class XMLEvent {
   var location : Location = null
   var namespaceContext : NamespaceContext = null
   override def toString() : String = toStream.mkString
-  def toStream : Stream[Char] = toString.toStream
+
+  override final def toStream() :  Stream[Char] = {
+    var sb = new StringWriter()
+    appendWriter(sb)
+    sb.toString.toStream
+  }
+  
   def appendWriter(writer : Writer) : Unit
 }
 
@@ -71,11 +77,6 @@ case class EvElemStart(name : QName, attributes : Map[QName, String]) extends XM
     sb.append('>')
   }
 
-  override final def toStream() :  Stream[Char] = {
-    var sb = new StringWriter()
-    appendWriter(sb)
-    sb.toString.toStream
-  }
 }
 
 /** An element is encountered the last time */
@@ -89,12 +90,6 @@ case class EvElemEnd(name : QName) extends XMLEvent {
     }
     sb.append(name.localPart)
     sb.append('>')
-  }
-
-  override final def toStream() :  Stream[Char] = {
-    var sb = new StringWriter()
-    appendWriter(sb)
-    sb.toString.toStream
   }
 }
 /** A text node is encountered */
@@ -112,12 +107,6 @@ case class EvEntityRef(entity: String) extends XMLEvent {
     sb.append(entity)
     sb.append(';')
   }
-
-  override final def toStream() :  Stream[Char] = {
-    var sb = new StringWriter()
-    appendWriter(sb)
-    sb.toString.toStream
-  }
 }
 
 /** A processing instruction is encountered */
@@ -132,13 +121,6 @@ case class EvComment(text: String) extends XMLEvent {
     sb.append("<!-- ")
     sb.append(text)
     sb.append(" -->")
-  }
-
-  override final def toStream() : Stream[Char] = {
-    var sb: StringWriter = new StringWriter()
-
-    appendWriter(sb)
-    sb.toString.toStream
   }
 }
 
