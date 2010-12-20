@@ -91,7 +91,7 @@ Idea has scala-support in the form of the
 # Related work and links.
 
 ## HaXML
-[HaXML](http://www.haskell.org/HaXml/) is a collection of many utilities for parsing, filtering, transforming, and generating XML documents using Haskell. Freetle heavily draws on HaXML and combinators from Haskell.
+[HaXML](http://www.cs.york.ac.uk/fp/HaXml/) is a collection of many utilities for parsing, filtering, transforming, and generating XML documents using Haskell. Freetle heavily draws on HaXML and combinators from Haskell.
 
 ## XSLT
 [XSLT](http://en.wikipedia.org/wiki/XSLT) is the w3c initiative to standardise a XML transformation langage. There are a number of quality and opensource implementations in the java world. The main problem of XSLT is that it is tree-oriented and thus it implies that one cannot transform large documents easily. The input document is effectively first loaded into memory. XSLT suffers from the use of XML programming language which makes develop awkward and difficult (it lacks a proper IDE etc...).
