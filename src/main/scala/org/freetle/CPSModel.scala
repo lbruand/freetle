@@ -88,7 +88,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
     @inline final def isNotEmptyPositive(x : CPSTupleElement) : Boolean = !(isEmptyPositive(x))
     @inline final def removeWhileEmptyPositive(s : CPSStream) : CPSStream = {
       var cs : CPSStream = s
-      while ( CPSStreamHelperMethods.constantEmptyPositive.equals(cs.head) ) {
+      while ( !cs.isEmpty && CPSStreamHelperMethods.constantEmptyPositive.equals(cs.head) ) {
         cs = cs.tail
       }
       cs
