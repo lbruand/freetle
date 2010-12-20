@@ -155,25 +155,27 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
     lazy val rightRealized : ChainedTransformRoot = right
 
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      leftRealized(SequenceOperator.innerSequenceOperator(rightRealized(success, failure)), failure)
+      leftRealized(new InnerSequenceOperator(rightRealized(success, failure)), failure)
     }
-  }
-  object SequenceOperator extends CPSStreamHelperMethodsTrait {
-    @inline private def innerSequenceOperator(input : =>CFilter)(s : CPSStream, c : Context) : CPSStream = {
-      if (s.isEmpty) {
-        input(s, c)
-      } else {
-        if (s.head._2) { // It is Result.
-          s.head._1 match {
-            case None => innerSequenceOperator(input)(s.tail, c) // Empty positive to trim.
-            case Some(_) => Stream.cons(s.head, innerSequenceOperator(input)(s.tail, c)) // Non empty positive to skip.
-          }
-        } else {
+    
+    final class InnerSequenceOperator(input : =>CFilter) extends CFilter {
+      def apply(s : CPSStream, c : Context) : CPSStream = {
+        if (s.isEmpty) {
           input(s, c)
+        } else {
+          if (s.head._2) { // It is Result.
+            s.head._1 match {
+              case None => this(s.tail, c) // Empty positive to trim.
+              case Some(_) => Stream.cons(s.head, this(s.tail, c)) // Non empty positive to skip.
+            }
+          } else {
+            input(s, c)
+          }
         }
       }
     }
   }
+
   
   final class CFilterIdentityWithContext extends CFilter {
     var context : Option[Context] = None
