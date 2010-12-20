@@ -49,18 +49,18 @@ Ultimately, Freetle's goal is to stay forever :
 Freetle is deeply indebted to giants:
 
 * The [Scala language](http://www.scala-lang.org/) being the most evident
-* Haskell
-* HaXML
+* The [Haskell language](http://www.haskell.org/) that triggered the scala effort
+* [HaXML](http://www.cs.york.ac.uk/fp/HaXml/) for proposing XML transformation combinators.
 
 ## Combinators : bottom-top approach
 Freetle Transformations are expressed in the Scala language with syntactic sugar from the Freetle library.
 In effect, transformations are expressed as algebra expressions of unitary transformations and operators.
-This approach, called _combinators_, gives almost infinite expressivity while retaining simplicity.
-/* TODO reformulated :  It is a reaction to the top-down approach of many ETLs which hide the great complexity of their code behind
-complex concepts such like Cards, Maps, etc... */
+This bottom-top approach, called _combinators_, gives almost infinite expressivity while retaining simplicity.
 With Freetle, the basic concepts to understand are few, simple, already well established in the functional
 software industry.
 (See Architecture)
+Moreover, this approach gives the ability to write meta processor that transform completely a transformation into
+an other.
 
 ## Stream-oriented
 Freetle transformations are stream-oriented programming :
@@ -99,8 +99,12 @@ Idea has scala-support in the form of the
 ## STX/Joost
 [STX/Joost](http://joost.sourceforge.net/) is an open source initiative to go beyond the large document problem inherent to XSLT. It is relatively slower than XSLT and lacks a number of features.(mainly a sort)
 
-# Benchmark
-Freetle strives to reach high performance.
+# Performance
+Freetle is still behind XML transformation leader XSLTC when transforming small documents.
+XSLTC does not transform documents of arbitrary size.
+Freetle compares well with [STX/Joost](http://joost.sourceforge.net/).
+
+
 [Benchmark](http://yquem.inria.fr/~frisch/xstream/bench.html)
 
 # Licensing
