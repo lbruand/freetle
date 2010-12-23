@@ -27,7 +27,7 @@ trait TestXMLHelperMethods[Context] extends CPSXMLModel[Context] with TestHelper
 
   def mloadStreamFromResource(resourceName: String, context : Option[Context]): XMLResultStream = {
     val src: InputStream = this.getClass().getResourceAsStream(resourceName)
-    Stream.fromIterator(new XMLEventStream(src) map (x => (Some(x), false)))
+    XMLResultStreamUtils.loadXMLResultStream(src)
   }
   def sloadStreamFromResource(resourceName: String) = mloadStreamFromResource(resourceName, null)
   def loadStreamFromResource = new Memoize1(sloadStreamFromResource)
