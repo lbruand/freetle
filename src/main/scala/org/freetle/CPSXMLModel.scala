@@ -110,14 +110,14 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
    * Shortcut to take an opening tag based on the localpart.
    */
   object < {
-    def evStartEvMatcher(name : String)(event : XMLEvent) = {
+    def evStartMatcher(name : String)(event : XMLEvent) = {
       event match {
         case EvElemStart(testName,_) if (name.equals(testName.localPart)) => true
         case _ => false
       }
     }
     def apply(name : String) = {
-      new ElementMatcherTaker(evStartEvMatcher(name))
+      new ElementMatcherTaker(evStartMatcher(name))
     }
   }
 
@@ -125,14 +125,14 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
    * Shortcut to take a closing tag based on the localpart.
    */
   object </ {
-    def evEndEvMatcher(name : String)(event : XMLEvent) = {
+    def evEndMatcher(name : String)(event : XMLEvent) = {
       event match {
         case EvElemEnd(testName) if (name.equals(testName.localPart)) => true
         case _ => false
       }
     }
     def apply(name : String) = {
-      new ElementMatcherTaker(evEndEvMatcher(name))
+      new ElementMatcherTaker(evEndMatcher(name))
     }
   }
   /**
