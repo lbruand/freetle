@@ -71,9 +71,9 @@ final class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
   type Attributes = Map[QName, String]
 
   @inline private def fromJavaQName(qn : javax.xml.namespace.QName) : org.freetle.util.QName = {
-    new QName(namespaceURI = qn.getNamespaceURI,
-      localPart = qn.getLocalPart,
-      prefix = qn.getPrefix)
+    new QName(namespaceURI = qn.getNamespaceURI.intern,
+      localPart = qn.getLocalPart.intern,
+      prefix = qn.getPrefix.intern)
   }
   
   @inline private def buildAttributes(input : XMLStreamReader) : Attributes = {
