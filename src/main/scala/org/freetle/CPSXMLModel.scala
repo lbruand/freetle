@@ -150,12 +150,22 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
    */
 
   object XMLResultStreamUtils {
+    /**
+     * Load a XMLResultStream from an InputStream
+     */
     def loadXMLResultStream(in : InputStream) : XMLResultStream = {
       Stream.fromIterator(new XMLEventStream(in) map (x => (Some(x), false)))
     }
+
+    /**
+     * Load a XMLResultStream from a String.
+     */
     def loadXMLResultStream(str : String) : XMLResultStream =
         loadXMLResultStream(new ByteArrayInputStream(str.getBytes))
 
+    /**
+     * Serialise a XMLResultStream into a XML form.
+     */
     def serializeXMLResultStream(evStream : =>XMLResultStream, writer : Writer) : Unit = {
       evStream foreach (_._1 match {
                 case Some(x : XMLEvent) => x.appendWriter(writer)
@@ -163,6 +173,9 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
               })
     }
 
+    /**
+     * Deserialize from an objectInputStream serialized/binary XMLEvent. 
+     */
     def rehydrate(in : ObjectInputStream) : XMLResultStream = {
       val read = in.readObject
       if (read != null) {
@@ -171,7 +184,10 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
         Stream.Empty
       }
     }
-    
+
+    /**
+     * Serialize to an objectOutputStream serialized/binary XMLEvent.
+     */
     def dehydrate(evStream: XMLResultStream, dataOut: ObjectOutputStream): Unit = {
       evStream.foreach(x => {dataOut.writeObject(x._1.get)})
     }
