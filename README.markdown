@@ -11,7 +11,7 @@ Freetle is written in the [Scala language](http://www.scala-lang.org/) and compi
 
 # What does Freetle mean ?
 
-Freetle is a contraction of Free ETL. A [ETL](http://en.wikipedia.org/wiki/Extract,_transform,_load) for Extract Transform and Load is a software tool used by companies to transfer datas (usually large chunks of it) from one system and one form to another system and another form.
+Freetle is a contraction of Free ETL. An [ETL](http://en.wikipedia.org/wiki/Extract,_transform,_load) for Extract Transform and Load is a software tool used to transfer/transform datas (usually large chunks of it) from one system and one form to another system and another form.
 
 # What is the audience ?
 
@@ -38,6 +38,7 @@ While bringing in major new ideas from the functional programming world :
 * Lazyness and Streaming
 
 Ultimately, Freetle's goal is to stay forever :
+
 * Free
 * Open-Sourced (Apache 2.0 license)
 * Scalable
@@ -59,8 +60,8 @@ This bottom-top approach, called _combinators_, gives almost infinite expressivi
 With Freetle, the basic concepts to understand are few, simple, already well established in the functional
 software industry.
 (See Architecture)
-Moreover, this approach gives the ability to write meta processor that transform completely a transformation into
-an other.
+Moreover, this approach gives the ability to write meta processors that transform completely a transformation into
+another.
 
 ## Stream-oriented
 Freetle transformations are stream-oriented programming :
@@ -101,7 +102,7 @@ Idea has scala-support in the form of the
 
 # Performance
 Freetle is still behind XML transformation leader XSLTC when transforming small documents.
-XSLTC does not transform documents of arbitrary size.
+But XSLTC does not transform documents of arbitrary size whereas Freetle does.
 Freetle compares well with [STX/Joost](http://joost.sourceforge.net/).
 
 
