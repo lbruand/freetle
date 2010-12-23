@@ -17,7 +17,7 @@ package org.freetle
 
 import util._
 import xml.{Node, NodeSeq}
-import java.io.{ByteArrayInputStream, Writer, InputStream}
+import java.io._
 
 /**
  * This is a streaming Continuation Passing Transformation model.
@@ -161,6 +161,19 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
                 case Some(x : XMLEvent) => x.appendWriter(writer)
                 case _ => (new EvComment("EmptyPositive")).appendWriter(writer)
               })
+    }
+
+    def rehydrate(in : ObjectInputStream) : XMLResultStream = {
+      val read = in.readObject
+      if (read != null) {
+        Stream.cons( (Some((read).asInstanceOf[XMLEvent]), false), rehydrate(in))
+      } else {
+        Stream.Empty
+      }
+    }
+    
+    def dehydrate(evStream: XMLResultStream, dataOut: ObjectOutputStream): Unit = {
+      evStream.foreach(x => {dataOut.writeObject(x._1.get)})
     }
   }
   

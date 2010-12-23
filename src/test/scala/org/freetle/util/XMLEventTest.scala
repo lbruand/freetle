@@ -58,31 +58,19 @@ class XMLEventTest extends CPSXMLModel[XMLEventTestContext] with TestXMLHelperMe
     </message>
 </input>""", serialize(evStream))
   }
-  def rehydrate(in : ObjectInputStream) : XMLResultStream = {
-    val read = in.readObject
-    if (read != null) {
-      Stream.cons( (Some((read).asInstanceOf[XMLEvent]), false), rehydrate(in))
-    } else {
-      Stream.Empty
-    }
-  }
-
-  def dehydrate(evStream: XMLResultStream, dataOut: ObjectOutputStream): Unit = {
-    evStream.foreach(x => {dataOut.writeObject(x._1.get)})
-  }
 
   @Test
   def testExternalizable() {
     val evStream = loadStreamFromResource("/org/freetle/input.xml")
     val baout = new ByteArrayOutputStream()
     val dataOut = new ObjectOutputStream(baout)
-    dehydrate(evStream, dataOut)
+    XMLResultStreamUtils.dehydrate(evStream, dataOut)
     dataOut.writeObject(null)
     dataOut.flush
     assertTrue(baout.size > 0)
     val bain = new ByteArrayInputStream(baout.toByteArray)
     val dataIn = new ObjectInputStream(bain)
-    val result = rehydrate(dataIn)
+    val result = XMLResultStreamUtils.rehydrate(dataIn)
     assertEquals(evStream.size, result.size)
     assertEquals(evStream, result)
     
