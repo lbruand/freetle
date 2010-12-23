@@ -19,14 +19,15 @@ package org.freetle.util
 import javax.xml.stream.Location
 import javax.xml.namespace.NamespaceContext
 import javax.xml.XMLConstants
-import java.io.{StringWriter, Writer}
+import java.io._
 
 /** This class represents an XML event for pull parsing.
  *  Pull parsing means that during the traversal of the XML
  *  tree we are parsing, each "event" is returned to the caller
  *  and the traversal is suspended.
  */
-sealed abstract class XMLEvent {
+@SerialVersionUID(32001)
+sealed abstract class XMLEvent extends Externalizable {
   var location : Location = null
   var namespaceContext : NamespaceContext = null
   override def toString() : String = toStream.mkString
@@ -39,14 +40,27 @@ sealed abstract class XMLEvent {
   
   def appendWriter(writer : Writer) : Unit
 }
+@SerialVersionUID(32002)
+case class QName(var namespaceURI : String = XMLConstants.NULL_NS_URI,
+                 var localPart: String = null,
+                 var prefix : String = XMLConstants.DEFAULT_NS_PREFIX) extends Externalizable {
+  def readExternal(in: ObjectInput) = {
+    namespaceURI = in.readUTF
+    localPart = in.readUTF
+    prefix = in.readUTF
+  }
 
-case class QName(namespaceURI : String = XMLConstants.NULL_NS_URI,
-                 localPart: String,
-                 prefix : String = XMLConstants.DEFAULT_NS_PREFIX) {
-
+  def writeExternal(out: ObjectOutput) = {
+    out.writeUTF(this.namespaceURI)
+    out.writeUTF(this.localPart)
+    out.writeUTF(this.prefix)
+  }
 }
-/** An element is encountered the first time */
-case class EvElemStart(name : QName, attributes : Map[QName, String]) extends XMLEvent {
+
+/** An element representing an openning tag */
+@SerialVersionUID(32003)
+case class EvElemStart(var name : QName = null, var attributes : Map[QName, String] = null) extends XMLEvent {
+  final def this() = this(null, null)
   private final def buildAttrStringBuffer(sb :Writer)(j : Tuple2[QName, String]): Unit = {
     sb.append(' ')
     if (!j._1.prefix.isEmpty) {
@@ -77,10 +91,36 @@ case class EvElemStart(name : QName, attributes : Map[QName, String]) extends XM
     sb.append('>')
   }
 
+  def readExternal(in: ObjectInput) = {
+    this.name = new QName()
+    this.name.readExternal(in)
+    val size = in.readInt
+    this.attributes = (1 to size).map(x => {
+      val name = new QName()
+      name.readExternal(in)
+      val value = in.readUTF
+      (name, value)
+    }).toMap[QName, String]
+  }
+
+  def writeExternal(out: ObjectOutput) = {
+    this.name.writeExternal(out)
+    out.writeInt(this.attributes.size)
+    this.attributes.foreach[Unit]( x => {
+      val (attributeName : QName, attributeValue : String) = x
+      attributeName.writeExternal(out)
+      out.writeUTF(attributeValue)
+    })
+  }
+
+
+
 }
 
-/** An element is encountered the last time */
-case class EvElemEnd(name : QName) extends XMLEvent {
+/** An element representing a closing tag */
+@SerialVersionUID(32004)
+case class EvElemEnd(var name : QName) extends XMLEvent {
+  final def this() = this(null)
   final def appendWriter(sb: Writer): Unit = {
     sb.append('<')
     sb.append('/')
@@ -91,34 +131,86 @@ case class EvElemEnd(name : QName) extends XMLEvent {
     sb.append(name.localPart)
     sb.append('>')
   }
+
+
+  def readExternal(in: ObjectInput) = {
+    this.name = new QName()
+    this.name.readExternal(in)
+  }
+
+  def writeExternal(out: ObjectOutput) = {
+    this.name.writeExternal(out)
+  }
 }
 /** A text node is encountered */
-case class EvText(text : String) extends XMLEvent {
+@SerialVersionUID(32005)
+case class EvText(var text : String) extends XMLEvent {
+  final def this() = this(null)
   final def appendWriter(sb: Writer): Unit = {
     sb.append(text)
+  }
+
+
+  def readExternal(in: ObjectInput) = {
+    this.text = in.readUTF
+  }
+
+  def writeExternal(out: ObjectOutput) = {
+    out.writeUTF(this.text)
   }
 }
 
 /** An entity reference is encountered */
-case class EvEntityRef(entity: String) extends XMLEvent {
+@SerialVersionUID(32006)
+case class EvEntityRef(var entity: String) extends XMLEvent {
+  final def this() = this(null)
   final def appendWriter(sb: Writer): Unit = {
     sb.append('&')
     sb.append(entity)
     sb.append(';')
   }
+
+  def readExternal(in: ObjectInput) = {
+    this.entity = in.readUTF
+  }
+
+  def writeExternal(out: ObjectOutput) = {
+    out.writeUTF(this.entity)
+  }
 }
 
 /** A processing instruction is encountered */
-case class EvProcInstr(target: String, text: String) extends XMLEvent {
+@SerialVersionUID(32007)
+case class EvProcInstr(var target: String, var text: String) extends XMLEvent {
+  final def this() = this(null, null)
   final def appendWriter(sb: Writer): Unit = {}
+
+  final def readExternal(in: ObjectInput) = {
+    this.target = in.readUTF
+    this.text = in.readUTF
+  }
+
+  final def writeExternal(out: ObjectOutput) = {
+    out.writeUTF(this.target)
+    out.writeUTF(this.text)
+  }
 }
 
 /** A comment is encountered */
-case class EvComment(text: String) extends XMLEvent {
+@SerialVersionUID(32008)
+case class EvComment(var text: String) extends XMLEvent {
+  final def this() = this(null)
   final def appendWriter(sb: Writer): Unit = {
     sb.append("<!-- ")
     sb.append(text)
     sb.append(" -->")
+  }
+  final def readExternal(in: ObjectInput) = {
+    this.text = in.readUTF
+  }
+
+  final def writeExternal(out: ObjectOutput) = {
+    out.writeUTF(this.text)
   }
 }
 

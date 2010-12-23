@@ -18,6 +18,7 @@ package org.freetle.util
 import org.junit._
 import Assert._
 import org.freetle.{TestXMLHelperMethods, CPSXMLModel}
+import java.io._
 
 /**
  * Context specific to this test.
@@ -56,5 +57,30 @@ class XMLEventTest extends CPSXMLModel[XMLEventTestContext] with TestXMLHelperMe
         <value>10010</value>
     </message>
 </input>""", serialize(evStream))
-  }  
+  }
+  def rehydrate(in : ObjectInputStream) : XMLResultStream = {
+    val read = in.readObject
+    if (read != null) {
+      Stream.cons( (Some((read).asInstanceOf[XMLEvent]), false), rehydrate(in))
+    } else {
+      Stream.Empty
+    }
+  }
+
+  @Test
+  def testExternalizable() {
+    val evStream = loadStreamFromResource("/org/freetle/input.xml")
+    val baout = new ByteArrayOutputStream()
+    val dataOut = new ObjectOutputStream(baout)
+    evStream.foreach(x => {dataOut.writeObject(x._1.get)})
+    dataOut.writeObject(null)
+    dataOut.flush
+    assertTrue(baout.size > 0)
+    val bain = new ByteArrayInputStream(baout.toByteArray)
+    val dataIn = new ObjectInputStream(bain)
+    val result = rehydrate(dataIn)
+    assertEquals(evStream.size, result.size)
+    assertEquals(evStream, result)
+    
+  }
 }
