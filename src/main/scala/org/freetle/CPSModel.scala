@@ -26,6 +26,12 @@ package org.freetle
 trait CPSModelTypeDefinition[@specialized Element, @specialized Context] {
   type CPSElementOrPositive = Option[Element]
   type CPSTupleElement = (CPSElementOrPositive, Boolean)
+
+  /**
+   * A property not enforceable with the type system :
+   *  * At a certain rank the stream, all elements are tail (i.e. _2 == false)
+   *  * Before that certain rank, all elements are results (there can possibly be no result at all)
+   */
   type CPSStream = Stream[CPSTupleElement]
 
   type CFilter = (CPSStream, Context) => CPSStream
@@ -33,7 +39,7 @@ trait CPSModelTypeDefinition[@specialized Element, @specialized Context] {
 }
 class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeDefinition[Element, Context] {
   /**
-   * An identity CFilter.
+   *  An identity CFilter.
    */
   class CFilterIdentity extends CFilter {
     def apply(s : CPSStream, c : Context) : CPSStream = s
