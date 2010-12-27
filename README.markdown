@@ -37,6 +37,8 @@ While bringing in major new ideas from the functional programming world :
 * Combinators and DeSL
 * Lazyness and Streaming
 
+# Governance
+
 Ultimately, Freetle's goal is to stay forever :
 
 * Free
@@ -59,7 +61,6 @@ In effect, transformations are expressed as algebra expressions of unitary trans
 This bottom-top approach, called _combinators_, gives almost infinite expressivity while retaining simplicity.
 With Freetle, the basic concepts to understand are few, simple, already well established in the functional
 software industry.
-(See Architecture)
 Moreover, this approach gives the ability to write meta processors that transform completely a transformation into
 another.
 
@@ -71,7 +72,7 @@ Stream oriented programming is theorized as being faster but harder to program.
 Thanks to Freetle's use of combinators, Freetle transformations are not harder to program than typically tree-oriented transformations such as XSL-T.
 
 ## Connectors
-Freetle is bent to develop a set of connectors to technical system such as :
+Freetle is bent to develop a set of connectors to technical systems such as :
 
 * Databases (via JDBC)
 * Message Oriented Middleware (via JMS)
@@ -105,8 +106,11 @@ Freetle is still behind XML transformation leader XSLTC when transforming small 
 But XSLTC does not transform documents of arbitrary size whereas Freetle does.
 Freetle compares well with [STX/Joost](http://joost.sourceforge.net/).
 
-
 [Benchmark](http://yquem.inria.fr/~frisch/xstream/bench.html)
+
+# Getting Started
+
+See the document Getting Started.
 
 # Licensing
 Freetle is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) (See attached).
