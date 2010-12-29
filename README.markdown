@@ -2,6 +2,9 @@
 FREETLE XML TRANSFORMATION FRAMEWORK
 ====================================
 
+# Copyright
+Freetle is copyrighted by Lucas Bruand.
+
 # What is Freetle ?
 
 Freetle is a Open sourced toolbox to write high performance Data transformations.
@@ -115,10 +118,6 @@ See the document Getting Started.
 # Licensing
 Freetle is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) (See attached).
 Commercial licensing and support can be obtained, please contact TODO.
-
-
-# Copyright
-Freetle is copyrighted by Lucas Bruand.
 
 # Disclaimer
 Freetle is provided on an "AS IS" BASIS,
