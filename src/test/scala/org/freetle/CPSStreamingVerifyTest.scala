@@ -64,6 +64,57 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestCPSStreamingContext] {
   }
 
   @Test
+  def testChoiceBacktracking() = {
+    def createStream : CPSStream = {
+      Stream.continually(("aaab".toStream map (x => (Some(x), false)))).take(max).flatten
+    }
+    /*
+     This transformation does not recognize the previous stream because this is no backtracking coded in the
+     sequence operator.
+     */
+    val t = (((
+              new ElementMatcherTaker(_.equals('a'))
+              ~ new ElementMatcherTaker(_.equals('a'))
+              ~ new ElementMatcherTaker(_.equals('b'))
+            ) |
+            (
+              new ElementMatcherTaker(_.equals('a'))
+              ~ new ElementMatcherTaker(_.equals('a'))
+              ~ new ElementMatcherTaker(_.equals('a'))
+              ~ new ElementMatcherTaker(_.equals('b'))
+            ))*)
+    
+    assertTrue(t(filterIdentity, filterIdentity)(createStream, null).exists(p => {
+      val (x, y) = p
+      Some('b').equals(x) && y == false
+    }))
+  }
+
+  @Test
+  def testChoiceNoBacktracking() = {
+    def createStream : CPSStream = {
+      Stream.continually(("aaab".toStream map (x => (Some(x), false)))).take(max).flatten
+    }
+
+    val t = (((
+              new ElementMatcherTaker(_.equals('a'))
+              ~ new ElementMatcherTaker(_.equals('a'))
+              ~ new ElementMatcherTaker(_.equals('a'))
+              ~ new ElementMatcherTaker(_.equals('b'))
+            ) |
+            (
+              new ElementMatcherTaker(_.equals('a'))
+              ~ new ElementMatcherTaker(_.equals('a'))
+              ~ new ElementMatcherTaker(_.equals('b'))
+            ))*)
+    
+    t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
+                                                                         assertTrue(" char : " + x._1, x._2)
+                                                                       }
+                                                                  )
+  }
+
+  @Test
   def testSequence() = {
     def createStream : CPSStream = {
       Stream((Some('a'), false)).append(
