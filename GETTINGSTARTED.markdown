@@ -60,14 +60,14 @@ There can possibly be no result elements at all.
 
 During transformations, a Context is used to store information for later use.
 
-## Transformations
+## TransformContextFreeTransformations
 
-Freetle provides various type of transformations.
+Freetle provides various types of transformations.
 They come in two kinds :
- * Context-free transformations.
- * Context-using or Context modifying transformations.
+ * Context-free transformations (which are derived from ContextFreeTransform).
+ * Context-using or Context modifying transformations (which are derived from ContextWritingTransform or ContextReadingTransform).
 
-
+Transformation can be combined using 
 
 ## Operators
 
@@ -81,7 +81,7 @@ They come in two kinds :
 
 # Licensing
 Freetle is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) (See attached).
-Commercial licensing and support can be obtained, please contact TODO.
+Commercial licensing and support can be obtained, please contact Lucas Bruand.
 
 # Disclaimer
 Freetle is provided on an "AS IS" BASIS,
