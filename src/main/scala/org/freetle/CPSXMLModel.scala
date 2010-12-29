@@ -47,6 +47,9 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     def initialState = 1
   }
 
+  /**
+   * A base class to load text tokens to context.
+   */
   abstract class TakeTextToContext extends ContextWritingTransform {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
     
