@@ -27,29 +27,29 @@ Freetle relies heavily on [Streams](http://www.scala-lang.org/api/current/scala/
 Streams are basic scala datastructures which are used as input and output of freetle transformations.
 Streams are variations on Lists : They contain a finite, ordered suit of XML Events.
 But they differ from Lists on their ability to be created on demand. They said to be 'lazy'.
-For example, when a XML file is parsed to a Stream of XML events, the XML file is _not_ loaded at once into memory :
-The Stream summons XML Events as needed.
-Thus Stream provide a very useful abstraction to limit memory usage while preserving the ability to write programs in an imperative manner.
+For example, when a XML file is parsed to a Stream of `XMLevents`, the XML file is _not_ loaded at once into memory :
+The Stream summons `XMLEvents` as needed.
+Thus Stream provides a very useful abstraction to limit memory usage while preserving the ability to write programs in an imperative manner.
 
 ## CPSStream
 
-Freetle defines a result streams as XML Event streams decorated with specific 'result' markers (Boolean).
+Freetle defines a result streams as `XMLEvent` streams decorated with specific 'result' markers (Boolean).
 
 In effect, the Freetle defines :
 
 	type CPSElementOrPositive = Option[Element]
 	type CPSTupleElement = (CPSElementOrPositive, Boolean)
 
-CPSTupleElement is the most basic type used in the freetle transformations.
+`CPSTupleElement` is the most basic type used in the freetle transformations.
 
  
-The second position Boolean indicates whether the element is marked as a result or not. (true = result, false = tail)
+The second position Boolean indicates whether the element is marked as a result or not. (`true` = result, `false` = tail)
 
 CPSStream are streams of CPSTupleElement
 
 	type CPSStream = Stream[CPSTupleElement]
 
-Two properties of CPSStream that is not enforced by the type system (But should always be verified) :
+Two properties of `CPSStream` that is not enforced by the type system (But should always be verified) :
 
  * At a certain rank, every element is a tail. 
  * Before this first tail element, all elements are results. 
