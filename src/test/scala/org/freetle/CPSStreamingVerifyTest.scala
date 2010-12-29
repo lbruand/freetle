@@ -74,10 +74,11 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestCPSStreamingContext] {
     val t = (new ElementMatcherTaker(_.equals('a')) ~ new ElementMatcherTaker(_.equals('b')))
 
 
-    t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
-                                                                         assertTrue(" char : " + x._1, x._2)
-                                                                       }
-                                                                  )
+    t(filterIdentity, filterIdentity)(createStream, null).
+            foreach(x => {
+                assertTrue(" char : " + x._1, x._2)
+              }
+            )
   }
 
   @Test
@@ -92,10 +93,11 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestCPSStreamingContext] {
                                 (new ElementMatcherTaker(_.equals('b')))*)
 
 
-    t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
-                                                                         assertTrue(" char : " + x._1, x._2)
-                                                                       }
-                                                                  )
+    t(filterIdentity, filterIdentity)(createStream, null).
+            foreach(x => {
+                assertTrue(" char : " + x._1, x._2)
+              }
+            )
   }
 
   @Test
@@ -109,10 +111,11 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestCPSStreamingContext] {
     val t = ((new ElementMatcherTaker(_.equals('a')))+) ~
                                  ((new ElementMatcherTaker(_.equals('b')))+)
 
-    t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
-                                                                         assertTrue(" char : " + x._1, x._2)
-                                                                       }
-                                                                  )
+    t(filterIdentity, filterIdentity)(createStream, null).
+            foreach(x => {
+                   assertTrue(" char : " + x._1, x._2)
+                 }
+            )
   }  
 
   @Test
@@ -122,35 +125,36 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestCPSStreamingContext] {
     val t = (new ElementMatcherTaker(_.equals('a')))+
     
     t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
-                                                                         assertTrue(x._2)
-                                                                         x._1 match {
-                                                                           case None => assertTrue(true)
-                                                                           case Some(c) =>  assertEquals('a', c)
-                                                                         }
+           assertTrue(x._2)
+           x._1 match {
+             case None => assertTrue(true)
+             case Some(c) =>  assertEquals('a', c)
+           }
 
-                                                                       }
-                                                                  )
+         }
+    )
 
     def createStreamWithFinalB : CPSStream = Stream.continually((Some('a'), false)).take(max).append(Stream((Some('b'), false)))
 
-    t(filterIdentity, filterIdentity)(createStreamWithFinalB, null).zipWithIndex.foreach(xi => {                                                                          
-                                                                         val (x, i) = xi
-                                                                         i match {
-                                                                           case c if (c == max) => {
-                                                                             assertTrue(x._2)
-                                                                             assertEquals(None, x._1)
-                                                                           }
-                                                                           case c if (c == max+1) => {
-                                                                             assertFalse(x._2)
-                                                                             assertEquals(Some('b'), x._1)
-                                                                           }
-                                                                           case _ => {
-                                                                             assertTrue(x._2)
-                                                                             assertEquals(Some('a'), x._1)
-                                                                           }
-                                                                         }
-                                                                       }
-                                                                  )
+    t(filterIdentity, filterIdentity)(createStreamWithFinalB, null).zipWithIndex.foreach(
+      xi => {
+              val (x, i) = xi
+              i match {
+                case c if (c == max) => {
+                  assertTrue(x._2)
+                  assertEquals(None, x._1)
+                }
+                case c if (c == max+1) => {
+                  assertFalse(x._2)
+                  assertEquals(Some('b'), x._1)
+                }
+                case _ => {
+                  assertTrue(x._2)
+                  assertEquals(Some('a'), x._1)
+                }
+              }
+            }
+      )
   }
   
 }
