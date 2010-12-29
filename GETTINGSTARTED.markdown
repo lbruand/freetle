@@ -67,7 +67,7 @@ They come in two kinds :
  * Context-free transformations (which are derived from ContextFreeTransform).
  * Context-using or Context modifying transformations (which are derived from ContextWritingTransform or ContextReadingTransform).
 
-Transformation can be combined using 
+Transformation can be combined using operators :
 
 ## Operators
 
