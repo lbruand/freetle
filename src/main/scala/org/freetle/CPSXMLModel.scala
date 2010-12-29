@@ -147,7 +147,6 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
   /**
    * Util class to build XMLResultStream, save etc...
    */
-
   object XMLResultStreamUtils {
     /**
      * Load a XMLResultStream from an InputStream
