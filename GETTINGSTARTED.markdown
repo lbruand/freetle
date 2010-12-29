@@ -16,7 +16,7 @@ No previous knowledge of Scala is pre-supposed here - Through it is advisable fo
 While it is possible to use no IDE, it is greatly advised to use one.
 Amongst credible IDE with scala support, you can pick either Eclipse or Intellij IDEA.
 
-# the freetle concepts.
+# Introduction to freetle concepts.
 ## XML Events.
 
 Freetle uses a Stax pull parser to read sequences of events from XML Files.
@@ -27,7 +27,7 @@ Freetle relies heavily on [Streams](http://www.scala-lang.org/api/current/scala/
 Streams are basic scala datastructures which are used as input and output of freetle transformations.
 Streams are variations on Lists : They contain a finite, ordered suit of XML Events.
 But they differ from Lists on their ability to be created on demand. They said to be 'lazy'.
-For example, when a XML file is parsed to a Stream of XML events, the XML file is loaded at once into memory :
+For example, when a XML file is parsed to a Stream of XML events, the XML file is _not_ loaded at once into memory :
 The Stream summons XML Events as needed.
 Thus Stream provide a very useful abstraction to limit memory usage while preserving the ability to write programs in an imperative manner.
 
@@ -70,12 +70,41 @@ They come in two kinds :
 Transformation can be combined using operators :
 
 ## Operators
+In the freetle library, there are two types of operators:
 
+### Binary operators
+These are operators that take two operands, the left hand operand and the right hand operand.
 
+#### Sequence Operator.
+Shortcut Symbol : `~`
 
+This is the most frequent (binary) operator. It call first the left hand operand, and then call the right hand operand
+on what left from the first call (this is call the Tail).
 
+#### Compose Operator.
+Shortcut Symbol : `->`
 
+Call the left hand operand and then call the right hand operand on the result returned from the first action.
 
+#### Choice Operator
+Shortcut Symbol : `|`
+
+Call the left hand operand. If the result is positive, return it, else call the right hand operand.
+NB : There is not backtracking coded so beware of factoring anything on the left.
+
+### Unary operators.
+These are operators that take only one operand, named the underlying operand.
+These are mainly constituted by cardinality operators. These operators are used to describe that the underlying
+operand can be repeated.
+
+#### Zero Or One Operator
+Shortcut Symbol : `?`
+
+#### Zero Or More Operator
+Shortcut Symbol : `*`
+
+#### One Or More Operator
+Shortcut Symbol : `+`
 
 # Creating a project using a maven artifact.
 
