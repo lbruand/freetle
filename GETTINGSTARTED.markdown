@@ -45,7 +45,7 @@ In effect, the Freetle defines :
  
 The second position Boolean indicates whether the element is marked as a result or not. (`true` = result, `false` = tail)
 
-CPSStream are streams of CPSTupleElement
+`CPSStream` are streams of `CPSTupleElement`
 
 	type CPSStream = Stream[CPSTupleElement]
 
