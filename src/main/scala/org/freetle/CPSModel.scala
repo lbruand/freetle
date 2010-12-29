@@ -76,6 +76,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
   
   /**
    * Abstract class for all transformations.
+   * It defines shortcuts for operators.
    */
   abstract sealed class ChainedTransformRoot extends ChainedTransform with MetaProcessable with CPSStreamHelperMethodsTrait {
     final def ~(other : => ChainedTransformRoot) : ChainedTransformRoot = new SequenceOperator(this, other)
