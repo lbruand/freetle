@@ -76,10 +76,6 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
       (nodeSeq map( serializeNodeXML(_))).toStream.flatten
     }
 
-
-    /*def buildAttributes(attributes : MetaData) : Map[QName, String] = {
-      attributes.
-    }*/
     def serializeNodeXML(node : Node) : CPSStream =
       node match {
       case elem :  scala.xml.Elem //(prefix, label, attributes, scope, children)
