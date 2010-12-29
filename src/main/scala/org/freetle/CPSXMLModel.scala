@@ -23,7 +23,6 @@ import java.io._
  * This is a streaming Continuation Passing Transformation model.
  * It is capable of working over XML Events.
  */
-
 class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
   /**
    * Used for backward compatibility.
