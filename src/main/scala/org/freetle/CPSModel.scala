@@ -15,14 +15,10 @@
   */
 package org.freetle
 
-/**
- * This is an abstract streaming Continuation Passing Transformation model.
- * It is capable of working over any type of alphabet (not only XML).
- * It is internally using continuations This was used to solve the stackoverflow problems
- * met in previous backtracking models. 
- */
- // TODO : Explore if it is not possible to get rid of isPositive and the emptyPositive completely using CPS.
 
+/**
+ * Defines types for the CPSModel.
+ */
 trait CPSModelTypeDefinition[@specialized Element, @specialized Context] {
   type CPSElementOrPositive = Option[Element]
   type CPSTupleElement = (CPSElementOrPositive, Boolean)
@@ -37,6 +33,13 @@ trait CPSModelTypeDefinition[@specialized Element, @specialized Context] {
   type CFilter = (CPSStream, Context) => CPSStream
    
 }
+
+/**
+ * This is an abstract streaming Continuation Passing Transformation model.
+ * It is capable of working over any type of alphabet (not only XML).
+ * It is internally using continuations This was used to solve the stackoverflow problems
+ * met in previous backtracking models.
+ */
 class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeDefinition[Element, Context] {
   /**
    *  An identity CFilter.
