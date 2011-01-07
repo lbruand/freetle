@@ -35,7 +35,7 @@ Thus Stream provides a very useful abstraction to limit memory usage while prese
 
 Freetle defines a result streams as `XMLEvent` streams decorated with specific 'result' markers (Boolean).
 
-In effect, the Freetle defines :
+Thus, the Freetle defines :
 
 	type CPSElementOrPositive = Option[Element]
 	type CPSTupleElement = (CPSElementOrPositive, Boolean)
@@ -43,7 +43,7 @@ In effect, the Freetle defines :
 `CPSTupleElement` is the most basic type used in the freetle transformations.
 
  
-The second position Boolean indicates whether the element is marked as a result or not. (`true` = result, `false` = tail)
+The second position Boolean indicates whether the element is marked as a result or a tail. (`true` = result, `false` = tail)
 
 `CPSStream` are streams of `CPSTupleElement`
 
@@ -107,6 +107,9 @@ Shortcut Symbol : `*`
 Shortcut Symbol : `+`
 
 # Creating a project using a maven artifact.
+
+
+# 
 
 # Licensing
 Freetle is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) (See attached).
