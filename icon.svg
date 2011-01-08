@@ -118,15 +118,6 @@
        inkscape:vp_y="0 : 1000 : 0"
        inkscape:vp_x="0 : 0.5 : 1"
        sodipodi:type="inkscape:persp3d" />
-    <filter
-       color-interpolation-filters="sRGB"
-       inkscape:collect="always"
-       id="filter4418-7">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="0.15868146"
-         id="feGaussianBlur4420-4" />
-    </filter>
     <linearGradient
        id="linearGradient4344-1">
       <stop
@@ -152,19 +143,6 @@
          style="fill:url(#linearGradient4406);fill-opacity:1;fill-rule:nonzero;stroke:none"
          sodipodi:type="arc" />
     </clipPath>
-    <filter
-       color-interpolation-filters="sRGB"
-       inkscape:collect="always"
-       id="filter4340-3"
-       x="-0.16409537"
-       width="1.3281907"
-       y="-0.6358695"
-       height="2.271739">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="0.57601772"
-         id="feGaussianBlur4342-3" />
-    </filter>
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient4344"
@@ -1340,7 +1318,7 @@
        y1="10.598727"
        x2="5.9133549"
        y2="6.7940555"
-       gradientTransform="matrix(1.4186331,0,0,1.4186331,-74.850644,-15.366452)" />
+       gradientTransform="matrix(2.0138956,0,0,2.0138956,-90.060568,-28.507702)" />
     <inkscape:perspective
        id="perspective5601"
        inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
@@ -1410,9 +1388,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.203864"
-     inkscape:cx="18.896265"
-     inkscape:cy="37.095786"
+     inkscape:zoom="7.359375"
+     inkscape:cx="-3.8834443"
+     inkscape:cy="36.874005"
      inkscape:current-layer="g4408"
      showgrid="true"
      inkscape:document-units="px"
@@ -1445,7 +1423,7 @@
       <g
          style="filter:url(#filter4418)"
          id="g4484-5"
-         transform="matrix(0.94823483,0.31757001,-0.31757001,0.94823483,20.213771,-0.36610164)">
+         transform="matrix(1.3461169,0.4508233,-0.4508233,1.3461169,44.893151,-7.2131614)">
         <path
            sodipodi:type="arc"
            style="fill:url(#linearGradient4488-58);fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -1470,7 +1448,7 @@
       </g>
       <g
          id="g4484"
-         transform="matrix(0.91796098,0.3966707,-0.3966707,0.91796098,25.672104,8.4128029)">
+         transform="matrix(1.3031401,0.56311487,-0.56311487,1.3031401,52.641816,5.2493969)">
         <path
            sodipodi:type="arc"
            style="fill:url(#linearGradient4488);fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -1502,11 +1480,11 @@
          sodipodi:rx="0.27176222"
          sodipodi:ry="0.067940556"
          d="m 50.955413,10.394904 a 0.27176222,0.06794056 0 1 1 -0.543524,0 0.27176222,0.06794056 0 1 1 0.543524,0 z"
-         transform="matrix(1.4186331,0,0,1.4186331,-85.452743,-20.763885)" />
+         transform="matrix(2.0138956,0,0,2.0138956,-105.11134,-36.169914)" />
       <g
          style="filter:url(#filter4418)"
          id="g4484-6"
-         transform="translate(21.975263,-3.8553085)">
+         transform="matrix(1.419603,0,0,1.419603,47.393771,-12.166449)">
         <path
            sodipodi:type="arc"
            style="fill:url(#linearGradient4488-0);fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -1531,7 +1509,7 @@
       </g>
       <g
          id="g4865"
-         transform="translate(1.1565926,1.3493581)">
+         transform="matrix(1.419603,0,0,1.419603,17.839526,-4.7778899)">
         <g
            transform="translate(20.047609,-1.1565926)"
            id="g4484-9"
@@ -1580,7 +1558,7 @@
            sodipodi:type="arc" />
       </g>
       <g
-         transform="translate(-3.8071184,2.6987163)"
+         transform="matrix(1.419603,0,0,1.419603,10.793027,-2.862337)"
          style="filter:url(#filter4418-73)"
          id="g4865-0">
         <g
@@ -1631,7 +1609,7 @@
            sodipodi:type="arc" />
       </g>
       <g
-         transform="translate(-9.0117849,5.2046667)"
+         transform="matrix(1.419603,0,0,1.419603,3.4044673,0.69511741)"
          style="filter:url(#filter4418-73-8)"
          id="g4865-0-2">
         <g
@@ -1682,7 +1660,7 @@
            sodipodi:type="arc" />
       </g>
       <g
-         transform="translate(-15.180279,7.132321)"
+         transform="matrix(1.419603,0,0,1.419603,-5.3523448,3.431621)"
          style="filter:url(#filter4418-73-1)"
          id="g4865-0-1">
         <g
@@ -1733,7 +1711,7 @@
            sodipodi:type="arc" />
       </g>
       <g
-         transform="translate(-20.963242,6.7467905)"
+         transform="matrix(1.419603,0,0,1.419603,-13.561856,2.8843208)"
          style="filter:url(#filter4418-73-82)"
          id="g4865-0-9">
         <g
@@ -1784,7 +1762,7 @@
            sodipodi:type="arc" />
       </g>
       <g
-         transform="translate(-26.746205,5.9757288)"
+         transform="matrix(1.419603,0,0,1.419603,-21.771367,1.7897194)"
          style="filter:url(#filter4418-73-7)"
          id="g4865-0-7">
         <g
@@ -1835,7 +1813,7 @@
            sodipodi:type="arc" />
       </g>
       <g
-         transform="translate(-30.601514,2.8914818)"
+         transform="matrix(1.419603,0,0,1.419603,-27.244374,-2.5886866)"
          style="filter:url(#filter4418-73-18)"
          id="g4865-0-3">
         <g
@@ -1886,7 +1864,7 @@
            sodipodi:type="arc" />
       </g>
       <g
-         transform="translate(-35.227884,-0.19276519)"
+         transform="matrix(1.419603,0,0,1.419603,-33.811983,-6.9670925)"
          style="filter:url(#filter4418-73-0)"
          id="g4865-0-8">
         <g
@@ -1937,7 +1915,7 @@
            sodipodi:type="arc" />
       </g>
       <g
-         transform="translate(-37.348304,-6.1684937)"
+         transform="matrix(1.419603,0,0,1.419603,-36.822137,-15.450254)"
          style="filter:url(#filter4418-73-12)"
          id="g4865-0-6">
         <g
@@ -1990,7 +1968,7 @@
       <g
          style="filter:url(#filter4418)"
          id="g4484-0"
-         transform="matrix(1.2751018,0,0,1.2751018,-7.5557365,-21.674895)">
+         transform="matrix(1.8101382,0,0,1.8101382,5.4714779,-37.463186)">
         <path
            sodipodi:type="arc"
            style="fill:url(#linearGradient4488-5);fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -2015,7 +1993,7 @@
       </g>
       <path
          style="fill:url(#linearGradient5591);fill-opacity:1;fill-rule:nonzero;stroke:none"
-         d="m -64.441311,-3.0294645 c 0,5.3457683 3.557538,7.0138742 1.06021,8.0961488 -3.204481,1.388736 -6.650408,-6.6056892 -6.650408,-8.0961488 0,-1.4904596 1.251409,-2.6987157 2.795099,-2.6987157 1.54369,0 2.795099,1.2082561 2.795099,2.6987157 z"
+         d="m -75.283448,-10.994079 c 0,7.5888681 5.050291,9.956916 1.505076,11.49331621 -4.54909,1.97145369 -9.440938,-9.37745551 -9.440938,-11.49331621 0,-2.115861 1.776504,-3.831105 3.967931,-3.831105 2.191427,0 3.967931,1.715244 3.967931,3.831105 z"
          id="path5580"
          sodipodi:nodetypes="cassc" />
       <path
@@ -2023,12 +2001,13 @@
          d="m 3.9405523,1.9023352 c 0,3.7682528 2.5077223,4.9441071 0.7473461,5.7070067 C 2.4290473,8.5882673 0,2.9529659 0,1.9023352 0,0.85170441 0.88212306,0 1.9702761,0 3.0584292,0 3.9405523,0.85170441 3.9405523,1.9023352 z"
          id="path5580-9"
          sodipodi:nodetypes="cassc"
-         transform="matrix(-1.4186331,0,0,1.4186331,-46.792526,-3.8811689)" />
+         transform="matrix(-2.0138956,0,0,2.0138956,-50.229182,-12.203161)" />
       <g
-         id="g5657">
+         id="g5657"
+         transform="matrix(1.4026286,-0.2188735,0.2188735,1.4026286,12.909463,-20.203311)">
         <path
            transform="matrix(1.5389236,0.25857923,-0.14552078,0.86606089,-44.498571,-2.3470143)"
-           d="m -8.6963905,17.460722 a 1.358811,1.4267516 0 1 1 -2.7176225,0 1.358811,1.4267516 0 1 1 2.7176225,0 z"
+           d="m -8.6963905,17.460722 c 0,0.787973 -0.6083604,1.426752 -1.3588115,1.426752 -0.75045,0 -1.358811,-0.638779 -1.358811,-1.426752 0,-0.787973 0.608361,-1.426752 1.358811,-1.426752 0.7504511,0 1.3588115,0.638779 1.3588115,1.426752 z"
            sodipodi:ry="1.4267516"
            sodipodi:rx="1.358811"
            sodipodi:cy="17.460722"
@@ -2038,7 +2017,7 @@
            sodipodi:type="arc" />
         <path
            transform="matrix(0.73550105,0,0,0.73550105,-58.184418,3.9776249)"
-           d="m -4.3481951,8.4246283 a 1.6305733,1.22293 0 1 1 -3.2611465,0 1.6305733,1.22293 0 1 1 3.2611465,0 z"
+           d="m -4.3481951,8.4246283 c 0,0.6754055 -0.7300325,1.2229299 -1.6305732,1.2229299 -0.9005408,0 -1.6305733,-0.5475244 -1.6305733,-1.2229299 0,-0.6754056 0.7300325,-1.22293 1.6305733,-1.22293 0.9005407,0 1.6305732,0.5475244 1.6305732,1.22293 z"
            sodipodi:ry="1.22293"
            sodipodi:rx="1.6305733"
            sodipodi:cy="8.4246283"
@@ -2048,7 +2027,7 @@
            sodipodi:type="arc" />
       </g>
       <g
-         transform="matrix(0.97541481,-0.22037684,0.22037684,0.97541481,3.9313801,-13.237261)"
+         transform="matrix(1.4064034,-0.19313696,0.19313696,1.4064034,24.353326,-18.222361)"
          style="filter:url(#filter4418)"
          id="g5657-5">
         <path
@@ -2081,7 +2060,7 @@
          sodipodi:rx="3.1707208"
          sodipodi:ry="3.1707208"
          d="m -35.934836,18.168671 a 3.1707208,3.1707208 0 1 1 -6.341441,0 3.1707208,3.1707208 0 1 1 6.341441,0 z"
-         transform="matrix(1.2466776,0,0,1.074722,-10.009949,-4.1562413)" />
+         transform="matrix(1.7697872,0,0,1.5256785,1.9874707,-12.593654)" />
     </g>
   </g>
 </svg>
