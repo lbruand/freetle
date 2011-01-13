@@ -15,9 +15,13 @@
   */
 package org.freetle.sample
 
-/**
- * Created by IntelliJ IDEA.
- * User: caroline
- */
-
-class TransformSampleTest
+import org.junit._
+import Assert._
+@Test
+class TransformSampleTest {
+  @Test
+  def testTransformSample() {
+    TransformSampleMain.main(Array("src/test/resources/input.xml", "target/output.txt"))
+    
+  }
+}
