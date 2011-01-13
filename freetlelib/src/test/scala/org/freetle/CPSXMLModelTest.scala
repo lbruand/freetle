@@ -102,6 +102,35 @@ class CPSXMLModelTest extends CPSXMLModel[TestXMLContext] with TestXMLHelperMeth
   }
 
   @Test
+  def testChoice() {
+    val evStream = loadStreamFromResource("/org/freetle/input.xml")
+
+    val t = <("input") ~
+                (( <("myMessage") ~
+                   ((<("value") ~
+                   takeText   ~
+                   </("value")) -> new DropFilter()) ~
+                  </("myMessage")
+                )|
+                ( <("message") ~
+                   ((<("value") ~
+                   takeText   ~
+                   </("value")) -> new DropFilter()) ~
+                  </("message")
+                )
+            +) ~ </("input")
+
+    val tmeta = t.metaProcess(new SpaceSkipingMetaProcessor())
+    val r = CPSStreamHelperMethods.removeAllEmptyPositive(tmeta(filterIdentity, filterIdentity)(evStream, new TestXMLContext()))
+    assertAllResult(r, "Result : [" + serializeWithResult(r) + "]" )
+    assertEquals("Result : [" + serializeWithResult(r) + "]", evStream.length-8, r.length)
+    assertTrue(r.filter(x => (x._1 match {
+      case Some(EvElemStart(QName(_, "value", _), _)) => true
+      case _  => false
+    })).isEmpty)
+  }
+
+  @Test
   def testSumming() = {
     val c = new TestXMLContext()
     val evStream = loadStreamFromResource("/org/freetle/input2.xml")
