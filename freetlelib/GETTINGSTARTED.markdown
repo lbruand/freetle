@@ -9,7 +9,7 @@ GETTING STARTED
 
 # Pre-requisite
 
-No previous knowledge of Scala is pre-supposed here - Through it is advisable for one to further one's knowledge in Scala, once the basics of Freetle are 
+No previous knowledge of Scala is pre-supposed here - Through it is advisable for one to further one's knowledge in Scala, once the basics of Freetle are acquired.
 
 # Choosing an IDE.
 
