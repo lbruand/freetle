@@ -13,15 +13,15 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
-package org.freetle.sample
+package ${groupId}
 
 import org.junit._
 import Assert._
+
 @Test
 class TransformSampleTest {
   @Test
-  def testTransformSample() {
-    TransformSampleMain.main(Array("src/test/resources/input.xml", "target/output.txt"))
-    
+  def testTransformSample() = {
+    TransformSampleMain.main(Array("src/test/resources/input.xml", "target/output.xml"))
   }
 }
