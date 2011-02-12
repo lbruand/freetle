@@ -114,8 +114,13 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
         case _ => false
       }
     }
-    def apply(name : String) = {
-      new ElementMatcherTaker(evStartMatcher(name))
+    def apply(name : String, matcher : Option[CPSElemMatcher] = None) : ElementMatcherTaker = {
+      new ElementMatcherTaker(
+          matcher match {
+              case None => evStartMatcher(name)
+              case Some(m) => ((e : XMLEvent) => evStartMatcher(name)(e) && m(e))
+          }
+        )
     }
   }
 
