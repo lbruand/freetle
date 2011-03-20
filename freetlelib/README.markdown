@@ -5,6 +5,9 @@ FREETLE XML TRANSFORMATION FRAMEWORK
 # Copyright
 Freetle is copyrighted by Lucas Bruand.
 
+README
+------
+
 # What is Freetle ?
 
 Freetle is a Open sourced toolbox to write high performance Data transformations.
