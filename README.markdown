@@ -27,5 +27,5 @@ Freetle is a contraction of Free ETL. An [ETL](http://en.wikipedia.org/wiki/Extr
 
 # Where to go next ?
 
-[Discover the library itself](./tree/master/freetlelib/)
-[Discover A sample transformation](./tree/master/freetle-sample/)
+* [Discover the library itself](./freetle/tree/master/freetlelib/)
+* [Discover A sample transformation](./freetle/tree/master/freetle-sample/)
