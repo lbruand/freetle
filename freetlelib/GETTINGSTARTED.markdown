@@ -27,7 +27,7 @@ Freetle relies heavily on [Streams](http://www.scala-lang.org/api/current/scala/
 Streams are basic scala datastructures which are used as input and output of freetle transformations.
 Streams are variations on Lists : They contain a finite, ordered suit of XML Events.
 But they differ from Lists on their ability to be created on demand. They said to be 'lazy'.
-For example, when a XML file is parsed to a Stream of `XMLevents`, the XML file is _not_ loaded at once into memory :
+For example, when a XML file is parsed to a Stream of `XMLEvents`, the XML file is _not_ loaded at once into memory :
 The Stream summons `XMLEvents` as needed.
 Thus Stream provides a very useful abstraction to limit memory usage while preserving the ability to write programs in an imperative manner.
 
