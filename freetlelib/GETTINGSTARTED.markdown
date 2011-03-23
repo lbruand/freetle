@@ -113,7 +113,6 @@ Shortcut Symbol : `+`
 
 # Licensing
 Freetle is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) (See attached).
-Commercial licensing and support can be obtained, please contact Lucas Bruand.
 
 # Disclaimer
 Freetle is provided on an "AS IS" BASIS,

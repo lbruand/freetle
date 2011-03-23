@@ -124,7 +124,6 @@ See the document [Getting Started.](./GETTINGSTARTED.markdown).
 
 # Licensing
 Freetle is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) (See attached).
-Commercial licensing and support can be obtained, please contact TODO.
 
 # Disclaimer
 Freetle is provided on an "AS IS" BASIS,
