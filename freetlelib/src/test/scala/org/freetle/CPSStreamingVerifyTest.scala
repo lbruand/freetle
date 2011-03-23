@@ -18,7 +18,7 @@ import org.junit._
 import Assert._
 
 
-case class TestCPSStreamingContext(a : Int = 0)
+case class TstCPSStreamingContext(a : Int = 0)
 
 /**
  * These tests are asserting the capability of the transformation to work in streaming mode.
@@ -27,7 +27,7 @@ case class TestCPSStreamingContext(a : Int = 0)
  * JVM Tuning : use a contrained JVM to test -Xmx10m -Xss100k in order to verify that we are streaming.
  */
 @Test
-class CPSStreamingVerifyTest extends CPSModel[Char, TestCPSStreamingContext] {
+class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
 
   final val max = 10000
   final val filterIdentity = new CFilterIdentity()
@@ -44,7 +44,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TestCPSStreamingContext] {
     }
     val s = createStream
     val t = ((new ElementMatcherTaker(_.equals('a'))*) ~ (new ElementMatcherTaker(_.equals('b')))*) -> new DropFilter()
-    val r = t(filterIdentity, filterIdentity)(createStream, new TestCPSStreamingContext())
+    val r = t(filterIdentity, filterIdentity)(createStream, new TstCPSStreamingContext())
     assertTrue(""+r, CPSStreamHelperMethods.isOnlyEmptyPositiveStream(r))
 
   }

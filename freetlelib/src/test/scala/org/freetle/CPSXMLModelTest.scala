@@ -20,12 +20,12 @@ import org.junit._
 import Assert._
 import util._
 
-case class TestXMLContext(name :String ="name", totalSum : Int = 0, currentSum : Int = 0)
+case class TstXMLContext(name :String ="name", totalSum : Int = 0, currentSum : Int = 0)
 
 
 
 @Test
-class CPSXMLModelTest extends CPSXMLModel[TestXMLContext] with TestXMLHelperMethods[TestXMLContext] with CPSMeta[TestXMLContext] {
+class CPSXMLModelTest extends CPSXMLModel[TstXMLContext] with TestXMLHelperMethods[TstXMLContext] with CPSMeta[TstXMLContext] {
   @Test
   def testDeepFilter() {
     val s : CPSStream = List(
@@ -42,10 +42,10 @@ class CPSXMLModelTest extends CPSXMLModel[TestXMLContext] with TestXMLHelperMeth
       ).toStream map (x => (Some(x), false))
 
     val t = <("body") ~ <("body") ~ new DeepFilter()
-    val r = t(filterIdentity, filterIdentity)(s, new TestXMLContext())
+    val r = t(filterIdentity, filterIdentity)(s, new TstXMLContext())
     assertEquals(10, lengthResult(r))
     val t2 = <("body") ~ <("body") ~ <("a") ~ new DeepFilter()
-    val r2 = t2(filterIdentity, filterIdentity)(s, new TestXMLContext())
+    val r2 = t2(filterIdentity, filterIdentity)(s, new TstXMLContext())
     assertEquals(serializeWithResult(r2), 9, lengthResult(r2))
   }
   
@@ -61,7 +61,7 @@ class CPSXMLModelTest extends CPSXMLModel[TestXMLContext] with TestXMLHelperMeth
                   </("message")
                 )+) ~ </("input")
     val tmeta = t.metaProcess(new SpaceSkipingMetaProcessor())
-    val r = CPSStreamHelperMethods.removeAllEmptyPositive(tmeta(filterIdentity, filterIdentity)(evStream, new TestXMLContext()))
+    val r = CPSStreamHelperMethods.removeAllEmptyPositive(tmeta(filterIdentity, filterIdentity)(evStream, new TstXMLContext()))
     assertAllResult(r, "Result : [" + serializeWithResult(r) + "]" )
     assertEquals("Result : [" + serializeWithResult(r) + "]", evStream.length-8, r.length)
     assertTrue(r.filter(x => (x._1 match {
@@ -74,13 +74,13 @@ class CPSXMLModelTest extends CPSXMLModel[TestXMLContext] with TestXMLHelperMeth
   def testPushToContext() {
     val cfilterIdentityWithContextSuccess = new CFilterIdentityWithContext()
     val cfilterIdentityWithContextFailure = new CFilterIdentityWithContext()
-    val c = new TestXMLContext(name = "before")
+    val c = new TstXMLContext(name = "before")
     val s = List(
               new EvText("after"),
               new EvText(" night")
             ).toStream.map(x => (Some(x), false))
     val t = new TakeTextToContext() {
-      def pushToContext(text : String, context : TestXMLContext) : TestXMLContext = {
+      def pushToContext(text : String, context : TstXMLContext) : TstXMLContext = {
           context.copy(name = text)
       }
     }
@@ -121,7 +121,7 @@ class CPSXMLModelTest extends CPSXMLModel[TestXMLContext] with TestXMLHelperMeth
             +) ~ </("input")
 
     val tmeta = t.metaProcess(new SpaceSkipingMetaProcessor())
-    val r = CPSStreamHelperMethods.removeAllEmptyPositive(tmeta(filterIdentity, filterIdentity)(evStream, new TestXMLContext()))
+    val r = CPSStreamHelperMethods.removeAllEmptyPositive(tmeta(filterIdentity, filterIdentity)(evStream, new TstXMLContext()))
     assertAllResult(r, "Result : [" + serializeWithResult(r) + "]" )
     assertEquals("Result : [" + serializeWithResult(r) + "]", evStream.length-8, r.length)
     assertTrue(r.filter(x => (x._1 match {
@@ -132,16 +132,16 @@ class CPSXMLModelTest extends CPSXMLModel[TestXMLContext] with TestXMLHelperMeth
 
   @Test
   def testSumming() = {
-    val c = new TestXMLContext()
+    val c = new TstXMLContext()
     val evStream = loadStreamFromResource("/org/freetle/input2.xml")
     val totalSumTaker = new TakeTextToContext() {
-      def pushToContext(text : String, context : TestXMLContext) : TestXMLContext = {
+      def pushToContext(text : String, context : TstXMLContext) : TstXMLContext = {
           context.copy(totalSum = Integer.parseInt(text))
       }
     }
 
     val sumTaker = new TakeTextToContext() {
-      def pushToContext(text : String, context : TestXMLContext) : TestXMLContext = {
+      def pushToContext(text : String, context : TstXMLContext) : TstXMLContext = {
           context.copy(currentSum = context.currentSum + Integer.parseInt(text))
       }
     }
