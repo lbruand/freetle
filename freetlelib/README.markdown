@@ -64,7 +64,7 @@ Freetle is deeply indebted to giants:
 
 * The [Scala language](http://www.scala-lang.org/) being the most evident
 * The [Haskell language](http://www.haskell.org/) that triggered the scala effort
-* [HaXML](http://www.cs.york.ac.uk/fp/HaXml/) for proposing XML transformation combinators.
+* [HaXML](http://projects.haskell.org/HaXml/) for proposing XML transformation combinators.
 
 ## Combinators : bottom-top approach
 Freetle Transformations are expressed in the Scala language with syntactic sugar from the Freetle library.
