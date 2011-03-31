@@ -19,7 +19,7 @@ Freetle is written in the [Scala language](http://www.scala-lang.org/) and compi
 
 Freetle is still very beta.
 A lot polishing is to be done before it gets production-ready but the main features are here.
-We expect a lot of improval in the near future.
+We expect a lot of improvement in the near future.
 
 # What does Freetle mean ?
 
