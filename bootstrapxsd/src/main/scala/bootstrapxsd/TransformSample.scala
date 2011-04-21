@@ -33,7 +33,7 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
    /**
    * A base class to load text tokens to context.
    */
-  class TakeTextToContext extends ContextWritingTransform {
+  class TakeNameAttributeToContext extends ContextWritingTransform {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
 
     @inline def apply(stream : CPSStream, context : TransformSampleContext) : (CPSStream, TransformSampleContext) = {
@@ -43,7 +43,7 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
         val sr = removeWhileEmptyPositive(stream)
         (sr.head._1.get) match {
           case EvElemStart(name, attributes) if ("element".equals(name.localPart)) =>
-            (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(attributes.get(QName(NS, "name" ,p)).get, context))
+            (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(attributes.get(QName("", "name" ,"")).get, context))
           case _ => (stream, context)
         }
       }
@@ -55,7 +55,7 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
   
   def header : ChainedTransformRoot = <("schema")
   def footer : ChainedTransformRoot = </("schema")
-  def element : ChainedTransformRoot = <("element") ~ </("element")
+  def element : ChainedTransformRoot = new TakeNameAttributeToContext() ~ </("element")
   def document :ChainedTransformRoot = header ~ ((element)*) ~ footer 
   def transform : ChainedTransformRoot = (document).metaProcess(new SpaceSkipingMetaProcessor())
 }
@@ -79,7 +79,7 @@ object TransformSampleMain extends TransformSampleTransformer {
       try {
         val output = if (args.length == 2) new FileOutputStream(args(1)) else System.out
         val context = new TransformSampleContext()
-        val transform = new TransformSampleParser()
+        val transform = new TransformSampleTransformer()
         def inStream = XMLResultStreamUtils.loadXMLResultStream(input)
         def outStream = transform.transform(new CFilterIdentity(), new CFilterIdentity())(inStream, context)
         val sw = new OutputStreamWriter(output)
