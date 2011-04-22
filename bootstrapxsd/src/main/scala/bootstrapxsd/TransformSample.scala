@@ -33,7 +33,7 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
    /**
    * A base class to load text tokens to context.
    */
-  class TakeNameAttributeToContext extends ContextWritingTransform {
+  class TakeNameAttributeToContext(elementName : String, attributeName : String) extends ContextWritingTransform {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
 
     @inline def apply(stream : CPSStream, context : TransformSampleContext) : (CPSStream, TransformSampleContext) = {
@@ -42,8 +42,8 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
       else {
         val sr = removeWhileEmptyPositive(stream)
         (sr.head._1.get) match {
-          case EvElemStart(name, attributes) if ("element".equals(name.localPart)) =>
-            (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(attributes.get(QName("", "name" ,"")).get, context))
+          case EvElemStart(name, attributes) if (elementName.equals(name.localPart)) =>
+            (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(attributes.get(QName("", attributeName ,"")).get, context))
           case _ => (stream, context)
         }
       }
@@ -55,12 +55,13 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
   
   def header : ChainedTransformRoot = <("schema")
   def footer : ChainedTransformRoot = </("schema")
-  def element : ChainedTransformRoot = new TakeNameAttributeToContext() ~ </("element")
+  def element : ChainedTransformRoot = new TakeNameAttributeToContext("element", "name") ~ </("element")
   def document :ChainedTransformRoot = header ~ ((element)*) ~ footer 
   def transform : ChainedTransformRoot = (document).metaProcess(new SpaceSkipingMetaProcessor())
 }
 
 class TransformSampleTransformer extends TransformSampleParser {
+  //override def header : ChainedTransformRoot = 
   override def element : ChainedTransformRoot = (super.element) -> new DropFilter() ~ new PushNode((x : Option[TransformSampleContext]) => {
                          x match {
 
