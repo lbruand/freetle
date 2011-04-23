@@ -102,7 +102,22 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
         serializeXML(nodeSeq.apply(Some(context))).append(in)
       }
   }
+
+  class PushFormattedText(formatter: Context => String) extends ContextReadingTransform {
+    def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
+
+    def partialapply(in : CPSStream, context : Context) : CPSStream = {
+        Stream.cons((Some(new EvText(formatter(context))), true), in)
+      }
+  }
   
+  class PushText(text: String) extends ContextReadingTransform {
+    def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
+
+    def partialapply(in : CPSStream, context : Context) : CPSStream = {
+        Stream.cons((Some(new EvText(text)), true), in)
+      }
+  }
 
   /**
    * Shortcut to take an opening tag based on the localpart.

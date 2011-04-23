@@ -62,13 +62,11 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
 
 class TransformSampleTransformer extends TransformSampleParser {
   //override def header : ChainedTransformRoot = 
-  override def element : ChainedTransformRoot = (super.element) -> new DropFilter() ~ new PushNode((x : Option[TransformSampleContext]) => {
-                         x match {
-
-                                                    case Some(context) => <cd>def element{context.name.capitalize} : ChainedTransformRoot = </cd>
-                                                    case _ => <cd></cd>
-                         }
-                       })
+  override def element : ChainedTransformRoot = (super.element) -> new DropFilter() ~ new PushFormattedText( context =>
+                                                    "def element%s : ChainedTransformRoot = <%s> ~ </%s>\n" format (
+                                                            context.name.capitalize,
+                                                            context.name,
+                                                            context.name))
 }
 
 object TransformSampleMain extends TransformSampleTransformer {
