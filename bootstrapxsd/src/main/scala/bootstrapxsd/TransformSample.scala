@@ -21,7 +21,7 @@ import java.io._
 import org.freetle.util.{QName, EvElemStart, EvText}
 import javax.xml.XMLConstants
 
-case class TransformSampleContext(name : String = "")
+case class TransformSampleContext(name : String = "", elemType : String = null)
 
 
 /**
@@ -33,7 +33,7 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
    /**
    * A base class to load text tokens to context.
    */
-  class TakeNameAttributeToContext(elementName : String, attributeName : String) extends ContextWritingTransform {
+  class TakeNameAttributeToContext(attributeName : String) extends ContextWritingTransform {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
 
     @inline def apply(stream : CPSStream, context : TransformSampleContext) : (CPSStream, TransformSampleContext) = {
@@ -42,30 +42,50 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
       else {
         val sr = removeWhileEmptyPositive(stream)
         (sr.head._1.get) match {
-          case EvElemStart(name, attributes) if (elementName.equals(name.localPart)) =>
-            (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(attributes.get(QName("", attributeName ,"")).get, context))
+          case EvElemStart(name, attributes)  =>
+            (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(name, attributes, context))
           case _ => (stream, context)
         }
       }
     }
 
-    def pushToContext(text : String, context : TransformSampleContext) : TransformSampleContext =
-        context.copy(name = text)
+    def pushToContext(name : QName, attributes : Map[QName, String], context : TransformSampleContext) : TransformSampleContext = {
+
+      var attriName: Option[String] = attributes.get(QName("", attributeName, ""))
+      attriName match {
+        case Some(atname) => context.copy(name = atname)
+        case None => context
+      }
+
+    }
   }
   
   def header : ChainedTransformRoot = <("schema")
   def footer : ChainedTransformRoot = </("schema")
-  def element : ChainedTransformRoot = new TakeNameAttributeToContext("element", "name") ~ </("element")
+  def innerElement : ChainedTransformRoot = <("complexType") ~ <("sequence") ~ ((element)*) ~ </("sequence") ~ </("complexType")
+  def elementWithoutAttributeType : ChainedTransformRoot = <(new EvStartMatcher() {
+    def testElem(name : QName, attributes : Map[QName, String]) : Boolean = "element".equals(name.localPart) &&
+        !attributes.contains(QName("", "type", ""))
+  })
+  def elementWithAttributeType : ChainedTransformRoot = <(new EvStartMatcher() {
+    def testElem(name : QName, attributes : Map[QName, String]) : Boolean = "element".equals(name.localPart) &&
+        attributes.contains(QName("", "type", ""))
+  })
+  def endElement : ChainedTransformRoot = </("element") 
+  def element : ChainedTransformRoot = (elementWithAttributeType | (elementWithoutAttributeType ~ innerElement)) ~ endElement
+  /*new TakeNameAttributeToContext("element", "name", "type")*/
   def document :ChainedTransformRoot = header ~ ((element)*) ~ footer 
   def transform : ChainedTransformRoot = (document).metaProcess(new SpaceSkipingMetaProcessor())
 }
 
 class TransformSampleTransformer extends TransformSampleParser {
-  //override def header : ChainedTransformRoot = 
-  override def element : ChainedTransformRoot = (super.element) -> new DropFilter() ~ new PushFormattedText( context =>
-                                                    "def element%s : ChainedTransformRoot = <%s> ~ </%s>\n" format (
+  //override def header : ChainedTransformRoot =
+  override def endElement : ChainedTransformRoot = (super.endElement) -> new DropFilter()
+  override def elementWithoutAttributeType : ChainedTransformRoot = (super.elementWithoutAttributeType -> new TakeNameAttributeToContext("name")) -> new DropFilter() ~ new PushFormattedText( context =>
+                                                    "def element%s : ChainedTransformRoot = <(\"%s\") ~ inner%s ~ </(\"%s\")\n" format (
                                                             context.name.capitalize,
                                                             context.name,
+                                                            context.name.capitalize,
                                                             context.name))
 }
 

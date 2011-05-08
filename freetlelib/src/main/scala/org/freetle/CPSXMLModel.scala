@@ -118,27 +118,40 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
         Stream.cons((Some(new EvText(text)), true), in)
       }
   }
+  abstract class EvStartMatcher extends CPSElemMatcher {
+    def testElem(name : QName, attributes : Map[QName, String]) : Boolean
 
+    def apply(event: XMLEvent) : Boolean = {
+      event match {
+        case EvElemStart(name, attributes) => {
+           testElem(name, attributes)
+        }
+        case _ => false
+      }
+    }
+  }
+
+  class LocalPartEvStartMatcher(localPart : String) extends EvStartMatcher {
+    def testElem(name: QName, attributes: Map[QName, String]) = localPart.equals(name.localPart) 
+  }
   /**
    * Shortcut to take an opening tag based on the localpart.
    */
   object < {
-    def evStartMatcher(name : String)(event : XMLEvent) = {
-      event match {
-        case EvElemStart(testName,_) if (name.equals(testName.localPart)) => true
-        case _ => false
-      }
-    }
-    def apply(name : String, matcher : Option[CPSElemMatcher] = None) : ElementMatcherTaker = {
+    
+    def apply(evStartMatcher : EvStartMatcher) : ElementMatcherTaker = {
       new ElementMatcherTaker(
-          matcher match {
-              case None => evStartMatcher(name)
-              case Some(m) => ((e : XMLEvent) => evStartMatcher(name)(e) && m(e))
-          }
+          evStartMatcher
         )
     }
+
   }
 
+  /**
+   * This allows for automatic conversion toward an EvStartMatcher from a String.
+   * TODO : Could add other matching on namespace, prefix, etc...
+   */
+  implicit def string2EvStartMatcher(s : String) : EvStartMatcher = new LocalPartEvStartMatcher(s)
   /**
    * Shortcut to take a closing tag based on the localpart.
    */
