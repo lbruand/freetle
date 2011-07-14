@@ -33,7 +33,7 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
    /**
    * A base class to load text tokens to context.
    */
-  class TakeNameAttributeToContext(attributeName : String) extends ContextWritingTransform {
+  class TakeNameAttributeToContext(attributeName : String, matcher : EvStartMatcher) extends ContextWritingTransform {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
 
     @inline def apply(stream : CPSStream, context : TransformSampleContext) : (CPSStream, TransformSampleContext) = {
@@ -41,10 +41,15 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
         (stream, context)
       else {
         val sr = removeWhileEmptyPositive(stream)
-        (sr.head._1.get) match {
-          case EvElemStart(name, attributes)  =>
-            (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(name, attributes, context))
-          case _ => (stream, context)
+        val elem = sr.head._1.get
+        if (matcher(elem)) {
+          (elem) match {
+            case EvElemStart(name, attributes)  =>
+              (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(name, attributes, context))
+            case _ => (stream, context)
+          }
+        } else {
+          (stream, context)
         }
       }
     }
@@ -63,10 +68,11 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
   def header : ChainedTransformRoot = <("schema")
   def footer : ChainedTransformRoot = </("schema")
   def innerElement : ChainedTransformRoot = <("complexType") ~ <("sequence") ~ ((element)*) ~ </("sequence") ~ </("complexType")
-  def elementWithoutAttributeType : ChainedTransformRoot = <(new EvStartMatcher() {
+  val elementWithoutAttributeTypeMatcher = new EvStartMatcher() {
     def testElem(name : QName, attributes : Map[QName, String]) : Boolean = "element".equals(name.localPart) &&
         !attributes.contains(QName("", "type", ""))
-  })
+  }
+  def elementWithoutAttributeType : ChainedTransformRoot = <(elementWithoutAttributeTypeMatcher)
   def elementWithAttributeType : ChainedTransformRoot = <(new EvStartMatcher() {
     def testElem(name : QName, attributes : Map[QName, String]) : Boolean = "element".equals(name.localPart) &&
         attributes.contains(QName("", "type", ""))
@@ -81,12 +87,12 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
 class TransformSampleTransformer extends TransformSampleParser {
   //override def header : ChainedTransformRoot =
   override def endElement : ChainedTransformRoot = (super.endElement) -> new DropFilter()
-  override def elementWithoutAttributeType : ChainedTransformRoot = (super.elementWithoutAttributeType -> new TakeNameAttributeToContext("name")) -> new DropFilter() ~ new PushFormattedText( context =>
+  override def elementWithoutAttributeType : ChainedTransformRoot = (new TakeNameAttributeToContext("name", elementWithoutAttributeTypeMatcher)) -> (new DropFilter() ~ new PushFormattedText( context =>
                                                     "def element%s : ChainedTransformRoot = <(\"%s\") ~ inner%s ~ </(\"%s\")\n" format (
                                                             context.name.capitalize,
                                                             context.name,
                                                             context.name.capitalize,
-                                                            context.name))
+                                                            context.name)))
 }
 
 object TransformSampleMain extends TransformSampleTransformer {
