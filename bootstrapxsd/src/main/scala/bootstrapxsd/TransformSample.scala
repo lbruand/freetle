@@ -67,26 +67,44 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
   
   def header : ChainedTransformRoot = <("schema")
   def footer : ChainedTransformRoot = </("schema")
-  def innerElement : ChainedTransformRoot = <("complexType") ~ <("sequence") ~ ((element)*) ~ </("sequence") ~ </("complexType")
+  def innerElementHeader : ChainedTransformRoot = <("complexType") ~ <("sequence")
+  def innerElementFooter : ChainedTransformRoot = </("sequence") ~ </("complexType")
+  def innerElement : ChainedTransformRoot = innerElementHeader ~ ((element)*) ~ innerElementFooter 
+
   val elementWithoutAttributeTypeMatcher = new EvStartMatcher() {
     def testElem(name : QName, attributes : Map[QName, String]) : Boolean = "element".equals(name.localPart) &&
         !attributes.contains(QName("", "type", ""))
   }
+
   val elementWithAttributeTypeMatcher = new EvStartMatcher() {
     def testElem(name : QName, attributes : Map[QName, String]) : Boolean = "element".equals(name.localPart) &&
         attributes.contains(QName("", "type", ""))
   }
+
   def elementWithoutAttributeType : ChainedTransformRoot = <(elementWithoutAttributeTypeMatcher)
   def elementWithAttributeType : ChainedTransformRoot = <(elementWithAttributeTypeMatcher)
   def endElement : ChainedTransformRoot = </("element") 
   def element : ChainedTransformRoot = (elementWithAttributeType | (elementWithoutAttributeType ~ innerElement)) ~ endElement
-  /*new TakeNameAttributeToContext("element", "name", "type")*/
+
   def document :ChainedTransformRoot = header ~ ((element)*) ~ footer 
   def transform : ChainedTransformRoot = (document).metaProcess(new SpaceSkipingMetaProcessor())
 }
 
 class TransformSampleTransformer extends TransformSampleParser {
-  //override def header : ChainedTransformRoot =
+  /**
+   * TODO IDEA : Work things out by using a list of ChainedTransformRoot
+   * ex:
+   * class InnerNote extends ChainedTransformRoot  {
+   *    val applyList = new List()
+   *    // Here we define an apply method.
+   *    // Begin of the generating loop
+   *    def elementTo : ChainedTransformRoot = <("to") ~ takeText ~ </("To")
+   *    applyList.add(elementTo)
+   *    // end of the generating loop.
+   * }
+   */
+  override def innerElement : ChainedTransformRoot =  new PushFormattedText( context => context.name) ~ (super.innerElement)
+
   override def endElement : ChainedTransformRoot = (super.endElement) -> new DropFilter()
   override def elementWithoutAttributeType : ChainedTransformRoot = (new TakeNameAttributeToContext("name", elementWithoutAttributeTypeMatcher)) -> (new DropFilter() ~ new PushFormattedText( context =>
                                                     "def element%s : ChainedTransformRoot = <(\"%s\") ~ inner%s ~ </(\"%s\")\n" format (
