@@ -72,11 +72,12 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
     def testElem(name : QName, attributes : Map[QName, String]) : Boolean = "element".equals(name.localPart) &&
         !attributes.contains(QName("", "type", ""))
   }
-  def elementWithoutAttributeType : ChainedTransformRoot = <(elementWithoutAttributeTypeMatcher)
-  def elementWithAttributeType : ChainedTransformRoot = <(new EvStartMatcher() {
+  val elementWithAttributeTypeMatcher = new EvStartMatcher() {
     def testElem(name : QName, attributes : Map[QName, String]) : Boolean = "element".equals(name.localPart) &&
         attributes.contains(QName("", "type", ""))
-  })
+  }
+  def elementWithoutAttributeType : ChainedTransformRoot = <(elementWithoutAttributeTypeMatcher)
+  def elementWithAttributeType : ChainedTransformRoot = <(elementWithAttributeTypeMatcher)
   def endElement : ChainedTransformRoot = </("element") 
   def element : ChainedTransformRoot = (elementWithAttributeType | (elementWithoutAttributeType ~ innerElement)) ~ endElement
   /*new TakeNameAttributeToContext("element", "name", "type")*/
@@ -93,11 +94,18 @@ class TransformSampleTransformer extends TransformSampleParser {
                                                             context.name,
                                                             context.name.capitalize,
                                                             context.name)))
+  
+  override def elementWithAttributeType : ChainedTransformRoot = (new TakeNameAttributeToContext("name", elementWithAttributeTypeMatcher)) -> (new DropFilter() ~ new PushFormattedText( context =>
+                                                    "def element%s : ChainedTransformRoot = <(\"%s\") ~ takeText ~ </(\"%s\")\n" format (
+                                                            context.name.capitalize,
+                                                            context.name,
+                                                            context.name.capitalize,
+                                                            context.name))) 
 }
 
 object TransformSampleMain extends TransformSampleTransformer {
   def usage() = {
-    println("transform - Freetle sample transformation")
+    println("transform - XSD Bootstrap transformation")
     println("usage : transform <input file> [output file]")
   }
   
