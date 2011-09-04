@@ -117,7 +117,6 @@ class TransformSampleTransformer extends TransformSampleParser {
                                                     "def element%s : ChainedTransformRoot = <(\"%s\") ~ takeText ~ </(\"%s\")\n" format (
                                                             context.name.capitalize,
                                                             context.name,
-                                                            context.name.capitalize,
                                                             context.name))) 
 }
 
