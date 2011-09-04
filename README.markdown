@@ -17,7 +17,7 @@ Freetle is written in the [Scala language](http://www.scala-lang.org/) and compi
 
 # Current status
 
-Freetle is still very beta.
+Freetle is still very alpha.
 A lot polishing is to be done before it gets production-ready but the main features are here.
 We expect a lot of improvement in the near future.
 
