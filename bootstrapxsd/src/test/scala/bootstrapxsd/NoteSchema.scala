@@ -1,12 +1,18 @@
 package bootstrapxsd
 import org.freetle.CPSXMLModel
 import org.freetle.meta.CPSMeta
-class NoteSchemaContext {
 
-}
+
+class NoteSchemaContext {}
+
 class NoteSchema extends CPSXMLModel[NoteSchemaContext] with CPSMeta[NoteSchemaContext] {
-  class NoteType extends TransformBase {
+  abstract class SequenceBaseType extends (()=>ChainedTransformRoot) {
     var list = scala.collection.mutable.ArrayBuffer.empty[ChainedTransformRoot]
+    def apply() : ChainedTransformRoot=  list.reduceLeft( (x, y) => new SequenceOperator(x,y) )
+  }
+
+  class NoteType extends SequenceBaseType {
+
     def elementTo = <("to") ~ takeText ~ </("to")
     list += elementTo
 
@@ -19,12 +25,9 @@ class NoteSchema extends CPSXMLModel[NoteSchemaContext] with CPSMeta[NoteSchemaC
     def elementBody = <("body") ~ takeText ~ </("body")
     list += elementBody
 
-    override def apply(s : CPSStream, c : NoteSchemaContext) : (CPSStream, NoteSchemaContext) = {
-      (s, c)
-    }
   }
 
 
-  def elementNote = <("note") ~ new NoteType() ~ </("note")
+  def elementNote = <("note") ~ (new NoteType())() ~ </("note")
 
 }
