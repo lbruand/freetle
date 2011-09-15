@@ -33,7 +33,9 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
    /**
    * A base class to load text tokens to context.
    */
-  class TakeNameAttributeToContext(attributeName : String, matcher : EvStartMatcher) extends ContextWritingTransform {
+  class TakeAttributesToContext(matcher : EvStartMatcher) extends ContextWritingTransform {
+
+    
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
 
     @inline def apply(stream : CPSStream, context : TransformSampleContext) : (CPSStream, TransformSampleContext) = {
@@ -55,69 +57,55 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
     }
 
     def pushToContext(name : QName, attributes : Map[QName, String], context : TransformSampleContext) : TransformSampleContext = {
-
-      var attriName: Option[String] = attributes.get(QName("", attributeName, ""))
-      attriName match {
-        case Some(atname) => context.copy(name = atname)
-        case None => context
+      var nContext = context 
+      val attriName: Option[String] = attributes.get(QName("", "name", ""))
+      nContext = attriName match {
+        case Some(atname) => nContext.copy(name = atname)
+        case None => nContext
       }
-
+      val attriType: Option[String] = attributes.get(QName("", "type", ""))
+      nContext = attriType match {
+        case Some(attype) => nContext.copy(elemType = attype)
+        case None => nContext
+      }
+      nContext
     }
   }
   
   def header : ChainedTransformRoot = <("schema")
   def footer : ChainedTransformRoot = </("schema")
-  def innerElementHeader : ChainedTransformRoot = <("complexType") ~ <("sequence")
-  def innerElementFooter : ChainedTransformRoot = </("sequence") ~ </("complexType")
-  def innerElement : ChainedTransformRoot = innerElementHeader ~ ((element)*) ~ innerElementFooter 
 
-  val elementWithoutAttributeTypeMatcher = new EvStartMatcher() {
-    def testElem(name : QName, attributes : Map[QName, String]) : Boolean = "element".equals(name.localPart) &&
-        !attributes.contains(QName("", "type", ""))
-  }
 
   val elementWithAttributeTypeMatcher = new EvStartMatcher() {
     def testElem(name : QName, attributes : Map[QName, String]) : Boolean = "element".equals(name.localPart) &&
         attributes.contains(QName("", "type", ""))
   }
 
-  def elementWithoutAttributeType : ChainedTransformRoot = <(elementWithoutAttributeTypeMatcher)
+
   def elementWithAttributeType : ChainedTransformRoot = <(elementWithAttributeTypeMatcher)
   def endElement : ChainedTransformRoot = </("element") 
-  def element : ChainedTransformRoot = (elementWithAttributeType | (elementWithoutAttributeType ~ innerElement)) ~ endElement
+  def element : ChainedTransformRoot = elementWithAttributeType ~ endElement
+  def startComplexType : ChainedTransformRoot = <("complexType") ~ <("sequence")
+  def endComplexType : ChainedTransformRoot = </("sequence") ~ </("complexType")
+  def complexType : ChainedTransformRoot = startComplexType ~ endComplexType
 
   def document :ChainedTransformRoot = header ~ ((element)*) ~ footer 
   def transform : ChainedTransformRoot = (document).metaProcess(new SpaceSkipingMetaProcessor())
 }
 
 class TransformSampleTransformer extends TransformSampleParser {
-  /**
-   * TODO IDEA : Work things out by using a list of ChainedTransformRoot
-   * ex:
-   * class InnerNote extends ChainedTransformRoot  {
-   *    val applyList = new List()
-   *    // Here we define an apply method.
-   *    // Begin of the generating loop
-   *    def elementTo : ChainedTransformRoot = <("to") ~ takeText ~ </("To")
-   *    applyList.add(elementTo)
-   *    // end of the generating loop.
-   * }
-   */
-  override def innerElement : ChainedTransformRoot =  new PushFormattedText( context => context.name) ~ (super.innerElement)
+
+
 
   override def endElement : ChainedTransformRoot = (super.endElement) -> new DropFilter()
-  override def elementWithoutAttributeType : ChainedTransformRoot = (new TakeNameAttributeToContext("name", elementWithoutAttributeTypeMatcher)) -> (new DropFilter() ~ new PushFormattedText( context =>
-                                                    "def element%s : ChainedTransformRoot = <(\"%s\") ~ inner%s ~ </(\"%s\")\n" format (
-                                                            context.name.capitalize,
-                                                            context.name,
-                                                            context.name.capitalize,
-                                                            context.name)))
   
-  override def elementWithAttributeType : ChainedTransformRoot = (new TakeNameAttributeToContext("name", elementWithAttributeTypeMatcher)) -> (new DropFilter() ~ new PushFormattedText( context =>
-                                                    "def element%s : ChainedTransformRoot = <(\"%s\") ~ takeText ~ </(\"%s\")\n" format (
+  override def elementWithAttributeType : ChainedTransformRoot = (new TakeAttributesToContext(elementWithAttributeTypeMatcher)) -> (new DropFilter() ~ new PushFormattedText( context =>
+                                                    "def element%s : ChainedTransformRoot = <(\"%s\") ~ (new %s())() ~ </(\"%s\")\nlist += element%s\n" format (
                                                             context.name.capitalize,
                                                             context.name,
-                                                            context.name))) 
+                                                            context.elemType.capitalize,
+                                                            context.name,
+                                                            context.name.capitalize))) 
 }
 
 object TransformSampleMain extends TransformSampleTransformer {
