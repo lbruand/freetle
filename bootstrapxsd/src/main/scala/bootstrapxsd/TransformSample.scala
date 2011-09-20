@@ -21,7 +21,11 @@ import java.io._
 import org.freetle.util.{QName, EvElemStart, EvText}
 import javax.xml.XMLConstants
 
-case class TransformSampleContext(name : String = "", elemType : String = null)
+case class TransformSampleContext(
+        name : String = "",
+        elemType : String = null,
+        minOccurs : String = null,
+        maxOccurs : String = null)
 
 
 /**
@@ -68,6 +72,16 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
         case Some(attype) => nContext.copy(elemType = attype)
         case None => nContext
       }
+      val minOccurs: Option[String] = attributes.get(QName("", "minOccurs", ""))
+      nContext = attriType match {
+        case Some(atMinOccurs) => nContext.copy(minOccurs = atMinOccurs)
+        case None => nContext
+      }
+      val maxOccurs: Option[String] = attributes.get(QName("", "maxOccurs", ""))
+      nContext = attriType match {
+        case Some(atMaxOccurs) => nContext.copy(maxOccurs = atMaxOccurs)
+        case None => nContext
+      }
       nContext
     }
   }
@@ -89,7 +103,9 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
 
   def elementWithAttributeType : ChainedTransformRoot = <(elementWithAttributeTypeMatcher)
   def endElement : ChainedTransformRoot = </("element") 
+
   def element : ChainedTransformRoot = elementWithAttributeType ~ endElement
+
   def startSequence : ChainedTransformRoot = <("sequence")
   def endSequence : ChainedTransformRoot = </("sequence")
   def startChoice : ChainedTransformRoot = <("choice")
