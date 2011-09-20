@@ -10,6 +10,16 @@
     </xs:sequence>
 </xs:complexType>
 
+<xs:complexType name="NoteChoiceType">
+    <xs:choice>
+      <xs:element name="to" type="xs:string"/>
+      <xs:element name="from" type="xs:string"/>
+      <xs:element name="heading" type="xs:string"/>
+      <xs:element name="body" type="xs:string"/>
+    </xs:choice>
+</xs:complexType>
+
 <xs:element name="note" type="NoteType"/>
+<xs:element name="chote" type="NoteChoiceType"/>
 
 </xs:schema>

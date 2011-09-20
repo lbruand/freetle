@@ -92,10 +92,13 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
   def element : ChainedTransformRoot = elementWithAttributeType ~ endElement
   def startSequence : ChainedTransformRoot = <("sequence")
   def endSequence : ChainedTransformRoot = </("sequence")
-  def startComplexType : ChainedTransformRoot = <("complexType") ~ startSequence
-  def endComplexType : ChainedTransformRoot = endSequence ~ </("complexType")
+  def startChoice : ChainedTransformRoot = <("choice")
+  def endChoice : ChainedTransformRoot = </("choice")
+  def startComplexType : ChainedTransformRoot = <("complexType")
+  def endComplexType : ChainedTransformRoot = </("complexType")
   def sequence : ChainedTransformRoot = startSequence ~ items ~ endSequence
-  def complexType : ChainedTransformRoot = startComplexType ~ sequence ~ endComplexType
+  def choice : ChainedTransformRoot = startChoice ~ items ~ endChoice
+  def complexType : ChainedTransformRoot = startComplexType ~ (sequence | choice) ~ endComplexType
   def items : ChainedTransformRoot =  (element | complexType)*
   def document :ChainedTransformRoot = startSchema ~ (items) ~ endSchema
   def transform : ChainedTransformRoot = (document).metaProcess(new SpaceSkipingMetaProcessor())
@@ -104,10 +107,15 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
 class TransformSampleTransformer(val packageName : String) extends TransformSampleParser {
 
   override def startComplexType : ChainedTransformRoot = (new TakeAttributesToContext(complexTypeWithAttributeNameMatcher)) -> (new DropFilter() ~ new PushFormattedText( context =>
-                                                                "class %s extends SequenceBaseType {\n" format (context.name.capitalize))
+                                                                "class %s " format (context.name.capitalize))
                                                             )
-  override def startSequence : ChainedTransformRoot = (super.startSequence) -> (new DropFilter())
+
+  override def startChoice : ChainedTransformRoot = (super.startChoice) -> (new DropFilter() ~ new PushText("extends ChoiceBaseType {\n"))
+  override def endChoice : ChainedTransformRoot = (super.endChoice) -> (new DropFilter())
+  override def startSequence : ChainedTransformRoot = (super.startSequence) -> (new DropFilter() ~ new PushText("extends SequenceBaseType {\n"))
+
   override def endSequence : ChainedTransformRoot = (super.endSequence) -> (new DropFilter())
+
   override def endComplexType : ChainedTransformRoot = (super.endComplexType) -> (new DropFilter() ~ new PushFormattedText( context => "}\n" ))
 
   override def endElement : ChainedTransformRoot = (super.endElement) -> new DropFilter()
