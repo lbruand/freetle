@@ -11,5 +11,10 @@ class AbstractXMLSchema[Context] extends CPSXMLModel[Context] with CPSMeta[Conte
     var list = scala.collection.mutable.ArrayBuffer.empty[ChainedTransformRoot]
     def apply() : ChainedTransformRoot=  list.reduceLeft( (x, y) => new SequenceOperator(x,y) )
   }
+
+  abstract class ChoiceBaseType extends (()=>ChainedTransformRoot) {
+    var list = scala.collection.mutable.ArrayBuffer.empty[ChainedTransformRoot]
+    def apply() : ChainedTransformRoot=  list.reduceLeft( (x, y) => new ChoiceOperator(x,y) )
+  }
 }
 
