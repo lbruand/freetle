@@ -133,6 +133,16 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
         Stream.cons((Some(new EvText(formatter(context))), true), in)
       }
   }
+
+  object > {
+    def apply(formatter: Context => String) : PushFormattedText = {
+      new PushFormattedText(formatter = formatter)
+    }
+
+    def apply(text : String) : PushText = {
+      new PushText(text = text)
+    }
+  }
   
   class PushText(text: String) extends ContextReadingTransform {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
