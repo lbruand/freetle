@@ -68,6 +68,29 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     def pushToContext(text : String, context : Context) : Context
   }
 
+  abstract class TakeAttributesToContext(matcher : EvStartMatcher) extends ContextWritingTransform {
+    def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
+
+    @inline def apply(stream : CPSStream, context : Context) : (CPSStream, Context) = {
+      if (stream.isEmpty)
+        (stream, context)
+      else {
+        val sr = removeWhileEmptyPositive(stream)
+        val elem = sr.head._1.get
+        if (matcher(elem)) {
+          (elem) match {
+            case EvElemStart(name, attributes)  =>
+              (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(name, attributes, context))
+            case _ => (stream, context)
+          }
+        } else {
+          (stream, context)
+        }
+      }
+    }
+    def pushToContext(name : QName, attributes : Map[QName, String], context : Context) : Context
+  }
+
   /**
    * Push a scala xml content down the pipeline.
    */

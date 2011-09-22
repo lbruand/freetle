@@ -35,34 +35,10 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
   val NS = "http://www.w3.org/2001/XMLSchema"
   val p = XMLConstants.DEFAULT_NS_PREFIX
 
-  abstract class TakeAttributesToContext(matcher : EvStartMatcher) extends ContextWritingTransform {
-    
-  }
    /**
    * A base class to load attributes to context.
    */
   class TakeSchemaAttributesToContext(matcher : EvStartMatcher) extends TakeAttributesToContext(matcher) {
-
-    
-    def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
-
-    @inline def apply(stream : CPSStream, context : TransformSampleContext) : (CPSStream, TransformSampleContext) = {
-      if (stream.isEmpty)
-        (stream, context)
-      else {
-        val sr = removeWhileEmptyPositive(stream)
-        val elem = sr.head._1.get
-        if (matcher(elem)) {
-          (elem) match {
-            case EvElemStart(name, attributes)  =>
-              (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(name, attributes, context))
-            case _ => (stream, context)
-          }
-        } else {
-          (stream, context)
-        }
-      }
-    }
 
     def pushToContext(name : QName, attributes : Map[QName, String], context : TransformSampleContext) : TransformSampleContext = {
       var nContext = context 
