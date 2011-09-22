@@ -29,13 +29,13 @@ case class TransformSampleContext(
 
 
 /**
- * A sample transformation for freetle
+ * Xsd bootstrap parser.
  */
 class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPSMeta[TransformSampleContext] {
   val NS = "http://www.w3.org/2001/XMLSchema"
   val p = XMLConstants.DEFAULT_NS_PREFIX
    /**
-   * A base class to load text tokens to context.
+   * A base class to load attributes to context.
    */
   class TakeAttributesToContext(matcher : EvStartMatcher) extends ContextWritingTransform {
 
@@ -85,6 +85,7 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
       nContext
     }
   }
+
   
   def startSchema : ChainedTransformRoot = <("schema")
   def endSchema : ChainedTransformRoot = </("schema")
@@ -120,6 +121,9 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
   def transform : ChainedTransformRoot = (document).metaProcess(new SpaceSkipingMetaProcessor())
 }
 
+/**
+ * Overloads the parser with handler to transform the streams.
+ */
 class TransformSampleTransformer(val packageName : String) extends TransformSampleParser {
 
   override def startComplexType : ChainedTransformRoot = (new TakeAttributesToContext(complexTypeWithAttributeNameMatcher)) -> (new DropFilter() ~ new PushFormattedText( context =>
