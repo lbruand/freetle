@@ -113,18 +113,18 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
   def endChoice : ChainedTransformRoot = </("choice")
   def startComplexType : ChainedTransformRoot = <("complexType")
   def endComplexType : ChainedTransformRoot = </("complexType")
-  def sequence : ChainedTransformRoot = startSequence ~ items ~ endSequence
-  def choice : ChainedTransformRoot = startChoice ~ items ~ endChoice
+  def sequence : ChainedTransformRoot = startSequence ~ subitems ~ endSequence
+  def choice : ChainedTransformRoot = startChoice ~ subitems ~ endChoice
   def complexType : ChainedTransformRoot = startComplexType ~ (sequence | choice) ~ endComplexType
-  def items : ChainedTransformRoot =  (element | complexType)*
-  def document :ChainedTransformRoot = startSchema ~ (items) ~ endSchema
+  def subitems : ChainedTransformRoot =  (element | complexType)*
+  def document :ChainedTransformRoot = startSchema ~ (subitems) ~ endSchema
   def transform : ChainedTransformRoot = (document).metaProcess(new SpaceSkipingMetaProcessor())
 }
 
 /**
  * Overloads the parser with handler to transform the streams.
  */
-class TransformSampleTransformer(val packageName : String) extends TransformSampleParser {
+class TransformSampleTransformer(val packageName : String, val schemaName : String) extends TransformSampleParser {
 
   override def startComplexType : ChainedTransformRoot = (new TakeAttributesToContext(complexTypeWithAttributeNameMatcher)) -> (new DropFilter() ~ new PushFormattedText( context =>
                                                                 "class %s " format (context.name.capitalize))
@@ -150,11 +150,11 @@ class TransformSampleTransformer(val packageName : String) extends TransformSamp
                                                             context.name.capitalize)
 
                                                     ))
-  override def startSchema : ChainedTransformRoot = (super.startSchema) -> (new DropFilter() ~ new PushFormattedText( context => "package %s\nclass NoteSchema[Context] extends AbstractXMLSchema[Context] {\n" format (packageName)))
+  override def startSchema : ChainedTransformRoot = (super.startSchema) -> (new DropFilter() ~ new PushFormattedText( context => "package %s\nclass %sSchema[Context] extends AbstractXMLSchema[Context] {\n" format (packageName, schemaName.capitalize)))
   override def endSchema : ChainedTransformRoot = (super.endSchema) -> (new DropFilter() ~ new PushFormattedText( context => "}\n" ))
 }
 
-object TransformSampleMain extends TransformSampleTransformer(packageName = "bootstrapxsd") {
+object TransformSampleMain extends TransformSampleTransformer(packageName = "bootstrapxsd", schemaName = "Note") {
   def usage() = {
     println("transform - XSD Bootstrap transformation")
     println("usage : transform <input file> [output file]")
