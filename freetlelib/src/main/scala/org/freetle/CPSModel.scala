@@ -351,6 +351,8 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
     }
   }
 
+  val !> = new DropFilter()
+
   /**
    * This is a template transform to select in the stream using an accumulator.
    */

@@ -110,17 +110,17 @@ class TransformSampleTransformer(val packageName : String, val schemaName : Stri
                                                                 "class %s " format (context.name.capitalize))
                                                             )
 
-  override def startChoice : ChainedTransformRoot = (super.startChoice) -> (new DropFilter() ~ new PushText("extends ChoiceBaseType {\n"))
-  override def endChoice : ChainedTransformRoot = (super.endChoice) -> (new DropFilter())
-  override def startSequence : ChainedTransformRoot = (super.startSequence) -> (new DropFilter() ~ new PushText("extends SequenceBaseType {\n"))
+  override def startChoice : ChainedTransformRoot = (super.startChoice) -> (!> ~ new PushText("extends ChoiceBaseType {\n"))
+  override def endChoice : ChainedTransformRoot = (super.endChoice) -> !>
+  override def startSequence : ChainedTransformRoot = (super.startSequence) -> (!> ~ new PushText("extends SequenceBaseType {\n"))
 
-  override def endSequence : ChainedTransformRoot = (super.endSequence) -> (new DropFilter())
+  override def endSequence : ChainedTransformRoot = (super.endSequence) -> !>
 
-  override def endComplexType : ChainedTransformRoot = (super.endComplexType) -> (new DropFilter() ~ new PushFormattedText( context => "}\n" ))
+  override def endComplexType : ChainedTransformRoot = (super.endComplexType) -> (!> ~ new PushFormattedText( context => "}\n" ))
 
-  override def endElement : ChainedTransformRoot = (super.endElement) -> new DropFilter()
+  override def endElement : ChainedTransformRoot = (super.endElement) -> !>
   
-  override def elementWithAttributeType : ChainedTransformRoot = (new TakeSchemaAttributesToContext(elementWithAttributeTypeMatcher)) -> (new DropFilter() ~ new PushFormattedText( context =>
+  override def elementWithAttributeType : ChainedTransformRoot = (new TakeSchemaAttributesToContext(elementWithAttributeTypeMatcher)) -> (!> ~ new PushFormattedText( context =>
 
                                                     "def element%s : ChainedTransformRoot = <(\"%s\") ~ %s ~ </(\"%s\")\nlist += element%s\n" format (
                                                             context.name.capitalize,
@@ -130,8 +130,8 @@ class TransformSampleTransformer(val packageName : String, val schemaName : Stri
                                                             context.name.capitalize)
 
                                                     ))
-  override def startSchema : ChainedTransformRoot = (super.startSchema) -> (new DropFilter() ~ new PushFormattedText( context => "package %s\nclass %sSchema[Context] extends AbstractXMLSchema[Context] {\n" format (packageName, schemaName.capitalize)))
-  override def endSchema : ChainedTransformRoot = (super.endSchema) -> (new DropFilter() ~ new PushFormattedText( context => "}\n" ))
+  override def startSchema : ChainedTransformRoot = (super.startSchema) -> (!> ~ new PushFormattedText( context => "package %s\nclass %sSchema[Context] extends AbstractXMLSchema[Context] {\n" format (packageName, schemaName.capitalize)))
+  override def endSchema : ChainedTransformRoot = (super.endSchema) -> (!> ~ new PushFormattedText( context => "}\n" ))
 }
 
 object TransformSampleMain extends TransformSampleTransformer(packageName = "bootstrapxsd", schemaName = "Note") {
