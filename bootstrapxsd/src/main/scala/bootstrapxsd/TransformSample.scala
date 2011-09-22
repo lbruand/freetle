@@ -34,10 +34,14 @@ case class TransformSampleContext(
 class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPSMeta[TransformSampleContext] {
   val NS = "http://www.w3.org/2001/XMLSchema"
   val p = XMLConstants.DEFAULT_NS_PREFIX
+
+  abstract class TakeAttributesToContext(matcher : EvStartMatcher) extends ContextWritingTransform {
+    
+  }
    /**
    * A base class to load attributes to context.
    */
-  class TakeAttributesToContext(matcher : EvStartMatcher) extends ContextWritingTransform {
+  class TakeSchemaAttributesToContext(matcher : EvStartMatcher) extends TakeAttributesToContext(matcher) {
 
     
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
@@ -126,7 +130,7 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
  */
 class TransformSampleTransformer(val packageName : String, val schemaName : String) extends TransformSampleParser {
 
-  override def startComplexType : ChainedTransformRoot = (new TakeAttributesToContext(complexTypeWithAttributeNameMatcher)) -> (new DropFilter() ~ new PushFormattedText( context =>
+  override def startComplexType : ChainedTransformRoot = (new TakeSchemaAttributesToContext(complexTypeWithAttributeNameMatcher)) -> (new DropFilter() ~ new PushFormattedText( context =>
                                                                 "class %s " format (context.name.capitalize))
                                                             )
 
@@ -140,7 +144,7 @@ class TransformSampleTransformer(val packageName : String, val schemaName : Stri
 
   override def endElement : ChainedTransformRoot = (super.endElement) -> new DropFilter()
   
-  override def elementWithAttributeType : ChainedTransformRoot = (new TakeAttributesToContext(elementWithAttributeTypeMatcher)) -> (new DropFilter() ~ new PushFormattedText( context =>
+  override def elementWithAttributeType : ChainedTransformRoot = (new TakeSchemaAttributesToContext(elementWithAttributeTypeMatcher)) -> (new DropFilter() ~ new PushFormattedText( context =>
 
                                                     "def element%s : ChainedTransformRoot = <(\"%s\") ~ %s ~ </(\"%s\")\nlist += element%s\n" format (
                                                             context.name.capitalize,
