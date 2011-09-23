@@ -120,9 +120,21 @@ the only option, Freetle does not impose it.
 
 ## Parser
 
-The first class of transformation is the Parser class.
+The first class of transformation is the Parser class. A parser does not transform a stream.
+It merely recognizes the language grammar. The Parser is often generated from an other grammar description such as XML Schema.
 
-A parser class 
+The parser comprehend a set of named methods (called often rules) :
+
+
+    class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPSMeta[TransformSampleContext] {
+        def header : ChainedTransformRoot = <("catalog")
+        def footer : ChainedTransformRoot = </("catalog")
+        def element : ChainedTransformRoot = <("cd") ~ </("cd")
+        def document :ChainedTransformRoot = header ~ ((element)+) ~ footer
+        def transform : ChainedTransformRoot = (document).metaProcess(new SpaceSkipingMetaProcessor())
+    }
+
+Each rule has a name and a rule body which is a combination of operators and unite transformation.
 
 # Licensing
 Freetle is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) (See attached).
