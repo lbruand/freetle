@@ -40,7 +40,7 @@ Thus, the Freetle defines :
 	type CPSElementOrPositive = Option[Element]
 	type CPSTupleElement = (CPSElementOrPositive, Boolean)
 
-`CPSTupleElement` is the most basic type used in the freetle transformations.
+`CPSTupleElement` is the most basic type appearing in the freetle transformations.
 
  
 The second position Boolean indicates whether the element is marked as a result or a tail. (`true` = result, `false` = tail)
@@ -64,6 +64,7 @@ During transformations, a Context is used to store information for later use.
 
 Freetle provides various types of transformations.
 They come in two kinds :
+
  * Context-free transformations (which are derived from ContextFreeTransform).
  * Context-using or Context modifying transformations (which are derived from ContextWritingTransform or ContextReadingTransform).
 
