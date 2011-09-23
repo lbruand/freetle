@@ -107,10 +107,22 @@ Shortcut Symbol : `*`
 #### One Or More Operator
 Shortcut Symbol : `+`
 
+###
+
 # Creating a project using a maven artifact.
 
+    mvn archetype:generate
 
-# 
+# Proposed Structure of your transformations.
+
+Freetle proposes a standard structure for transformations. This option is strongly encouraged but is not
+the only option, Freetle does not impose it. 
+
+## Parser
+
+The first class of transformation is the Parser class.
+
+A parser class 
 
 # Licensing
 Freetle is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) (See attached).
