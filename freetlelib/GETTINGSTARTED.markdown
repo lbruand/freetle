@@ -138,7 +138,8 @@ Each rule has a name and a rule body which is a combination of operators and uni
 
 ## Transformer
 
-The Transformer inherites from the Parser class. It overrides specific method in order to accomplish change the streams.
+The Transformer inherites from the Parser class. It overrides specific methods in order to accomplish transformations in
+the parsed stream.
 
     class TransformSampleTransformer extends TransformSampleParser {
         /**
