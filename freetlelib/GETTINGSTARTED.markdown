@@ -136,6 +136,19 @@ The parser comprehend a set of named methods (called often rules) :
 
 Each rule has a name and a rule body which is a combination of operators and unite transformation.
 
+## Transformer
+
+The Transformer inherites from the Parser class. It overrides specific method in order to accomplish change the streams.
+
+    class TransformSampleTransformer extends TransformSampleParser {
+        /**
+         * The element rule is overloaded with a drop which suppress all content
+         * recognized in the element rule of the Parser
+         */
+        override def element : ChainedTransformRoot = (super.element) -> !>
+    }
+
+
 # Licensing
 Freetle is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) (See attached).
 
