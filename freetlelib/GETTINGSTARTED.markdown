@@ -91,7 +91,7 @@ Call the left hand operand and then call the right hand operand on the result re
 Shortcut Symbol : `|`
 
 Call the left hand operand. If the result is positive, return it, else call the right hand operand.
-NB : There is not backtracking coded so beware of factoring anything on the left.
+NB : There is no backtracking coded so beware of factoring anything on the left.
 
 ### Unary operators.
 These are operators that take only one operand, named the underlying operand.
