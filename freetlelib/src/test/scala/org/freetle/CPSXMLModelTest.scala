@@ -57,7 +57,7 @@ class CPSXMLModelTest extends CPSXMLModel[TstXMLContext] with TestXMLHelperMetho
                 (( <("message") ~
                    ((<("value") ~
                    takeText   ~
-                   </("value")) -> new DropFilter()) ~
+                   </("value")) -> !>) ~
                   </("message")
                 )+) ~ </("input")
     val tmeta = t.metaProcess(new SpaceSkipingMetaProcessor())
@@ -109,13 +109,13 @@ class CPSXMLModelTest extends CPSXMLModel[TstXMLContext] with TestXMLHelperMetho
                 (( <("myMessage") ~
                    ((<("value") ~
                    takeText   ~
-                   </("value")) -> new DropFilter()) ~
+                   </("value")) -> !>) ~
                   </("myMessage")
                 )|
                 ( <("message") ~
                    ((<("value") ~
                    takeText   ~
-                   </("value")) -> new DropFilter()) ~
+                   </("value")) -> !>) ~
                   </("message")
                 )
             +) ~ </("input")

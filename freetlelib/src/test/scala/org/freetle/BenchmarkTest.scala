@@ -71,7 +71,7 @@ class FreetleCaseBenchmarkTransform extends BaseCaseBenchmarkTransform {
         }
       }
 
-      val t = (<("catalog") -> new DropFilter()
+      val t = (<("catalog") -> !>
               )~
                   (((( (<("cd") ~
                       <("title") ~
@@ -92,7 +92,7 @@ class FreetleCaseBenchmarkTransform extends BaseCaseBenchmarkTransform {
                       <("year") ~
                            takeText ~
                       </("year") ~
-                    </("cd"))  -> new DropFilter()) ~ new PushNode(
+                    </("cd"))  -> !>) ~ new PushNode(
                        (x : Option[FreetleCaseBenchmarkContext]) => {
                          x match {
 
@@ -107,7 +107,7 @@ class FreetleCaseBenchmarkTransform extends BaseCaseBenchmarkTransform {
                     )
                     )
                   )  *) ~
-              (</("catalog") -> new DropFilter()
+              (</("catalog") -> !>
                       )
       val filterIdentity = new CFilterIdentity()
       val m = t.metaProcess(new SpaceSkipingMetaProcessor())
