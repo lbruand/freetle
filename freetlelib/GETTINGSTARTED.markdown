@@ -119,7 +119,10 @@ Shortcut Symbol : `+`
 Freetle proposes a standard structure for transformations. This option is strongly encouraged but is not
 the only option, Freetle does not impose it. 
 
-	Parser <- Transformer
+	Parser 
+	   ^
+	   |
+	Transformer
 
 ## Parser
 
