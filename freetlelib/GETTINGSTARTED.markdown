@@ -134,12 +134,12 @@ The parser comprehend a set of named methods (called often rules) :
         def transform : ChainedTransformRoot = (document).metaProcess(new SpaceSkipingMetaProcessor())
     }
 
-Each rule has a name and a rule body which is a combination of operators and unite transformation.
+Each rule has a name and a rule body which is a combination of operators and unite transformations.
 
 ## Transformer
 
 The Transformer inherites from the Parser class. It overrides specific methods in order to accomplish transformations in
-the parsed stream.
+the parsed stream. For example :
 
     class TransformSampleTransformer extends TransformSampleParser {
         /**
@@ -149,6 +149,7 @@ the parsed stream.
         override def element : ChainedTransformRoot = (super.element) -> !>
     }
 
+The element rule is overloaded with a drop.
 
 # Licensing
 Freetle is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) (See attached).
