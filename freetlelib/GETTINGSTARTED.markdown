@@ -111,7 +111,8 @@ Shortcut Symbol : `+`
 
 # Creating a project using a maven artifact.
 
-    mvn archetype:generate
+	mvn archetype:generate -DarchetypeGroupId=org.freetle -DarchetypeArtifactId=freetle-archetype -DarchetypeVersion=1.0-SNAPSHOT 
+			       -DinteractiveMode=false -DgroupId=com.test -DartifactId=hello -Dpackage=com.test
 
 # Proposed Structure of your transformations.
 
