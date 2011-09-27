@@ -60,7 +60,7 @@ There can possibly be no result elements at all.
 
 During transformations, a Context is used to store information for later use.
 
-## TransformContextFreeTransformations
+## Context-Free Transformations
 
 Freetle provides various types of transformations.
 They come in two kinds :
