@@ -119,6 +119,8 @@ Shortcut Symbol : `+`
 Freetle proposes a standard structure for transformations. This option is strongly encouraged but is not
 the only option, Freetle does not impose it. 
 
+	Parser <- Transformer
+
 ## Parser
 
 The first class of transformation is the Parser class. A parser does not transform a stream.
