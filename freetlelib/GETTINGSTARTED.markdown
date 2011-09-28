@@ -144,14 +144,15 @@ A parser does not transform a stream, it merely matches the language grammar. Th
 
 The parser comprehend a set of named methods (called often rules) :
 
-
-    class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPSMeta[TransformSampleContext] {
-        def header : ChainedTransformRoot = <("catalog")
-        def footer : ChainedTransformRoot = </("catalog")
-        def element : ChainedTransformRoot = <("cd") ~ </("cd")
-        def document :ChainedTransformRoot = header ~ ((element)+) ~ footer
-        def transform : ChainedTransformRoot = (document).metaProcess(new SpaceSkipingMetaProcessor())
-    }
+```scala
+class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPSMeta[TransformSampleContext] {
+    def header : ChainedTransformRoot = <("catalog")
+    def footer : ChainedTransformRoot = </("catalog")
+    def element : ChainedTransformRoot = <("cd") ~ </("cd")
+    def document :ChainedTransformRoot = header ~ ((element)+) ~ footer
+    def transform : ChainedTransformRoot = (document).metaProcess(new SpaceSkipingMetaProcessor())
+}
+```
 
 Each rule has a name and a rule body which is a combination of operators and unite transformations.
 
@@ -160,13 +161,15 @@ Each rule has a name and a rule body which is a combination of operators and uni
 The Transformer inherites from the Parser class. It overrides specific methods in order to accomplish transformations in
 the parsed stream. For example :
 
-    class TransformSampleTransformer extends TransformSampleParser {
-        /**
-         * The element rule is overloaded with a drop which suppress all content
-         * recognized in the element rule of the Parser
-         */
-        override def element : ChainedTransformRoot = (super.element) -> !>
-    }
+```scala
+class TransformSampleTransformer extends TransformSampleParser {
+    /**
+     * The element rule is overloaded with a drop which suppress all content
+     * recognized in the element rule of the Parser
+     */
+    override def element : ChainedTransformRoot = (super.element) -> !>
+}
+```
 
 The element rule is overloaded with a drop.
 
