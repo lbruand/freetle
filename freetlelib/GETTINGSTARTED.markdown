@@ -31,34 +31,10 @@ For example, when a XML file is parsed in to a Stream of `XMLEvents`, the XML fi
 The Stream summons `XMLEvents` as needed.
 Thus Streams are a very useful abstraction to limit memory usage while preserving the ability to write programs in an imperative manner.
 
-## CPSStream
-
-Freetle defines a result streams as `XMLEvent` streams decorated with specific 'result' markers (Boolean).
-
-Thus, the Freetle defines :
-
-	type CPSElementOrPositive = Option[Element]
-	type CPSTupleElement = (CPSElementOrPositive, Boolean)
-
-`CPSTupleElement` is the most basic type appearing in the freetle transformations.
-
- 
-The second position Boolean indicates whether the element is marked as a result or a tail. (`true` = result, `false` = tail)
-
-`CPSStream` are streams of `CPSTupleElement`
-
-	type CPSStream = Stream[CPSTupleElement]
-
-Two properties of `CPSStream` that is not enforced by the type system (But should always be verified) :
-
- * At a certain rank, every element is a tail. 
- * Before this first tail element, all elements are results. 
-
-There can possibly be no result elements at all.
-
 ## Context
 
-During transformations, a Context is used to store information for later use.
+During transformations, a Context is used to store information for later use. 
+A Context is a scala class that may contain variables.
 
 ## Context-Free Transformations
 
@@ -82,16 +58,24 @@ Shortcut Symbol : `~`
 This is the most frequent (binary) operator. It call first the left hand operand, and then call the right hand operand
 on what left from the first call (this is call the Tail).
 
+Example of usage : `<("order") ~ </("order")`
+Instance of matching XML : `<order></order>`
+
 #### Compose Operator.
 Shortcut Symbol : `->`
 
 Call the left hand operand and then call the right hand operand on the result returned from the first action.
+
+
 
 #### Choice Operator
 Shortcut Symbol : `|`
 
 Call the left hand operand. If the result is positive, return it, else call the right hand operand.
 NB : There is no backtracking coded so beware of factoring anything on the left.
+Example of usage : `(<("string") ~ takeText ~ </("string"))|(<("integer") ~ takeInteger ~ </("integer"))`
+Instance of matching XML : `<integer>1224</integer>`
+
 
 ### Unary operators.
 These are operators that take only one operand, named the underlying operand.
@@ -100,14 +84,31 @@ operand can be repeated.
 
 #### Zero Or One Operator
 Shortcut Symbol : `?`
+Example of usage : `(<("order") ~ </("order"))?`
+Instance of matching XML : `<order/>`
 
 #### Zero Or More Operator
 Shortcut Symbol : `*`
+Example of usage : (<("order") ~ </("order"))*
+Instance of matching XML : `<order/><order/>`
 
 #### One Or More Operator
 Shortcut Symbol : `+`
+Example of usage : `(<("order") ~ </("order"))+`
+Instance of matching XML : `<order/><order/>`
 
-###
+### Element Matchers
+
+#### Matching an opening tag
+Shortcut Symbol : `<`
+Example of usage : `<("order")`
+Instance of matching XML : `<order>`
+
+#### Matching a closing tag
+Shortcut Symbol : `</`
+Example of usage : `</("order")`
+Instance of matching XML : `</order>`
+
 
 # Creating a project using a maven artifact.
 
@@ -156,6 +157,33 @@ the parsed stream. For example :
     }
 
 The element rule is overloaded with a drop.
+
+# A more detailed view of the architecture.
+
+## CPSStream
+
+Freetle defines a result streams as `XMLEvent` streams decorated with specific 'result' markers (Boolean).
+
+Thus, the Freetle defines :
+
+	type CPSElementOrPositive = Option[Element]
+	type CPSTupleElement = (CPSElementOrPositive, Boolean)
+
+`CPSTupleElement` is the most basic type appearing in the freetle transformations.
+
+ 
+The second position Boolean indicates whether the element is marked as a result or a tail. (`true` = result, `false` = tail)
+
+`CPSStream` are streams of `CPSTupleElement`
+
+	type CPSStream = Stream[CPSTupleElement]
+
+Two properties of `CPSStream` that is not enforced by the type system (But should always be verified) :
+
+ * At a certain rank, every element is a tail. 
+ * Before this first tail element, all elements are results. 
+
+There can possibly be no result elements at all.
 
 # Licensing
 Freetle is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) (See attached).
