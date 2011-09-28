@@ -140,8 +140,7 @@ the only option, Freetle does not impose it.
 
 ## Parser
 
-The first class of transformation is the Parser class. A parser does not transform a stream.
-It merely recognizes the language grammar. The Parser is often generated from an other grammar description such as XML Schema.
+A parser does not transform a stream, it merely matches the language grammar. The Parser is often generated from an other grammar description such as XML Schema.
 
 The parser comprehend a set of named methods (called often rules) :
 
