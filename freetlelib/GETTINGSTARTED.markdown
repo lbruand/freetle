@@ -193,7 +193,9 @@ The second position Boolean indicates whether the element is marked as a result 
 
 `CPSStream` are streams of `CPSTupleElement`
 
-	type CPSStream = Stream[CPSTupleElement]
+```scala
+type CPSStream = Stream[CPSTupleElement]
+```
 
 Two properties of `CPSStream` that is not enforced by the type system (But should always be verified) :
 
