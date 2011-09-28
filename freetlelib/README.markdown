@@ -95,7 +95,7 @@ the Scala language.
  As a result, much of the tooling for development is pre existing:
 ### IDE Support
 #### Eclipse
-Eclipse has scala-support in the form of the [Scala IDE](http://www.assembla.com/wiki/show/scala-ide)
+Eclipse has scala-support in the form of the [Scala IDE](http://www.scala-ide.org/)
 
 #### Intellij Idea
 Idea has scala-support in the form of the [Scala Plugin for Intellij IDEA](http://confluence.jetbrains.net/display/SCA/Scala+Plugin+for+Intellij+IDEA)
