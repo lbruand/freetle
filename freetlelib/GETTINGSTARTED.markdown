@@ -177,6 +177,7 @@ The element rule is overloaded with a drop.
 Freetle defines a result streams as `XMLEvent` streams decorated with specific 'result' markers (Boolean).
 
 Thus, the Freetle defines :
+
 ```scala
 type CPSElementOrPositive = Option[Element]
 type CPSTupleElement = (CPSElementOrPositive, Boolean)
