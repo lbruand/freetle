@@ -59,6 +59,7 @@ This is the most frequent (binary) operator. It call first the left hand operand
 on what left from the first call (this is call the Tail).
 
 Example of usage : `<("order") ~ </("order")`
+
 Instance of matching XML : `<order></order>`
 
 #### Compose Operator.
@@ -73,7 +74,9 @@ Shortcut Symbol : `|`
 
 Call the left hand operand. If the result is positive, return it, else call the right hand operand.
 NB : There is no backtracking coded so beware of factoring anything on the left.
+
 Example of usage : `(<("string") ~ takeText ~ </("string"))|(<("integer") ~ takeInteger ~ </("integer"))`
+
 Instance of matching XML : `<integer>1224</integer>`
 
 
@@ -84,29 +87,39 @@ operand can be repeated.
 
 #### Zero Or One Operator
 Shortcut Symbol : `?`
+
 Example of usage : `(<("order") ~ </("order"))?`
+
 Instance of matching XML : `<order/>`
 
 #### Zero Or More Operator
 Shortcut Symbol : `*`
+
 Example of usage : (<("order") ~ </("order"))*
+
 Instance of matching XML : `<order/><order/>`
 
 #### One Or More Operator
 Shortcut Symbol : `+`
+
 Example of usage : `(<("order") ~ </("order"))+`
+
 Instance of matching XML : `<order/><order/>`
 
 ### Element Matchers
 
 #### Matching an opening tag
 Shortcut Symbol : `<`
+
 Example of usage : `<("order")`
+
 Instance of matching XML : `<order>`
 
 #### Matching a closing tag
 Shortcut Symbol : `</`
+
 Example of usage : `</("order")`
+
 Instance of matching XML : `</order>`
 
 
