@@ -173,7 +173,7 @@ class TransformSampleTransformer extends TransformSampleParser {
 
 The element rule is overloaded with a drop : It means that anything that the `super.element` matched will be dropped.
 
-## Outputting tags.
+## Outputting text.
 
 You can output text using the >( ) method.
 
