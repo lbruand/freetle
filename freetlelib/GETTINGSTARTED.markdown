@@ -171,7 +171,9 @@ class TransformSampleTransformer extends TransformSampleParser {
 }
 ```
 
-The element rule is overloaded with a drop.
+The element rule is overloaded with a drop : It means that anything that the `super.element` matched will be dropped.
+
+##
 
 # A more detailed view of the architecture.
 
