@@ -173,7 +173,19 @@ class TransformSampleTransformer extends TransformSampleParser {
 
 The element rule is overloaded with a drop : It means that anything that the `super.element` matched will be dropped.
 
-##
+## Outputting tags.
+
+You can output text using the >( ) method.
+
+```scala
+class TransformSampleTransformer extends TransformSampleParser {
+    /**
+     * The element rule is overloaded with a drop which suppress all content
+     * recognized in the element rule of the Parser
+     */
+    override def element : ChainedTransformRoot = (super.element) -> ( !> ~ >("hello world\n"))
+}
+```
 
 # A more detailed view of the architecture.
 
