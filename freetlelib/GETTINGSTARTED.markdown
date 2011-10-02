@@ -106,7 +106,7 @@ The element rule is overloaded with a drop : It means that anything that the `su
 ## Why adopting the parser/transformation structuration.
 
 The point of separating language matching from transforming proper is to ease upgrading the parser
-when the language evolves. It is sometimes interesting to segment further the transformation by introducing
+when the language evolves. It is sometimes interesting to segment further the transformation into
 multiple layers of transformation. One class of inheriting transformation mapping a different concern.
 
 ## Outputting text.
