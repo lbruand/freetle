@@ -34,7 +34,7 @@ Thus Streams are a very useful abstraction to limit memory usage while preservin
 ## Context
 
 During transformations, a Context is used to store information for later use. 
-A Context is a scala class that may contain variables.
+A Context is a scala class that may contain variables. It can be liked to a state of the parser.
 
 ## Context-Free Transformations
 
