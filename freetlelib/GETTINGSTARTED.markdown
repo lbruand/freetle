@@ -86,10 +86,9 @@ For instance, the document rule indicate in its body that there is :
     2 Any number of `element` and at least one.
     3 A `footer` rule.
 
-
 ## Transformer
 
-The Transformer inherites from the Parser class. It overrides specific methods in order to accomplish transformations in
+The Transformer inherites from the Parser class. It overrides specific rules in order to accomplish transformations in
 the parsed stream. For example :
 
 ```scala
@@ -103,6 +102,12 @@ class TransformSampleTransformer extends TransformSampleParser {
 ```
 
 The element rule is overloaded with a drop : It means that anything that the `super.element` matched will be dropped.
+
+## Why adopting the parser/transformation structuration.
+
+The point of separating language matching from transforming proper is to ease upgrading the parser
+when the language evolves. It is sometimes interesting to segment further the transformation by introducing
+multiple layers of transformation. One class of inheriting transformation mapping a different concern.
 
 ## Outputting text.
 
