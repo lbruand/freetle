@@ -77,7 +77,7 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
 }
 ```
 
-Each rule has a name and a rule body which is a combination of operators and unite transformations.
+Each rule has a name and a rule body which is a combination of operators and unit transformations.
 
 ## Transformer
 
