@@ -23,7 +23,7 @@ Freetle uses a Stax pull parser to read sequences of events from XML Files.
 
 ## Streams
 
-Freetle relies heavily on [Streams](http://www.scala-lang.org/api/current/scala/collection/immutabe/Stream.html) of XML events.
+Freetle relies on [Streams](http://www.scala-lang.org/api/current/scala/collection/immutabe/Stream.html) of XML events.
 Streams are basic scala datastructures which are used as input and output of freetle transformations.
 Streams are variations on Lists : They contain a finite, ordered suit of XML Events.
 But they differ from Lists on their ability to be created on demand. They are said to be 'lazy'.
