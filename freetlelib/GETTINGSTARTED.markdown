@@ -44,84 +44,7 @@ They come in two kinds :
  * Context-free transformations (which are derived from ContextFreeTransform).
  * Context-using or Context modifying transformations (which are derived from ContextWritingTransform or ContextReadingTransform).
 
-Transformation can be combined using operators :
-
-## Operators
-In the freetle library, there are two types of operators:
-
-### Binary operators
-These are operators that take two operands, the left hand operand and the right hand operand.
-
-#### Sequence Operator.
-Shortcut Symbol : `~`
-
-This is the most frequent (binary) operator. It call first the left hand operand, and then call the right hand operand
-on what left from the first call (this is call the Tail).
-
-Example of usage : `<("order") ~ </("order")`
-
-Instance of matching XML : `<order></order>`
-
-#### Compose Operator.
-Shortcut Symbol : `->`
-
-Call the left hand operand and then call the right hand operand on the result returned from the first action.
-
-
-
-#### Choice Operator
-Shortcut Symbol : `|`
-
-Call the left hand operand. If the result is positive, return it, else call the right hand operand.
-NB : There is no backtracking coded so beware of factoring anything on the left.
-
-Example of usage : `(<("string") ~ takeText ~ </("string"))|(<("integer") ~ takeInteger ~ </("integer"))`
-
-Instance of matching XML : `<integer>1224</integer>`
-
-
-### Unary operators.
-These are operators that take only one operand, named the underlying operand.
-These are mainly constituted by cardinality operators. These operators are used to describe that the underlying
-operand can be repeated.
-
-#### Zero Or One Operator
-Shortcut Symbol : `?`
-
-Example of usage : `(<("order") ~ </("order"))?`
-
-Instance of matching XML : `<order/>`
-
-#### Zero Or More Operator
-Shortcut Symbol : `*`
-
-Example of usage : (<("order") ~ </("order"))*
-
-Instance of matching XML : `<order/><order/>`
-
-#### One Or More Operator
-Shortcut Symbol : `+`
-
-Example of usage : `(<("order") ~ </("order"))+`
-
-Instance of matching XML : `<order/><order/>`
-
-### Element Matchers
-
-#### Matching an opening tag
-Shortcut Symbol : `<`
-
-Example of usage : `<("order")`
-
-Instance of matching XML : `<order>`
-
-#### Matching a closing tag
-Shortcut Symbol : `</`
-
-Example of usage : `</("order")`
-
-Instance of matching XML : `</order>`
-
+Transformation can be combined using operators.
 
 # Creating a project using a maven artifact.
 
@@ -217,6 +140,83 @@ Two properties of `CPSStream` that is not enforced by the type system (But shoul
  * Before this first tail element, all elements are results. 
 
 There can possibly be no result elements at all.
+
+## Operators
+In the freetle library, there are two types of operators:
+
+### Binary operators
+These are operators that take two operands, the left hand operand and the right hand operand.
+
+#### Sequence Operator.
+Shortcut Symbol : `~`
+
+This is the most frequent (binary) operator. It call first the left hand operand, and then call the right hand operand
+on what left from the first call (this is call the Tail).
+
+Example of usage : `<("order") ~ </("order")`
+
+Instance of matching XML : `<order></order>`
+
+#### Compose Operator.
+Shortcut Symbol : `->`
+
+Call the left hand operand and then call the right hand operand on the result returned from the first action.
+
+
+
+#### Choice Operator
+Shortcut Symbol : `|`
+
+Call the left hand operand. If the result is positive, return it, else call the right hand operand.
+NB : There is no backtracking coded so beware of factoring anything on the left.
+
+Example of usage : `(<("string") ~ takeText ~ </("string"))|(<("integer") ~ takeInteger ~ </("integer"))`
+
+Instance of matching XML : `<integer>1224</integer>`
+
+
+### Unary operators.
+These are operators that take only one operand, named the underlying operand.
+These are mainly constituted by cardinality operators. These operators are used to describe that the underlying
+operand can be repeated.
+
+#### Zero Or One Operator
+Shortcut Symbol : `?`
+
+Example of usage : `(<("order") ~ </("order"))?`
+
+Instance of matching XML : `<order/>`
+
+#### Zero Or More Operator
+Shortcut Symbol : `*`
+
+Example of usage : (<("order") ~ </("order"))*
+
+Instance of matching XML : `<order/><order/>`
+
+#### One Or More Operator
+Shortcut Symbol : `+`
+
+Example of usage : `(<("order") ~ </("order"))+`
+
+Instance of matching XML : `<order/><order/>`
+
+### Element Matchers
+
+#### Matching an opening tag
+Shortcut Symbol : `<`
+
+Example of usage : `<("order")`
+
+Instance of matching XML : `<order>`
+
+#### Matching a closing tag
+Shortcut Symbol : `</`
+
+Example of usage : `</("order")`
+
+Instance of matching XML : `</order>`
+
 
 # Licensing
 Freetle is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) (See attached).
