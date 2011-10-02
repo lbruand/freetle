@@ -123,6 +123,12 @@ class TransformSampleTransformer extends TransformSampleParser {
 }
 ```
 
+One can also output context-using text by using:
+
+```scala
+>( context => "hello %s" format (context.name))
+```
+
 # A more detailed view of the architecture.
 
 ## CPSStream
