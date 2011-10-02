@@ -63,7 +63,8 @@ the only option, Freetle does not impose it.
 
 ## Parser
 
-A parser does not transform a stream, it merely matches the language grammar. The Parser is often generated from an other grammar description such as XML Schema.
+A parser does not transform a stream, it merely matches the language grammar.
+The Parser is often generated from an other grammar description such as XML Schema.
 
 The parser comprehend a set of named methods (called often rules) :
 
@@ -78,6 +79,13 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
 ```
 
 Each rule has a name and a rule body which is a combination of operators and unit transformations.
+Rules are used to decompose the grammar structure of the language to match.
+For instance, the document rule indicate in its body that there is :
+
+    1 A `header` rule.
+    2 Any number of `element` and at least one.
+    3 A `footer` rule.
+
 
 ## Transformer
 
