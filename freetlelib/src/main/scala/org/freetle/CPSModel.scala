@@ -222,6 +222,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
                      // This is needed because identitySuccess is only called at the end of the result Stream,
                      // as a side effect.
                      // But it is suboptimal in term of memory usage.
+                     // We need identitySuccess to be instantiated so that we can pass further on the context.
         if (identitySuccess.isApplied) {
           rightRealized(success, failure)(result, identitySuccess.context.get)
         } else {
