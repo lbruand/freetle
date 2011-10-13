@@ -96,7 +96,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
       Stream.continually(("aaab".toStream map (x => (Some(x), false)))).take(max).flatten
     }
     /*
-     This transformation does not recognize the previous stream because this is no backtracking coded in the
+     This transformation does recognize the previous stream because this is no need for backtracking coded in the
      sequence operator.
      */
     val t = (((
