@@ -23,7 +23,7 @@ import java.io._
 /**
  * Context specific to this test.
  */
-case class XMLEventTestContext
+case class XMLEventTestContext(a:Int)
 
 /**
  * Testing what is specific to XMLEvents and related functions.

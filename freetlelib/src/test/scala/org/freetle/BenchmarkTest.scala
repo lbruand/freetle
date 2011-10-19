@@ -27,7 +27,7 @@ import compat.Platform
 import net.sf.joost.trax.TransformerFactoryImpl
 
 
-@serializable @SerialVersionUID(599494944949L + 30000L)
+@SerialVersionUID(599494944949L + 30000L)
 case class FreetleCaseBenchmarkContext(title : String = null, artist : String = null)
 
 abstract class BaseCaseBenchmarkTransform

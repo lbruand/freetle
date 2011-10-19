@@ -94,7 +94,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
   /**
    * Push a scala xml content down the pipeline.
    */
-  @serializable @SerialVersionUID(599494944949L + 10 *19L)
+  @SerialVersionUID(599494944949L + 10 *19L)
   class PushNode(nodeSeq: Option[Context] => NodeSeq) extends ContextReadingTransform {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
     def serializeXML(nodeSeq : NodeSeq) : CPSStream = {
@@ -217,7 +217,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
      * Load a XMLResultStream from an InputStream
      */
     def loadXMLResultStream(in : InputStream) : XMLResultStream = {
-      Stream.fromIterator(new XMLEventStream(in) map (x => (Some(x), false)))
+      (new XMLEventStream(in) map (x => (Some(x), false))).toStream
     }
 
     /**
