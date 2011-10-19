@@ -77,7 +77,7 @@ final class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
   }
   
   @inline private def buildAttributes(input : XMLStreamReader) : Attributes = {
-    List.range(0, input.getAttributeCount).map(
+    List.range[Int](0, input.getAttributeCount).map(
       x => (fromJavaQName(input.getAttributeName(x)), input.getAttributeValue(x))
       ).toMap
   }

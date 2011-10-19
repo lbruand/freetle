@@ -160,7 +160,7 @@ class BenchmarkTest {
     var sb = new StringBuilder(catalogHeader.length+ catalogFooter.length +
                               n*205)
     sb.append(catalogHeader)
-    (0 to n-1).foreach(x => buildRandomCD(sb))
+    (0 to (n-1)).foreach(x => buildRandomCD(sb))
     sb.append(catalogFooter)
     sb.result
   }
