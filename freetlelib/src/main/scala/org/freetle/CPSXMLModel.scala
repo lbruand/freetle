@@ -35,7 +35,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
    */
   class DeepFilter extends StatefulSelector[Int] {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { new DeepFilter() })
-    def conditionToStop(depth: Int) = depth < 0
+    def conditionToStop(depth: Int) = (depth <= 0)
 
     def accumulate(depth: Int, element: CPSElementOrPositive) : Int = depth + (element match {
       case Some(EvElemStart(_, _)) => +1

@@ -43,10 +43,10 @@ class CPSXMLModelTest extends CPSXMLModel[TstXMLContext] with TestXMLHelperMetho
 
     val t = <("body") ~ <("body") ~ new DeepFilter()
     val r = t(filterIdentity, filterIdentity)(s, new TstXMLContext())
-    assertEquals(10, lengthResult(r))
+    assertEquals(9, lengthResult(r))
     val t2 = <("body") ~ <("body") ~ <("a") ~ new DeepFilter()
     val r2 = t2(filterIdentity, filterIdentity)(s, new TstXMLContext())
-    assertEquals(serializeWithResult(r2), 9, lengthResult(r2))
+    assertEquals(serializeWithResult(r2), 6, lengthResult(r2))
   }
   
   @Test
