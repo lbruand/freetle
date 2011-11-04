@@ -24,7 +24,7 @@ import org.freetle.CPSXMLModel
 trait CPSMeta[Context] extends CPSXMLModel[Context] {
   class SpaceSkipingMetaProcessor extends MetaProcessor {
     def processTransform(th : TransformBase, instantiate : InstantiateTransform) : ChainedTransformRoot = {
-      if (th == !>) {
+      if (th == drop) {
         th
       } else {
         ((takeSpace)*) ~ instantiate() ~ ((takeSpace)*)
