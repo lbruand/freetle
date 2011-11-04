@@ -340,7 +340,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
    * A context-free transform, that drops all previous results.
    * It adds a EmptyPositive result if there was something to drop.
    */
-  object !> extends ContextFreeTransform {
+  object drop extends ContextFreeTransform {
     def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processTransform(this, () => { this })
     
@@ -351,8 +351,6 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
         s
     }
   }
-
-  //val !> = new DropFilter()
 
   /**
    * This is a template transform to select in the stream using an accumulator.
