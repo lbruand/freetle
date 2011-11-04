@@ -155,6 +155,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
   class PushText(text: String) extends PushFromContext(x => Stream(new EvText(text))) {
     override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
   }
+
   abstract class EvStartMatcher extends CPSElemMatcher {
     def testElem(name : QName, attributes : Map[QName, String]) : Boolean
 
