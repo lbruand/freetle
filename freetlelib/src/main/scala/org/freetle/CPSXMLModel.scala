@@ -101,7 +101,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
       }
   }
 
-  object PushFromContext {
+  object PushNode {
         def serializeXML(nodeSeq : NodeSeq) : Stream[XMLEvent] = {
       ((nodeSeq map( serializeNodeXML(_))).toStream.flatten)
     }
@@ -131,7 +131,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
    */
   @SerialVersionUID(599494944949L + 10 *19L)
   class PushNode(nodeSeq: Option[Context] => NodeSeq) extends PushFromContext(
-      ((x :Context) => Some(x)) andThen nodeSeq andThen PushFromContext.serializeXML
+      ((x :Context) => Some(x)) andThen nodeSeq andThen PushNode.serializeXML
   ) {
     override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
   }
