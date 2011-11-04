@@ -92,16 +92,21 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
   }
 
   /**
-   * Push a scala xml content down the pipeline.
+   * Base class to push from context.
    */
-  @SerialVersionUID(599494944949L + 10 *19L)
-  class PushNode(nodeSeq: Option[Context] => NodeSeq) extends ContextReadingTransform {
+  class PushFromContext(val generator : Context => Stream[XMLEvent]) extends ContextReadingTransform {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
-    def serializeXML(nodeSeq : NodeSeq) : CPSStream = {
-      (nodeSeq map( serializeNodeXML(_))).toStream.flatten
+    def partialapply(in : CPSStream, context : Context) : CPSStream = {
+        (generator(context) map ( x => (Some(x), true))).append(in)
+      }
+  }
+
+  object PushFromContext {
+        def serializeXML(nodeSeq : NodeSeq) : Stream[XMLEvent] = {
+      ((nodeSeq map( serializeNodeXML(_))).toStream.flatten)
     }
 
-    def serializeNodeXML(node : Node) : CPSStream =
+    def serializeNodeXML(node : Node) : Stream[XMLEvent] =
       node match {
       case elem :  scala.xml.Elem //(prefix, label, attributes, scope, children)
             => {
@@ -109,29 +114,41 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
                                         new QName(elem.scope.getURI(null), elem.label)
                                      else
                                         new QName(elem.scope.getURI(elem.prefix), elem.label, elem.prefix)
-                  Stream.cons( (Some(new EvElemStart(qName,  null)), true),
+                  Stream.cons( new EvElemStart(qName,  null),
                           Stream.concat(serializeXML(elem.child),
-                            Stream((Some(new EvElemEnd(qName)), true))))
+                            Stream(new EvElemEnd(qName))))
                 }
-      case text : scala.xml.Text => Stream((Some(new EvText(text.text)), true))
-      case comment : scala.xml.Comment => Stream((Some(new EvComment(comment.text)), true))
-      case pi : scala.xml.ProcInstr => Stream((Some(new EvProcInstr(pi.target, pi.proctext)), true))
-      case entityRef : scala.xml.EntityRef => Stream((Some(new EvEntityRef(entityRef.entityName)), true))
-      case atom : scala.xml.Atom[Any] => Stream((Some(new EvText(atom.text)), true))
-      case _ => Stream((Some(new EvText("error" + node.getClass)), true)) // TODO Throw exception.
+      case text : scala.xml.Text => Stream(new EvText(text.text))
+      case comment : scala.xml.Comment => Stream(new EvComment(comment.text))
+      case pi : scala.xml.ProcInstr => Stream(new EvProcInstr(pi.target, pi.proctext))
+      case entityRef : scala.xml.EntityRef => Stream(new EvEntityRef(entityRef.entityName))
+      case atom : scala.xml.Atom[Any] => Stream(new EvText(atom.text))
+      case _ => Stream(new EvText("error" + node.getClass)) // TODO Throw exception.
     }
+  }
+  /**
+   * Push a scala xml content down the pipeline.
+   */
+  @SerialVersionUID(599494944949L + 10 *19L)
+  class PushNode(nodeSeq: Option[Context] => NodeSeq) extends PushFromContext(
+      ((x :Context) => Some(x)) andThen nodeSeq andThen PushFromContext.serializeXML
+  ) {
+    override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
 
+    /*
     def partialapply(in : CPSStream, context : Context) : CPSStream = {
-        serializeXML(nodeSeq.apply(Some(context))).append(in)
-      }
+        (serializeXML(nodeSeq.apply(Some(context))) map ( x => (Some(x), true))).append(in)
+      } */
   }
 
-  class PushFormattedText(formatter: Context => String) extends ContextReadingTransform {
-    def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
+  class PushFormattedText(formatter: Context => String) extends PushFromContext(
+    formatter andThen ((x:String) => Stream(new EvText(x)))
+  ) {
+    override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
 
-    def partialapply(in : CPSStream, context : Context) : CPSStream = {
+    /*def partialapply(in : CPSStream, context : Context) : CPSStream = {
         Stream.cons((Some(new EvText(formatter(context))), true), in)
-      }
+      }*/
   }
 
   object > {
@@ -144,12 +161,12 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     }
   }
   
-  class PushText(text: String) extends ContextReadingTransform {
-    def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
+  class PushText(text: String) extends PushFromContext(x => Stream(new EvText(text))) {
+    override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
 
-    def partialapply(in : CPSStream, context : Context) : CPSStream = {
+    /*def partialapply(in : CPSStream, context : Context) : CPSStream = {
         Stream.cons((Some(new EvText(text)), true), in)
-      }
+      } */
   }
   abstract class EvStartMatcher extends CPSElemMatcher {
     def testElem(name : QName, attributes : Map[QName, String]) : Boolean
