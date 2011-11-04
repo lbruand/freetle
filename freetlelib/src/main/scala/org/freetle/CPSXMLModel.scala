@@ -134,21 +134,12 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
       ((x :Context) => Some(x)) andThen nodeSeq andThen PushFromContext.serializeXML
   ) {
     override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
-
-    /*
-    def partialapply(in : CPSStream, context : Context) : CPSStream = {
-        (serializeXML(nodeSeq.apply(Some(context))) map ( x => (Some(x), true))).append(in)
-      } */
   }
 
   class PushFormattedText(formatter: Context => String) extends PushFromContext(
     formatter andThen ((x:String) => Stream(new EvText(x)))
   ) {
     override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
-
-    /*def partialapply(in : CPSStream, context : Context) : CPSStream = {
-        Stream.cons((Some(new EvText(formatter(context))), true), in)
-      }*/
   }
 
   object > {
@@ -163,10 +154,6 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
   
   class PushText(text: String) extends PushFromContext(x => Stream(new EvText(text))) {
     override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
-
-    /*def partialapply(in : CPSStream, context : Context) : CPSStream = {
-        Stream.cons((Some(new EvText(text)), true), in)
-      } */
   }
   abstract class EvStartMatcher extends CPSElemMatcher {
     def testElem(name : QName, attributes : Map[QName, String]) : Boolean
