@@ -194,14 +194,34 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
                    assertTrue(" char : " + x._1, x._2)
                  }
             )
-  }  
+  }
+
+  /**
+   * Prove how one can count the number of occurrence of a rule.
+   */
+  @Test
+  def testCounting() = {
+    def createStream : CPSStream = Stream.continually((Some('a'), false)).take(max)
+    val t = (new ElementMatcherTaker(_.equals('a')) -> new ContextWritingTransform {
+      def metaProcess(metaProcessor : MetaProcessor) =
+              metaProcessor.processTransform(this, () => { this })
+       def apply(s : CPSStream, c : TstCPSStreamingContext) : (CPSStream, TstCPSStreamingContext) = {
+         (s, c.copy(a = c.a+1))
+       }
+    })+
+
+    val filterIdentityWithContext = new CFilterIdentityWithContext();
+    t(filterIdentityWithContext, filterIdentityWithContext)(createStream, new TstCPSStreamingContext(a = 0)).foreach(x => assertTrue(true))
+    assertEquals(Some(TstCPSStreamingContext(a = max)), filterIdentityWithContext.context)
+
+  }
 
   @Test
   def testTaker() = {
     def createStream : CPSStream = Stream.continually((Some('a'), false)).take(max)
 
     val t = (new ElementMatcherTaker(_.equals('a')))+
-    
+
     t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
            assertTrue(x._2)
            x._1 match {
