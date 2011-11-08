@@ -201,14 +201,14 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
    */
   @Test
   def testCounting() = {
-    def createStream : CPSStream = Stream.continually((Some('a'), false)).take(max)
-    val t = (new ElementMatcherTaker(_.equals('a')) -> new ContextWritingTransform {
+    def createStream : CPSStream = Stream.continually((Some('a'), false)).take(max).append(Stream((Some('b'), false)))
+    val t = ((new ElementMatcherTaker(_.equals('a')) -> new ContextWritingTransform {
       def metaProcess(metaProcessor : MetaProcessor) =
               metaProcessor.processTransform(this, () => { this })
        def apply(s : CPSStream, c : TstCPSStreamingContext) : (CPSStream, TstCPSStreamingContext) = {
          (s, c.copy(a = c.a+1))
        }
-    })+
+    })+ ) ~ new ElementMatcherTaker(_.equals('b'))
 
     val filterIdentityWithContext = new CFilterIdentityWithContext();
     t(filterIdentityWithContext, filterIdentityWithContext)(createStream, new TstCPSStreamingContext(a = 0)).foreach(x => assertTrue(true))
