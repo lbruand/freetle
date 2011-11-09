@@ -298,7 +298,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
 
   /**
    * A transform that's modifying the context but not the stream.
-   */                                          CPSStreamHelperMethods
+   */
   abstract class ContextWritingTransform extends TransformBase {
     def apply(s : CPSStream, c : Context) : (CPSStream, Context)
   }
