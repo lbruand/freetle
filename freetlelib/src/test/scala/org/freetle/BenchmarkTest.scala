@@ -310,7 +310,7 @@ class BenchmarkTest {
   def testXSLT() = {
     val warmup = 4
     val testRetries = 5
-    val sizes = (3 to 5).map(_ * 2500)
+    val sizes = (3 to 10).map(_ * 4000)
     //val sizes = Stream(1000)
     val benchmarks = List(
          (x :Int) => new XSLTCaseBenchmark(nCatalog = x),

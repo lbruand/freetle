@@ -15,9 +15,12 @@
   */
 package org.freetle.util
 import scala.io.Source
-import javax.xml.stream.XMLInputFactory
-import javax.xml.stream.XMLStreamReader
-import javax.xml.stream.XMLStreamConstants
+import org.codehaus.stax2.{XMLStreamReader2, XMLInputFactory2}
+import com.ctc.wstx.stax.WstxInputFactory
+import javax.xml.stream.{XMLStreamReader, XMLStreamConstants}
+
+//import javax.xml.stream.XMLInputFactory
+//import javax.xml.stream.XMLStreamReader
 import java.io.{InputStream, Reader}
 
 /**
@@ -55,7 +58,8 @@ object StreamSource {
 }
 
 object XMLEventStream {
-  val factory = XMLInputFactory.newInstance()
+  val factory =  new WstxInputFactory() //.newInstance()
+  factory.configureForSpeed()
 }
 /**
  * Transform a Source a XMLEvent Iterator for the purpose of making it a Stream afterward.
@@ -65,7 +69,7 @@ final class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
 
 
   val input : XMLStreamReader = src match {
-      case in : InputStream => XMLEventStream.factory.createXMLStreamReader(in)
+      case in : InputStream => XMLEventStream.factory.createXMLStreamReader(in) //createXMLEventReader(in) //.createXMLStreamReader(in)
       case src :Source => XMLEventStream.factory.createXMLStreamReader("default.xml", new SourceReader(src))
   }
   type Attributes = Map[QName, String]
