@@ -113,7 +113,8 @@ Idea has scala-support in the form of the [Scala Plugin for Intellij IDEA](http:
 
 # Performance
 Freetle compares well with XML transformation leader XSLTC when transforming small documents 
-(in our benchmark XSLT : 15,4 Mb/s whereas Freetle stands at 13,70 Mb/s )
+(in our benchmark XSLTC : 15,4 Mb/s whereas Freetle stands at 13,70 Mb/s )
+XSLTC is only 12% faster than Freetle.
 Keep in mind that :
  * XSLTC does not transform documents of arbitrary size whereas Freetle does.
  * Freetle is much more memory-efficient than XSLTC.
