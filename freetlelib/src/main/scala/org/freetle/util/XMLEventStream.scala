@@ -58,7 +58,7 @@ object StreamSource {
 }
 
 object XMLEventStream {
-  val factory =  new WstxInputFactory() //.newInstance()
+  val factory =  new WstxInputFactory()
   factory.configureForSpeed()
 }
 /**
