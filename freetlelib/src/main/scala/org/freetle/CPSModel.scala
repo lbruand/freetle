@@ -32,6 +32,12 @@ trait CPSModelTypeDefinition[@specialized Element, @specialized Context] {
 
   type CFilter = (CPSStream, Context) => CPSStream
 
+  /**
+   * A type to be used only as a trait for the ChainedTransformRoot
+   */
+  type ChainedTransform = (=>CFilter, =>CFilter) => CFilter
+
+
     /**
    * HelperMethods on CPSStream.
    */
@@ -106,11 +112,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
     def metaProcess(metaProcessor : MetaProcessor) : ChainedTransformRoot
   }
 
-  /**
-   * A type to be used only as a trait for the ChainedTransformRoot
-   */
-  type ChainedTransform = (=>CFilter, =>CFilter) => CFilter
-  
+
   /**
    * Abstract class for all transformations.
    * It defines shortcuts for operators.
