@@ -118,7 +118,6 @@ XSLTC is only 12% faster than Freetle.
 Keep in mind that :
 
  * XSLTC does not transform documents of arbitrary size whereas Freetle does.
- * Freetle is much more memory-efficient than XSLTC.
 
 Freetle compares very well with [STX/Joost](http://joost.sourceforge.net/).
 ( Measured in our benchmark at 4,02 Mb/s )
