@@ -75,6 +75,9 @@ trait CPSModelTypeDefinition[@specialized Element, @specialized Context] {
 
     @inline final def appendPositive(input : =>CFilter) : CFilter = innerAppendPositive(input)
   }
+  object CPSStreamHelperMethods extends CPSStreamHelperMethodsTrait {
+    @inline val constantEmptyPositive : CPSTupleElement = (None, true)
+  }
 }
 
 /**
@@ -125,9 +128,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
     final def + : ChainedTransformRoot = new OneOrMoreOperator(this)
     final def ? : ChainedTransformRoot = new ZeroOrOneOperator(this)
   }
-  object CPSStreamHelperMethods extends CPSStreamHelperMethodsTrait {
-    @inline val constantEmptyPositive : CPSTupleElement = (None, true)
-  }
+
 
   /**
    *  Base class for all transforms.
