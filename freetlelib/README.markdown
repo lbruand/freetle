@@ -116,6 +116,7 @@ Freetle compares well with XML transformation leader XSLTC when transforming sma
 (in our benchmark XSLTC : 15,4 Mb/s whereas Freetle stands at 13,70 Mb/s )
 XSLTC is only 12% faster than Freetle.
 Keep in mind that :
+
  * XSLTC does not transform documents of arbitrary size whereas Freetle does.
  * Freetle is much more memory-efficient than XSLTC.
 
