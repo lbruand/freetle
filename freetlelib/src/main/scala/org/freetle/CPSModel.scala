@@ -100,7 +100,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
     def processBinaryOperator(th : BinaryOperator, instantiate : InstantiateBinaryOperator, left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) : ChainedTransformRoot
   }
   /**
-   *       t
+   * Something that is usable by a MetaProcessor.
    */
   trait MetaProcessable {
     def metaProcess(metaProcessor : MetaProcessor) : ChainedTransformRoot
