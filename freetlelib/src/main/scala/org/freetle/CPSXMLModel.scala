@@ -56,7 +56,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
       if (stream.isEmpty)
         (stream, context)
       else {
-        val sr = removeWhileEmptyPositive(stream)
+        val sr = CPSStreamHelperMethods.removeWhileEmptyPositive(stream)
         (sr.head._1.get) match {
           case EvText(txt) =>
             (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(txt, context))
@@ -75,7 +75,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
       if (stream.isEmpty)
         (stream, context)
       else {
-        val sr = removeWhileEmptyPositive(stream)
+        val sr = CPSStreamHelperMethods.removeWhileEmptyPositive(stream)
         val elem = sr.head._1.get
         if (matcher(elem)) {
           (elem) match {

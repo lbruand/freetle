@@ -40,10 +40,9 @@ trait CPSModelTypeDefinition[@specialized Element, @specialized Context] {
 }
 
 trait CPSModelHelperExtension[@specialized Element, @specialized Context] extends CPSModelTypeDefinition[Element, Context]{
-    /**
-   * HelperMethods on CPSStream.
-   */
-  trait CPSStreamHelperMethodsTrait {
+
+  object CPSStreamHelperMethods {
+    @inline val constantEmptyPositive : CPSTupleElement = (None, true)
     @inline final def isEmptyPositive(x : CPSTupleElement) : Boolean = x.equals( (None, true) )
     @inline final def isNotEmptyPositive(x : CPSTupleElement) : Boolean = !(isEmptyPositive(x))
     @inline final def removeWhileEmptyPositive(s : CPSStream) : CPSStream = {
@@ -76,9 +75,6 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
                                                                         input(appendPositiveStream(str), c)
 
     @inline final def appendPositive(input : =>CFilter) : CFilter = innerAppendPositive(input)
-  }
-  object CPSStreamHelperMethods extends CPSStreamHelperMethodsTrait {
-    @inline val constantEmptyPositive : CPSTupleElement = (None, true)
   }
 }
 
@@ -122,7 +118,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
    * Abstract class for all transformations.
    * It defines shortcuts for operators.
    */
-  abstract sealed class ChainedTransformRoot extends ChainedTransform with MetaProcessable with CPSStreamHelperMethodsTrait {
+  abstract sealed class ChainedTransformRoot extends ChainedTransform with MetaProcessable {
     final def ~(other : => ChainedTransformRoot) : ChainedTransformRoot = new SequenceOperator(this, other)
     final def ->(other : => ChainedTransformRoot) : ChainedTransformRoot = new ComposeOperator(this, other)
     final def |(other : => ChainedTransformRoot) : ChainedTransformRoot = new ChoiceOperator(this, other)
@@ -141,7 +137,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       (s : CPSStream, c : Context) => {
         val (rs, rc) = apply(s, c)
-        if (isPositive(rs))
+        if (CPSStreamHelperMethods.isPositive(rs))
           success(rs, rc)
         else
           failure(s, c)
@@ -275,7 +271,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
               metaProcessor.processUnaryOperator(this, new ZeroOrOneOperator(_), underlying)
     lazy val underlyingRealized : ChainedTransformRoot = underlying
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      underlyingRealized(success, appendPositive(success))
+      underlyingRealized(success, CPSStreamHelperMethods.appendPositive(success))
     }
   }
 
@@ -288,7 +284,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
     lazy val underlyingRealized : ChainedTransformRoot = underlying
     lazy val sequenceOperator = new SequenceOperator(underlyingRealized, this)
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      sequenceOperator(success, appendPositive(success))
+      sequenceOperator(success, CPSStreamHelperMethods.appendPositive(success))
     }
   }
 
@@ -332,7 +328,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
       if (s.isEmpty)
         s
       else {
-        val sr = removeWhileEmptyPositive(s)
+        val sr = CPSStreamHelperMethods.removeWhileEmptyPositive(s)
         if (matcher(sr.head._1.get))
           Stream.cons( (sr.head._1, true), sr.tail)
         else
@@ -350,8 +346,8 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
               metaProcessor.processTransform(this, () => { this })
     
     def partialapply(s : CPSStream) : CPSStream = {
-      if (isPositive(s))
-        appendPositiveStream(s.dropWhile(_._2))
+      if (CPSStreamHelperMethods.isPositive(s))
+        CPSStreamHelperMethods.appendPositiveStream(s.dropWhile(_._2))
       else
         s
     }
