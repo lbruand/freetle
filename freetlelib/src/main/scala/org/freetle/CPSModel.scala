@@ -37,7 +37,9 @@ trait CPSModelTypeDefinition[@specialized Element, @specialized Context] {
    */
   type ChainedTransform = (=>CFilter, =>CFilter) => CFilter
 
+}
 
+trait CPSModelHelperExtension[@specialized Element, @specialized Context] extends CPSModelTypeDefinition[Element, Context]{
     /**
    * HelperMethods on CPSStream.
    */
@@ -86,7 +88,7 @@ trait CPSModelTypeDefinition[@specialized Element, @specialized Context] {
  * It is internally using continuations This was used to solve the stackoverflow problems
  * met in previous backtracking models.
  */
-class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeDefinition[Element, Context] {
+class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelperExtension[Element, Context] {
   /**
    *  An identity CFilter.
    */
