@@ -31,7 +31,44 @@ trait CPSModelTypeDefinition[@specialized Element, @specialized Context] {
   type CPSStream = Stream[CPSTupleElement]
 
   type CFilter = (CPSStream, Context) => CPSStream
-   
+
+    /**
+   * HelperMethods on CPSStream.
+   */
+  trait CPSStreamHelperMethodsTrait {
+    @inline final def isEmptyPositive(x : CPSTupleElement) : Boolean = x.equals( (None, true) )
+    @inline final def isNotEmptyPositive(x : CPSTupleElement) : Boolean = !(isEmptyPositive(x))
+    @inline final def removeWhileEmptyPositive(s : CPSStream) : CPSStream = {
+      var cs : CPSStream = s
+      while ( !cs.isEmpty && CPSStreamHelperMethods.constantEmptyPositive.equals(cs.head) ) {
+        cs = cs.tail
+      }
+      cs
+    }
+
+    def removeAllEmptyPositive(s : CPSStream) : CPSStream = s.filter( isNotEmptyPositive )
+
+    @inline final def isPositive(s : CPSStream) : Boolean = {
+      if (s.isEmpty)
+        false
+      else
+        s.head._2
+    }
+
+    def isOnlyEmptyPositiveStream(s : CPSStream) : Boolean = {
+      isPositive(s) && removeWhileEmptyPositive(s).isEmpty
+    }
+
+    @inline final def appendPositiveStream(s : CPSStream) : CPSStream = if (!isPositive(s))
+                                                                          Stream.cons(CPSStreamHelperMethods.constantEmptyPositive, s)
+                                                                        else
+                                                                          s
+
+    private def innerAppendPositive(input : =>CFilter)(str : CPSStream, c : Context) : CPSStream =
+                                                                        input(appendPositiveStream(str), c)
+
+    @inline final def appendPositive(input : =>CFilter) : CFilter = innerAppendPositive(input)
+  }
 }
 
 /**
@@ -89,44 +126,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelTypeD
   object CPSStreamHelperMethods extends CPSStreamHelperMethodsTrait {
     @inline val constantEmptyPositive : CPSTupleElement = (None, true)
   }
-  /**
-   * HelperMethods on CPSStream.
-   */
-  trait CPSStreamHelperMethodsTrait {
-    @inline final def isEmptyPositive(x : CPSTupleElement) : Boolean = x.equals( (None, true) )
-    @inline final def isNotEmptyPositive(x : CPSTupleElement) : Boolean = !(isEmptyPositive(x))
-    @inline final def removeWhileEmptyPositive(s : CPSStream) : CPSStream = {
-      var cs : CPSStream = s
-      while ( !cs.isEmpty && CPSStreamHelperMethods.constantEmptyPositive.equals(cs.head) ) {
-        cs = cs.tail
-      }
-      cs
-    }
 
-    def removeAllEmptyPositive(s : CPSStream) : CPSStream = s.filter( isNotEmptyPositive )
-
-    @inline final def isPositive(s : CPSStream) : Boolean = {
-      if (s.isEmpty)
-        false
-      else
-        s.head._2
-    }
-
-    def isOnlyEmptyPositiveStream(s : CPSStream) : Boolean = {
-      isPositive(s) && removeWhileEmptyPositive(s).isEmpty
-    }
-
-    @inline final def appendPositiveStream(s : CPSStream) : CPSStream = if (!isPositive(s))
-                                                                          Stream.cons(CPSStreamHelperMethods.constantEmptyPositive, s)
-                                                                        else
-                                                                          s
-    
-    private def innerAppendPositive(input : =>CFilter)(str : CPSStream, c : Context) : CPSStream =
-                                                                        input(appendPositiveStream(str), c)
-
-    @inline final def appendPositive(input : =>CFilter) : CFilter = innerAppendPositive(input)
-    
-  }
   /**
    *  Base class for all transforms.
    */
