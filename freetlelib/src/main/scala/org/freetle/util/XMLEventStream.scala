@@ -45,6 +45,29 @@ class SourceReader(src: Source) extends Reader {
 }
 
 /**
+ * Helper class to read a Source as a Reader.
+ */
+class StreamReader(stream: =>Stream[Char]) extends Reader {
+  var src = stream
+  override def read(arr : Array[Char], start : Int, sz : Int) : Int = {
+    var i = start
+    while (!src.isEmpty && i - start < sz) {
+      arr(i) = src.head
+      src = src.tail
+      i += 1
+    }
+    if (i - start == 0 && src.isEmpty)
+      -1
+    else
+      i - start
+  }
+
+  override def close() :Unit = {
+  }
+
+}
+
+/**
  * Create a Source from a Char Iterator.
  */
 object StreamSource {
@@ -69,7 +92,8 @@ final class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
 
 
   val input : XMLStreamReader = src match {
-      case in : InputStream => XMLEventStream.factory.createXMLStreamReader(in) //createXMLEventReader(in) //.createXMLStreamReader(in)
+      case in : InputStream => XMLEventStream.factory.createXMLStreamReader(in)
+      case stream : Stream[Char] => XMLEventStream.factory.createXMLStreamReader(new StreamReader(stream))
       case src :Source => XMLEventStream.factory.createXMLStreamReader("default.xml", new SourceReader(src))
   }
   type Attributes = Map[QName, String]

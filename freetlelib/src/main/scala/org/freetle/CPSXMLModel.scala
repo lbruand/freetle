@@ -234,6 +234,12 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
         loadXMLResultStream(new ByteArrayInputStream(str.getBytes))
 
     /**
+     * Load a XMLResultStream from a String.
+     */
+    def loadXMLResultStream(str : =>Stream[Char]) : XMLResultStream =
+        (new XMLEventStream(str) map (x => (Some(x), false))).toStream
+
+    /**
      * Serialise a XMLResultStream into a XML form.
      */
     def serializeXMLResultStream(evStream : =>XMLResultStream, writer : Writer) : Unit = {
