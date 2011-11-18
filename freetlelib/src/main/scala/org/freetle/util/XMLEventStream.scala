@@ -83,6 +83,7 @@ object StreamSource {
 object XMLEventStream {
   val factory =  new WstxInputFactory()
   factory.configureForSpeed()
+  factory.getConfig.doCoalesceText(true)
 }
 /**
  * Transform a Source a XMLEvent Iterator for the purpose of making it a Stream afterward.
