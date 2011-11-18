@@ -122,7 +122,7 @@ Keep in mind that :
 Freetle compares very well with [STX/Joost](http://joost.sourceforge.net/).
 ( Measured in our benchmark at 4,02 Mb/s )
 
-![Benchmark Results](http://chart.apis.google.com/chart?chf=bg,s,FFFFFF00&chxl=0:%7CFreetle%7CJoost%2FSTX%7CXSLTC%7C2:%7CSpeed+%28Mb%2Fs%29&chxp=2,100&chxr=0,0,20%7C1,0,20&chxt=y,x,x&chbh=a&chs=420x220&cht=bhs&chco=8CA1C8&chds=0,20.43&chd=t:15.43,4.02,13.7&chtt=Benchmark+Of+Different+XML+Transformation+Engines)
+![Benchmark Results](http://chart.apis.google.com/chart?chf=bg,s,FFFFFF00&chxl=0:%7CFreetle%7CJoost%2FSTX%7CXSLTC%7C2:%7CSpeed+%28Mb%2Fs%29&chxp=2,100&chxr=0,0,20%7C1,0,20&chxt=y,x,x&chbh=a&chs=420x220&cht=bhs&chco=8CA1C8&chds=0,20.43&chd=t:20.77,4.13,4.38&chtt=Benchmark+Of+Different+XML+Transformation+Engines)
 
 # Getting Started
 
