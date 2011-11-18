@@ -112,15 +112,13 @@ Idea has scala-support in the form of the [Scala Plugin for Intellij IDEA](http:
 [STX/Joost](http://joost.sourceforge.net/) is an open source initiative to go beyond the large document problem inherent to XSLT. It is relatively slower than XSLT and lacks a number of features.(mainly a sort)
 
 # Performance
-Freetle compares well with XML transformation leader XSLTC when transforming small documents 
-(in our benchmark XSLTC : 15,4 Mb/s whereas Freetle stands at 13,70 Mb/s )
-XSLTC is only 12% faster than Freetle.
+
 Keep in mind that :
 
  * XSLTC does not transform documents of arbitrary size whereas Freetle does.
 
 Freetle compares very well with [STX/Joost](http://joost.sourceforge.net/).
-( Measured in our benchmark at 4,02 Mb/s )
+( Measured in our benchmark at 4,13 Mb/s )
 
 ![Benchmark Results](http://chart.apis.google.com/chart?chf=bg,s,FFFFFF00&chxl=0:%7CFreetle%7CJoost%2FSTX%7CXSLTC%7C2:%7CSpeed+%28Mb%2Fs%29&chxp=2,100&chxr=0,0,20%7C1,0,20&chxt=y,x,x&chbh=a&chs=420x220&cht=bhs&chco=8CA1C8&chds=0,20.43&chd=t:20.77,4.13,4.38&chtt=Benchmark+Of+Different+XML+Transformation+Engines)
 
