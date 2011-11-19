@@ -152,6 +152,8 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     }
 
     def apply(event : XMLEvent) : PushFromContext = new PushFromContext(c => Stream(event))
+
+    def apply(events :Stream[XMLEvent]) : PushFromContext = new PushFromContext(c => events)
   }
   
   class PushText(text: String) extends PushFromContext(x => Stream(new EvText(text))) {
