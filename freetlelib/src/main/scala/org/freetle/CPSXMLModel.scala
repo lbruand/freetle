@@ -24,10 +24,6 @@ import java.io._
  * It is capable of working over XML Events.
  */
 class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
-  /**
-   * Used for backward compatibility.
-   */
-  type XMLResultStream = CPSStream
 
   /**
    * Take all the underlying nodes of the current event.
@@ -215,26 +211,26 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     /**
      * Load a XMLResultStream from an InputStream
      */
-    def loadXMLResultStream(in : InputStream) : XMLResultStream = {
+    def loadXMLResultStream(in : InputStream) : CPSStream = {
       (new XMLEventStream(in) map (x => (Some(x), false))).toStream
     }
 
     /**
      * Load a XMLResultStream from a String.
      */
-    def loadXMLResultStream(str : String) : XMLResultStream =
+    def loadXMLResultStream(str : String) : CPSStream =
         loadXMLResultStream(new ByteArrayInputStream(str.getBytes))
 
     /**
      * Load a XMLResultStream from a String.
      */
-    def loadXMLResultStream(str : =>Stream[Char]) : XMLResultStream =
+    def loadXMLResultStream(str : =>Stream[Char]) : CPSStream =
         (new XMLEventStream(str) map (x => (Some(x), false))).toStream
 
     /**
      * Serialise a XMLResultStream into a XML form.
      */
-    def serializeXMLResultStream(evStream : =>XMLResultStream, writer : Writer) : Unit = {
+    def serializeXMLResultStream(evStream : =>CPSStream, writer : Writer) : Unit = {
       evStream foreach (_._1 match {
                 case Some(x : XMLEvent) => x.appendWriter(writer)
                 case _ => (new EvComment("EmptyPositive")).appendWriter(writer)
@@ -244,7 +240,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     /**
      * Deserialize from an objectInputStream serialized/binary XMLEvent. 
      */
-    def rehydrate(in : ObjectInputStream) : XMLResultStream = {
+    def rehydrate(in : ObjectInputStream) : CPSStream = {
       val read = in.readObject
       if (read != null) {
         Stream.cons( (Some((read).asInstanceOf[XMLEvent]), false), rehydrate(in))
@@ -256,7 +252,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     /**
      * Serialize to an objectOutputStream serialized/binary XMLEvent.
      */
-    def dehydrate(evStream: XMLResultStream, dataOut: ObjectOutputStream): Unit = {
+    def dehydrate(evStream: CPSStream, dataOut: ObjectOutputStream): Unit = {
       evStream.foreach(x => {dataOut.writeObject(x._1.get)})
     }
   }

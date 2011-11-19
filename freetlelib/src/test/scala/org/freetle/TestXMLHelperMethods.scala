@@ -25,7 +25,7 @@ trait TestXMLHelperMethods[Context] extends CPSXMLModel[Context] with TestHelper
   val PREFIX : String = "p"
   val NAMESPACE : String = "http://freetle.sf.net/"
 
-  def mloadStreamFromResource(resourceName: String, context : Option[Context]): XMLResultStream = {
+  def mloadStreamFromResource(resourceName: String, context : Option[Context]): CPSStream = {
     val src: InputStream = this.getClass().getResourceAsStream(resourceName)
     XMLResultStreamUtils.loadXMLResultStream(src)
   }
@@ -36,7 +36,7 @@ trait TestXMLHelperMethods[Context] extends CPSXMLModel[Context] with TestHelper
   /**
    * Serialize ( not very efficient ).
    */
-  def serialize(x : XMLResultStream) : String = {
+  def serialize(x : CPSStream) : String = {
     var sb = new StringWriter()
     XMLResultStreamUtils.serializeXMLResultStream(x, sb)
     sb.toString
@@ -45,7 +45,7 @@ trait TestXMLHelperMethods[Context] extends CPSXMLModel[Context] with TestHelper
    /**
    * Serialize ( not very efficient ).
    */
-  def serializeWithResult(x : XMLResultStream) : String = {
+  def serializeWithResult(x : CPSStream) : String = {
     val charStream : Stream[Char] = (x map
             (y => Stream.cons(if (y._2) 'R' else 'T', y._1.getOrElse(new EvComment("EvEmptyPositive")).toStream))).flatten
     charStream.mkString

@@ -33,7 +33,7 @@ class XMLEventTest extends CPSXMLModel[XMLEventTestContext] with TestXMLHelperMe
   @Test
   def testLocationAndOffset() = {
     val c = null
-    val evStream : XMLResultStream = mloadStreamFromResource("/org/freetle/input2.xml", Some(c))
+    val evStream : CPSStream = mloadStreamFromResource("/org/freetle/input2.xml", Some(c))
 
     evStream.foreach( x => assertNotNull(x._1.get.location))
 
