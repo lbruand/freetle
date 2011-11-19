@@ -373,4 +373,14 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
     
     override def partialapply(in : CPSStream) : CPSStream = recurse(in, initialState)
   }
+
+    /**
+   * Base class to push from context.
+   */
+  class PushFromContext(val generator : Context => Stream[Element]) extends ContextReadingTransform {
+    def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
+    def partialapply(in : CPSStream, context : Context) : CPSStream = {
+        (generator(context) map ( x => (Some(x), true))).append(in)
+      }
+  }
 }

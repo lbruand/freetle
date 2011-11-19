@@ -91,16 +91,6 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     def pushToContext(name : QName, attributes : Map[QName, String], context : Context) : Context
   }
 
-  /**
-   * Base class to push from context.
-   */
-  class PushFromContext(val generator : Context => Stream[XMLEvent]) extends ContextReadingTransform {
-    def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
-    def partialapply(in : CPSStream, context : Context) : CPSStream = {
-        (generator(context) map ( x => (Some(x), true))).append(in)
-      }
-  }
-
   object PushNode {
         def serializeXML(nodeSeq : NodeSeq) : Stream[XMLEvent] = {
       ((nodeSeq map( serializeNodeXML(_))).toStream.flatten)
