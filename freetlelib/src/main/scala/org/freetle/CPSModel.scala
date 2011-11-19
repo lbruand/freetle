@@ -134,7 +134,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
   abstract class TransformBase extends ChainedTransformRoot  {
     def apply(s : CPSStream, c : Context) : (CPSStream, Context)
 
-    private def callSuccessOrFailure(success : =>CFilter, failure : =>CFilter)(s : CPSStream, c : Context) = {
+    private final def callSuccessOrFailure(success : =>CFilter, failure : =>CFilter)(s : CPSStream, c : Context) = {
       val (rs, rc) = apply(s, c)
       if (CPSStreamHelperMethods.isPositive(rs))
         success(rs, rc)
