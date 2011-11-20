@@ -48,8 +48,14 @@ trait CPSModelTypeDefinition[@specialized Element, @specialized Context] {
 
 }
 
+/**
+ * The CPSModelHelperExtension layer regroups Helper functions that are not exposed uplayer.
+ */
 trait CPSModelHelperExtension[@specialized Element, @specialized Context] extends CPSModelTypeDefinition[Element, Context]{
 
+  /**
+   * The object CPSStreamHelperMethods is a singleton to store low levels helper functions.
+   */
   object CPSStreamHelperMethods {
     @inline val constantEmptyPositive : CPSTupleElement = (None, true)
     @inline final def isEmptyPositive(x : CPSTupleElement) : Boolean = x.equals( (None, true) )
@@ -96,15 +102,25 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
 class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelperExtension[Element, Context] {
   /**
    *  An identity CFilter.
+   *  it does simply return the incoming stream as it is.
    */
   class CFilterIdentity extends CFilter {
     def apply(s : CPSStream, c : Context) : CPSStream = s
   }
 
 
-
+  /**
+   * A Type that describes a constructor function for TransformBase and subtypes.
+   * Used by the MetaProcessor.
+   */
   type InstantiateTransform = (()=>TransformBase)
+  /**
+   * A Type that describes a constructor function for a UnaryOperator.
+   */
   type InstantiateUnaryOperator = ((=>ChainedTransformRoot) => ChainedTransformRoot)
+  /**
+   * A Type that describes a constructor function for a BinaryOperator.
+   */
   type InstantiateBinaryOperator = ((=>ChainedTransformRoot, =>ChainedTransformRoot) => ChainedTransformRoot)
 
   /**
@@ -125,7 +141,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
 
   /**
    * Abstract class for all transformations.
-   * It defines shortcuts for operators.
+   * It defines many shortcuts for operators.
    */
   abstract sealed class ChainedTransformRoot extends ChainedTransform with MetaProcessable {
     final def ~(other : => ChainedTransformRoot) : ChainedTransformRoot = new SequenceOperator(this, other)
@@ -202,7 +218,9 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
     }
   }
 
-  
+  /**
+   * An Identity CFilter that keeps that context in reference.
+   */
   final class CFilterIdentityWithContext extends CFilter {
     var context : Option[Context] = None
     def isApplied : Boolean = !(None.equals(context))
@@ -260,7 +278,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
   }
 
   /**
-   *   Base class for cardinality operators.
+   * Base class for all cardinality operators.
    */
   abstract class CardinalityOperator(underlying : =>ChainedTransformRoot) extends UnaryOperator(underlying)
   
