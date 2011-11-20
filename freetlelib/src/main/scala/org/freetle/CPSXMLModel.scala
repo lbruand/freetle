@@ -163,10 +163,14 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
   }
 
+  abstract class EvTagMatcher extends CPSElemMatcher
   /**
    * Matches an EvElemStart
    */
-  abstract class EvStartMatcher extends CPSElemMatcher {
+  abstract class EvStartMatcher extends EvTagMatcher {
+
+    def testNamespace(name : QName, attributes : Map[QName, String]) : Boolean
+
     def testElem(name : QName, attributes : Map[QName, String]) : Boolean
 
     def apply(event: XMLEvent) : Boolean = {
@@ -207,7 +211,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
   /**
    * Matches an EvElemEnd
    */
-  abstract class EvEndMatcher extends CPSElemMatcher {
+  abstract class EvEndMatcher extends EvTagMatcher {
     def testElem(name : QName) : Boolean
 
     def apply(event: XMLEvent) : Boolean = {
