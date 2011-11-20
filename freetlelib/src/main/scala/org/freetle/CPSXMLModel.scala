@@ -229,8 +229,12 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
    * Shortcut to take a closing tag based on the localpart.
    */
   object </ {
-    def apply(name : String) = {
-      new LocalPartEvEndMatcher(name)
+
+    def apply(matcher : EvEndMatcher) : ElementMatcherTaker = {
+      new ElementMatcherTaker(matcher)
+    }
+    def apply(name : String) : ElementMatcherTaker = {
+      apply(new LocalPartEvEndMatcher(name))
     }
   }
   /**
