@@ -18,7 +18,6 @@ package org.freetle
 import util._
 import xml.{Node, NodeSeq}
 import java.io._
-import org.freetle.CPSXMLModel.LocalPartEvEndMatcher
 
 /**
  * This is a streaming Continuation Passing Transformation model.
