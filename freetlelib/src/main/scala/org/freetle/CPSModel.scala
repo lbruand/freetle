@@ -163,7 +163,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
   abstract class BinaryOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends Operator
 
   /**
-   * We execute in sequence left and then right if left has returned a result. 
+   * Executes in sequence the left operand and then the right operand if left operand has returned a result.
    */
   final class SequenceOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
     def metaProcess(metaProcessor : MetaProcessor) =
@@ -203,7 +203,10 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
     }
   }
   /**
-   * Composition Operator.
+   * The basic Composition Operator.
+   * Executes first the left operand.
+   * If the result given by the left operand is positive,
+   * then the right operand is executed on the result and on the context returned by the left operand.
    */
 
   final class ComposeOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
