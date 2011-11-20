@@ -64,6 +64,9 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     def pushToContext(text : String, context : Context) : Context
   }
 
+  /**
+   * A base class to load attributes values to context.
+   */
   abstract class TakeAttributesToContext(matcher : EvStartMatcher) extends ContextWritingTransform {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
 
@@ -87,8 +90,13 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     def pushToContext(name : QName, attributes : Map[QName, String], context : Context) : Context
   }
 
-  object PushNode {
-        def serializeXML(nodeSeq : NodeSeq) : Stream[XMLEvent] = {
+  /**
+   * A companion object to PushNode class.
+   * Internal.
+   */
+  private object PushNode {
+
+    def serializeXML(nodeSeq : NodeSeq) : Stream[XMLEvent] = {
       ((nodeSeq map( serializeNodeXML(_))).toStream.flatten)
     }
 
@@ -122,12 +130,18 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
   }
 
+  /**
+   * Push Formatted text from the context down to output stream.
+   */
   class PushFormattedText(formatter: Context => String) extends PushFromContext(
     formatter andThen ((x:String) => Stream(new EvText(x)))
   ) {
     override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
   }
 
+  /**
+   * Shortcut to output various objects downstream.
+   */
   object > {
     def apply(formatter: Context => String) : PushFormattedText = {
       new PushFormattedText(formatter = formatter)
@@ -141,7 +155,10 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
 
     def apply(events :Stream[XMLEvent]) : PushFromContext = new PushFromContext(c => events)
   }
-  
+
+  /**
+   * Output text downstream.
+   */
   class PushText(text: String) extends PushFromContext(x => Stream(new EvText(text))) {
     override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
   }
@@ -159,9 +176,13 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     }
   }
 
+  /**
+   * A matcher that matches EvStarts based on their localPart.
+   */
   class LocalPartEvStartMatcher(localPart : String) extends EvStartMatcher {
     def testElem(name: QName, attributes: Map[QName, String]) = localPart.equals(name.localPart) 
   }
+
   /**
    * Shortcut to take an opening tag based on the localpart.
    */
