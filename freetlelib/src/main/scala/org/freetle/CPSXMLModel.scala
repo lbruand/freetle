@@ -18,6 +18,7 @@ package org.freetle
 import util._
 import xml.{Node, NodeSeq}
 import java.io._
+import org.freetle.CPSXMLModel.LocalPartEvEndMatcher
 
 /**
  * This is a streaming Continuation Passing Transformation model.
@@ -163,6 +164,9 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
   }
 
+  /**
+   * Matches an EvElemStart
+   */
   abstract class EvStartMatcher extends CPSElemMatcher {
     def testElem(name : QName, attributes : Map[QName, String]) : Boolean
 
@@ -177,7 +181,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
   }
 
   /**
-   * A matcher that matches EvStarts based on their localPart.
+   * A matcher that matches EvElemStarts based on their localPart.
    */
   class LocalPartEvStartMatcher(localPart : String) extends EvStartMatcher {
     def testElem(name: QName, attributes: Map[QName, String]) = localPart.equals(name.localPart) 
@@ -202,17 +206,32 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
    */
   implicit def string2EvStartMatcher(s : String) : EvStartMatcher = new LocalPartEvStartMatcher(s)
   /**
-   * Shortcut to take a closing tag based on the localpart.
+   * Matches an EvElemEnd
    */
-  object </ {
-    def evEndMatcher(name : String)(event : XMLEvent) = {
+  abstract class EvEndMatcher extends CPSElemMatcher {
+    def testElem(name : QName) : Boolean
+
+    def apply(event: XMLEvent) : Boolean = {
       event match {
-        case EvElemEnd(testName) if (name.equals(testName.localPart)) => true
+        case EvElemEnd(name) => {
+           testElem(name)
+        }
         case _ => false
       }
     }
+  }
+  /**
+   * A matcher that matches EvElemEnds based on their localPart.
+   */
+  class LocalPartEvEndMatcher(localPart : String) extends EvEndMatcher {
+    def testElem(name: QName) = localPart.equals(name.localPart)
+  }
+  /**
+   * Shortcut to take a closing tag based on the localpart.
+   */
+  object </ {
     def apply(name : String) = {
-      new ElementMatcherTaker(evEndMatcher(name))
+      new LocalPartEvEndMatcher(name)
     }
   }
   /**
