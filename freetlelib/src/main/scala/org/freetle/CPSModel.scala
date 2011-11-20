@@ -20,7 +20,13 @@ package org.freetle
  * Defines types for the CPSModel.
  */
 trait CPSModelTypeDefinition[@specialized Element, @specialized Context] {
+  /** A type that contains either Some(Element) or None  */
   type CPSElementOrPositive = Option[Element]
+  /**
+   * A tuple that contains either Some(Element) or None in _1 and a boolean in _2
+   * which indicates whether this Element is a Result (value true) or a Tail
+   * (value false).
+   */
   type CPSTupleElement = (CPSElementOrPositive, Boolean)
 
   /**
@@ -30,6 +36,9 @@ trait CPSModelTypeDefinition[@specialized Element, @specialized Context] {
    */
   type CPSStream = Stream[CPSTupleElement]
 
+  /**
+   * CFilter type is the basic type of transformations in Freetle.
+   */
   type CFilter = (CPSStream, Context) => CPSStream
 
   /**
@@ -257,6 +266,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
   
   /**
    * Cardinality operator 1..*
+   * Apply repeatedly as many times as possible but at least once the __underlying transform__.
    */
   class OneOrMoreOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
     final def metaProcess(metaProcessor : MetaProcessor) =
@@ -269,6 +279,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
   }
   /**
    * Cardinality operator 0..1
+   * Apply at most once the underlying transform.
    */
   final class ZeroOrOneOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
     def metaProcess(metaProcessor : MetaProcessor) =
@@ -280,7 +291,8 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
   }
 
   /**
-   * Cardinality operator 0..* 
+   * Cardinality operator 0..*
+   * Apply repeatedly as many times as possible the __underlying transform__.
    */
   final class ZeroOrMoreOperator(underlying : =>ChainedTransformRoot) extends CardinalityOperator(underlying) {
     def metaProcess(metaProcessor : MetaProcessor) =
