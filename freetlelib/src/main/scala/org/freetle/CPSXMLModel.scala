@@ -162,20 +162,20 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
   class PushText(text: String) extends PushFromContext(x => Stream(new EvText(text))) {
     override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
   }
-
+  implicit object DefaultNamespaceMatcher extends NameSpaceMatcher {
+    def apply(v1: QName) : Boolean = true
+  }
   abstract class EvTagMatcher extends CPSElemMatcher {
-    implicit object DefaultNamespaceMatcher extends NameSpaceMatcher {
-      def apply(v1: QName) : Boolean = true
-    }
+
   }
 
   type NameSpaceMatcher = QName => Boolean
   /**
    * Matches an EvElemStart
    */
-  abstract class EvStartMatcher extends EvTagMatcher {
+  abstract class EvStartMatcher(nameSpaceMatcher :NameSpaceMatcher) extends EvTagMatcher {
 
-    def testElem(name : QName, attributes : Map[QName, String])(implicit nameSpaceMatcher :NameSpaceMatcher) : Boolean
+    def testElem(name : QName, attributes : Map[QName, String]) : Boolean
 
     def apply(event: XMLEvent) : Boolean = {
       event match {
@@ -190,8 +190,8 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
   /**
    * A matcher that matches EvElemStarts based on their localPart.
    */
-  class LocalPartEvStartMatcher(localPart : String) extends EvStartMatcher {
-    def testElem(name: QName, attributes: Map[QName, String])(implicit nameSpaceMatcher :NameSpaceMatcher) =
+  class LocalPartEvStartMatcher(localPart : String)(implicit nameSpaceMatcher :NameSpaceMatcher) extends EvStartMatcher(nameSpaceMatcher) {
+    def testElem(name: QName, attributes: Map[QName, String]) =
           localPart.equals(name.localPart) && nameSpaceMatcher(name)
   }
 
@@ -212,12 +212,12 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
    * This allows for automatic conversion toward an EvStartMatcher from a String.
    * TODO : Could add other matching on namespace, prefix, etc...
    */
-  implicit def string2EvStartMatcher(s : String) : EvStartMatcher = new LocalPartEvStartMatcher(s)
+  implicit def string2EvStartMatcher(s : String)(implicit nameSpaceMatcher :NameSpaceMatcher) : EvStartMatcher = new LocalPartEvStartMatcher(s)(nameSpaceMatcher)
   /**
    * Matches an EvElemEnd
    */
-  abstract class EvEndMatcher extends EvTagMatcher {
-    def testElem(name : QName)(implicit nameSpaceMatcher :NameSpaceMatcher) : Boolean
+  abstract class EvEndMatcher(nameSpaceMatcher :NameSpaceMatcher) extends EvTagMatcher {
+    def testElem(name : QName) : Boolean
 
     def apply(event: XMLEvent) : Boolean = {
       event match {
@@ -231,8 +231,8 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
   /**
    * A matcher that matches EvElemEnds based on their localPart.
    */
-  class LocalPartEvEndMatcher(localPart : String) extends EvEndMatcher {
-    def testElem(name: QName)(implicit nameSpaceMatcher :NameSpaceMatcher) = localPart.equals(name.localPart) && nameSpaceMatcher(name)
+  class LocalPartEvEndMatcher(localPart : String)(implicit nameSpaceMatcher :NameSpaceMatcher) extends EvEndMatcher(nameSpaceMatcher) {
+    def testElem(name: QName) = localPart.equals(name.localPart) && nameSpaceMatcher(name)
   }
   /**
    * Shortcut to take a closing tag based on the localpart.
@@ -242,8 +242,8 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     def apply(matcher : EvEndMatcher) : ElementMatcherTaker = {
       new ElementMatcherTaker(matcher)
     }
-    def apply(name : String) : ElementMatcherTaker = {
-      apply(new LocalPartEvEndMatcher(name))
+    def apply(name : String)(implicit nameSpaceMatcher :NameSpaceMatcher) : ElementMatcherTaker = {
+      apply(new LocalPartEvEndMatcher(name)(nameSpaceMatcher))
     }
   }
   /**
