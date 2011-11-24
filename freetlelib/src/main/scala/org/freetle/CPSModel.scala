@@ -414,7 +414,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
   class PushFromContext(val generator : Context => Stream[Element]) extends ContextReadingTransform {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
     def partialapply(in : CPSStream, context : Context) : CPSStream = {
-        (generator(context) map ( x => (Some(x), true))).append(in)
+        CPSStreamHelperMethods.appendPositiveStream((generator(context) map ( x => (Some(x), true)))).append(in)
       }
   }
 }
