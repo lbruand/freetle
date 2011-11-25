@@ -90,6 +90,8 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
                                                                         input(appendPositiveStream(str), c)
 
     @inline final def appendPositive(input : =>CFilter) : CFilter = innerAppendPositive(input)
+
+    @inline final def turnToTail(s : CPSStream) : CPSStream = s map (x => (x._1, false))
   }
 }
 
