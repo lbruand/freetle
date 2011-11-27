@@ -18,24 +18,26 @@ import org.junit._
 import Assert._
 import org.freetle.{TestXMLHelperMethods, CPSXMLModel}
 import java.io._
-import org.freetle.CPSModelTypeDefinition._
+import annotation.tailrec
 
 case class FileSplitterContext()
 @Test
 class FileSplitterTest extends CPSXMLModel[FileSplitterContext]{
-  val fileMatcher : ChainedTransformRoot = (takeSpace*) ~ <("File") ~ new DeepFilter()
+  val fileMatcher : ChainedTransformRoot = ((takeSpace*) -> drop) ~ <("File") ~ new DeepFilter()
   /**
    * Serialise a XMLResultStream into a XML form.
    */
-  def serializeXMLResultStream(evStream : =>CPSStream,
+  @tailrec final def serializeXMLResultStream(evStream : =>CPSStream,
                                writerConstructor : (Int, Writer) => Writer,
                                occurrence : Int = 0,
                                writerInput : Writer = null) : Unit = {
     val trans = fileMatcher(new CFilterIdentity(), new CFilterIdentity())
     var that = trans(CPSStreamHelperMethods.turnToTail(evStream), null)
     val writer = writerConstructor(occurrence, writerInput)
+    var read : Boolean = false
     while (!that.isEmpty && that.head._2) {
-      _._1 match {
+      read = true
+      that.head._1 match {
               case Some(x : XMLEvent) => x.appendWriter(writer)
               case _ => (new EvComment("EmptyPositive")).appendWriter(writer)
               }
@@ -43,7 +45,7 @@ class FileSplitterTest extends CPSXMLModel[FileSplitterContext]{
     }
 
     writer.flush()
-    if (!that.isEmpty) {
+    if (!that.isEmpty && read) {
       serializeXMLResultStream(that,
                                writerConstructor = writerConstructor,
                                occurrence = occurrence + 1,
@@ -54,11 +56,22 @@ class FileSplitterTest extends CPSXMLModel[FileSplitterContext]{
 
   @Test
   def test() = {
+    val str = """<Document>
+    <File>euhgzuie zeufhenuzehf fzehfeuiezh1</File>
+    <File>euhgzuie zeufhenuzehf fzehfeuiezh2</File>
+    <File>euhgzuie zeufhenuzehf fzehfeuiezh3</File>
+    </Document>
     """
-    <File>euhgzuie zeufhenuzehf fzehfeuiezh </File>
-    <File>euhgzuie zeufhenuzehf fzehfeuiezh </File>
-    <File>euhgzuie zeufhenuzehf fzehfeuiezh </File>
-    """
+    var inStream = XMLResultStreamUtils.loadXMLResultStream(str)
+    inStream = inStream.tail
+    serializeXMLResultStream(inStream, (occurrence, inputWriter) => {
+
+      if (inputWriter != null) {
+        val res = inputWriter.toString
+        assertTrue("occurrence nb "+occurrence + " val=["+ res+"]", res.endsWith(""+occurrence+"</File>"))
+      }
+      new StringWriter()
+    })
 
   }
 
