@@ -16,42 +16,13 @@
 package org.freetle.util
 import org.junit._
 import Assert._
-import org.freetle.{TestXMLHelperMethods, CPSXMLModel}
 import java.io._
-import annotation.tailrec
+import org.freetle.{FileSplitter, CPSXMLModel}
 
 case class FileSplitterContext()
 @Test
-class FileSplitterTest extends CPSXMLModel[FileSplitterContext]{
-  val fileMatcher : ChainedTransformRoot = ((takeSpace*) -> drop) ~ <("File") ~ new DeepFilter()
-  /**
-   * Serialise a XMLResultStream into a XML form.
-   */
-  @tailrec final def serializeXMLResultStream(evStream : =>CPSStream,
-                               writerConstructor : (Int, Writer) => Writer,
-                               occurrence : Int = 0,
-                               writerInput : Writer = null) : Unit = {
-    val trans = fileMatcher(new CFilterIdentity(), new CFilterIdentity())
-    var that = trans(CPSStreamHelperMethods.turnToTail(evStream), null)
-    val writer = writerConstructor(occurrence, writerInput)
-    var read : Boolean = false
-    while (!that.isEmpty && that.head._2) {
-      read = true
-      that.head._1 match {
-              case Some(x : XMLEvent) => x.appendWriter(writer)
-              case _ => (new EvComment("EmptyPositive")).appendWriter(writer)
-              }
-      that = that.tail
-    }
+class FileSplitterTest extends CPSXMLModel[FileSplitterContext] with FileSplitter[FileSplitterContext]{
 
-    writer.flush()
-    if (!that.isEmpty && read) {
-      serializeXMLResultStream(that,
-                               writerConstructor = writerConstructor,
-                               occurrence = occurrence + 1,
-                               writer)
-    }
-  }
 
 
   @Test
@@ -71,7 +42,7 @@ class FileSplitterTest extends CPSXMLModel[FileSplitterContext]{
         assertTrue("occurrence nb "+occurrence + " val=["+ res+"]", res.endsWith(""+occurrence+"</File>"))
       }
       new StringWriter()
-    })
+    }, context = null)
 
   }
 
