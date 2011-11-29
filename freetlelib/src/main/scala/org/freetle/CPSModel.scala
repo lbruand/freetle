@@ -388,15 +388,18 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
         s
     }
   }
-
-  /**
-   * This is a template transform to select in the stream using an accumulator.
-   */
-  abstract class StatefulSelector[State] extends ContextFreeTransform {
+  abstract class AbstractStatefulSelector[State] extends ContextFreeTransform {
     def conditionToStop(state : State) : Boolean
     def accumulate(state : State, element : CPSElementOrPositive) : State
     def initialState : State
-    final private def recurse(in : CPSStream, currentState : State) : CPSStream = {
+    def recurse(in : CPSStream, currentState : State) : CPSStream
+    override def partialapply(in : CPSStream) : CPSStream = recurse(in, initialState)
+  }
+  /**
+   * This is a template transform to select in the stream using an accumulator.
+   */
+  abstract class StatefulSelector[State] extends AbstractStatefulSelector[State] {
+    final def recurse(in : CPSStream, currentState : State) : CPSStream = {
       if (in.isEmpty)
         Stream.empty
       else
@@ -406,18 +409,13 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
         Stream.cons( (in.head._1, true),
                     recurse(in.tail, accumulate(currentState, in.head._1)))
     }
-    
-    override def partialapply(in : CPSStream) : CPSStream = recurse(in, initialState)
   }
 
     /**
    * This is a template transform to select in the stream using an accumulator.
    */
-  abstract class StatefulSelectorUntil[State] extends ContextFreeTransform {
-    def conditionToStop(state : State) : Boolean
-    def accumulate(state : State, element : CPSElementOrPositive) : State
-    def initialState : State
-    final private def recurse(in : CPSStream, currentState : State) : CPSStream = {
+  abstract class StatefulSelectorUntil[State] extends AbstractStatefulSelector[State] {
+    final def recurse(in : CPSStream, currentState : State) : CPSStream = {
       if (in.isEmpty)
         Stream.empty
       else
@@ -433,8 +431,6 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
 
         }
     }
-
-    override def partialapply(in : CPSStream) : CPSStream = recurse(in, initialState)
   }
 
     /**
