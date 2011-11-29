@@ -24,7 +24,8 @@ import util.{EvComment, XMLEvent}
  */
 
 trait FileSplitter[Context] extends CPSXMLModel[Context] {
-  val fileMatcher : ChainedTransformRoot = ((takeSpace*) -> drop) ~ <("File") ~ new DeepFilter()
+  val fileMatcher : ChainedTransformRoot = (((takeSpace*)  ~ <("File")) -> drop) ~  new DeepFilterUntil() ~
+                                            (</("File") -> drop )
   /**
    * Serialise a XMLResultStream into a XML form.
    */
@@ -41,7 +42,7 @@ trait FileSplitter[Context] extends CPSXMLModel[Context] {
       read = true
       that.head._1 match {
               case Some(x : XMLEvent) => x.appendWriter(writer)
-              case _ => (new EvComment("EmptyPositive")).appendWriter(writer)
+              case None => ()
               }
       that = that.tail
     }

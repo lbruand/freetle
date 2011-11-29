@@ -411,6 +411,33 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
   }
 
     /**
+   * This is a template transform to select in the stream using an accumulator.
+   */
+  abstract class StatefulSelectorUntil[State] extends ContextFreeTransform {
+    def conditionToStop(state : State) : Boolean
+    def accumulate(state : State, element : CPSElementOrPositive) : State
+    def initialState : State
+    final private def recurse(in : CPSStream, currentState : State) : CPSStream = {
+      if (in.isEmpty)
+        Stream.empty
+      else
+        if (conditionToStop(currentState))
+          in
+        else {
+          val computedState = accumulate(currentState, in.head._1)
+          if (conditionToStop(computedState))
+               in
+          else
+               Stream.cons( (in.head._1, true),
+                      recurse(in.tail, computedState))
+
+        }
+    }
+
+    override def partialapply(in : CPSStream) : CPSStream = recurse(in, initialState)
+  }
+
+    /**
    * Base class to push from context.
    */
   class PushFromContext(val generator : Context => Stream[Element]) extends ContextReadingTransform {

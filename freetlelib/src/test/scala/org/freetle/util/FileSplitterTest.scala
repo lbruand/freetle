@@ -39,7 +39,7 @@ class FileSplitterTest extends CPSXMLModel[FileSplitterContext] with FileSplitte
 
       if (inputWriter != null) {
         val res = inputWriter.toString
-        assertTrue("occurrence nb "+occurrence + " val=["+ res+"]", res.endsWith(""+occurrence+"</File>"))
+        assertTrue("occurrence nb "+occurrence + " val=["+ res+"]", res.endsWith(""+occurrence))
       }
       new StringWriter()
     }, context = null)

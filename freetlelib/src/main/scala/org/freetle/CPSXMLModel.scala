@@ -43,6 +43,23 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
   }
 
   /**
+   * Take all the underlying nodes of the current event.
+   * The deepfilter does return the matching end bracket.
+   */
+  class DeepFilterUntil extends StatefulSelectorUntil[Int] {
+    def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { new DeepFilter() })
+    def conditionToStop(depth: Int) = (depth <= 0)
+
+    def accumulate(depth: Int, element: CPSElementOrPositive) : Int = depth + (element match {
+      case Some(EvElemStart(_, _)) => +1
+      case Some(EvElemEnd(_)) => -1
+      case _ => 0
+    })
+
+    def initialState = 1
+  }
+
+  /**
    * A base class to load text tokens to context.
    */
   abstract class TakeTextToContext extends ContextWritingTransform {
