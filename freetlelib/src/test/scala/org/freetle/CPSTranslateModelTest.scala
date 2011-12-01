@@ -16,13 +16,21 @@
 package org.freetle
 import org.junit._
 import Assert._
+import util.QName
+
+case class CPSTranslateModelTstContext()
 /**
  * Testing the model translation.
  */
 @Test
-class CPSTranslateModelTest {
+class CPSTranslateModelTest extends CPSTranslateModel[CPSTranslateModelTstContext] {
   @Test
   def test() = {
-
+    val input = """::header56
+::flatfile
+::footer55
+""".toStream map ( (x : Char) => (Some(Left(x)), false))
+    val t = ((const("::") -> drop ~ new ValueTaker(8, new QName("", "header", "")) ~ const("\n"))*)
+    t(new CFilterIdentity(), new CFilterIdentity())(input, null) foreach (x => print(x))
   }
 }
