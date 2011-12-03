@@ -39,7 +39,7 @@ Because it relies on Scala, Freetle's design is oriented toward a tried and true
 
 * Freetle boasts seamless integration with Java. Thus it is easy to package and reuse.
 * Freetle transformations are developed in a Textfile oriented vanilla programming language rather than an exotic binary/XML programming language (Compare XSLT).
-* Built-in plugin IDE support both for Eclipse and Intellij Idea with navigation between Freetle transformations and Java code.
+* Built-in plugin IDE support both for Eclipse and Intellij Idea with navigation both inside Freetle transformations and with Java code.
 
 While bringing in major new ideas from the functional programming world :
 
