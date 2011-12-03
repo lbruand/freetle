@@ -30,7 +30,7 @@ class CPSTranslateModelTest extends CPSTranslateModel[CPSTranslateModelTstContex
 ::flatfile
 ::footer55
 """.toStream map ( (x : Char) => (Some(Left(x)), false))
-    val t = ((const("::") -> drop ~ new ValueTaker(8, new QName("", "header", "")) ~ const("\n"))*)
+    val t = ((const("::") -> drop ~ new ValueTaker(8, new QName("", "header", "")) ~ (const("\n") -> drop))*)
     t(new CFilterIdentity(), new CFilterIdentity())(input, null) foreach (x => print(x))
   }
 }
