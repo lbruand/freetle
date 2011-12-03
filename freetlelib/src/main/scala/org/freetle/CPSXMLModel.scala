@@ -288,12 +288,15 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
    * Util class to build XMLResultStream, save etc...
    */
   object XMLResultStreamUtils {
+
+    def convertToCPSStream(input : Iterator[XMLEvent]) : CPSStream =
+        input map (x => (Some(x), false)).toStream
+
     /**
      * Load a XMLResultStream from an InputStream
      */
-    def loadXMLResultStream(in : InputStream) : CPSStream = {
-      (new XMLEventStream(in) map (x => (Some(x), false))).toStream
-    }
+    def loadXMLResultStream(in : InputStream) : CPSStream =
+        convertToCPSStream(new XMLEventStream(in))
 
     /**
      * Load a XMLResultStream from a String.
@@ -305,7 +308,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
      * Load a XMLResultStream from a String.
      */
     def loadXMLResultStream(str : =>Stream[Char]) : CPSStream =
-        (new XMLEventStream(str) map (x => (Some(x), false))).toStream
+        convertToCPSStream(new XMLEventStream(str))
 
     /**
      * Serialise a XMLResultStream into a XML form.
