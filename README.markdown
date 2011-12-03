@@ -17,7 +17,7 @@ Freetle is written in the [Scala language](http://www.scala-lang.org/) and compi
 
 # Current status
 
-Freetle is beta state. Some features are to be added. Debugging is in progress.
+Freetle is progressing at a very good pace. A first release candidate is planned at the end of this year.
 
 # What does Freetle mean ?
 
