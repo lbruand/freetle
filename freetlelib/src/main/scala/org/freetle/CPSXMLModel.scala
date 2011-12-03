@@ -179,14 +179,25 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
   class PushText(text: String) extends PushFromContext(x => Stream(new EvText(text))) {
     override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
   }
+
+  /**
+   * A NameSpaceMatcher checks the namespace based on its qualified name.
+   */
+  type NameSpaceMatcher = QName => Boolean
+
+  /**
+   * This implicit NamespaceMatcher does no check at all on the namespace's qualified name.
+   */
   implicit object DefaultNamespaceMatcher extends NameSpaceMatcher {
     def apply(v1: QName) : Boolean = true
   }
-  abstract class EvTagMatcher extends CPSElemMatcher {
 
-  }
+  /**
+   * An abstract matcher for all tags (starting and ending)
+   */
+  abstract class EvTagMatcher extends CPSElemMatcher
 
-  type NameSpaceMatcher = QName => Boolean
+
   /**
    * Matches an EvElemStart
    */
