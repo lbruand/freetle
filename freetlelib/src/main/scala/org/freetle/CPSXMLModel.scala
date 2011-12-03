@@ -290,7 +290,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
   object XMLResultStreamUtils {
 
     def convertToCPSStream(input : Iterator[XMLEvent]) : CPSStream =
-        input map (x => (Some(x), false)).toStream
+        (input map ((x :XMLEvent) => (Some(x), false))).toStream
 
     /**
      * Load a XMLResultStream from an InputStream
