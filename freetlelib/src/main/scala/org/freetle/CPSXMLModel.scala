@@ -238,7 +238,6 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
 
   /**
    * This allows for automatic conversion toward an EvStartMatcher from a String.
-   * TODO : Could add other matching on namespace, prefix, etc...
    */
   implicit def string2EvStartMatcher(s : String)(implicit nameSpaceMatcher :NameSpaceMatcher) : EvStartMatcher = new LocalPartEvStartMatcher(s)(nameSpaceMatcher)
   /**
