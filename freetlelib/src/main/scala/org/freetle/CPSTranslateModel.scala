@@ -32,7 +32,7 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
             case Left(input) => true
             case _ => false
           }
-    )) reduce( (x : ChainedTransformRoot, y : ChainedTransformRoot) => x ~ y )
+    )) reduce( (x : ChainedTransformRoot, y : ChainedTransformRoot) => new SequenceOperator(x,  y) )
   }
   /**
    * A Context-free transform that matches elements.
