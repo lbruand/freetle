@@ -49,10 +49,10 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
         //val sr = CPSStreamHelperMethods.removeAllEmptyPositive(stream)
         val (shead, stail) = stream span (x => x._2)
         val sr = CPSStreamHelperMethods.removeAllEmptyPositive(shead)
-        val result : Stream[Char] = sr map ( (x :(Option[Either[Char, XMLEvent]], Boolean)) => x match {
+        val result : String = (sr map ( (x :(Option[Either[Char, XMLEvent]], Boolean)) => x match {
             case (Some(Left(c)), false) => c
             case _ => ' '
-          } ).mkString
+          } )).mkString
         (stail, pushToContext(result, context))
       }
     }
