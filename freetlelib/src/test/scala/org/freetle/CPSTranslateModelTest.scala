@@ -16,9 +16,9 @@
 package org.freetle
 import org.junit._
 import Assert._
-import util.QName
+import util.{EvText, EvElemStart, QName}
 
-case class CPSTranslateModelTstContext()
+case class CPSTranslateModelTstContext(value : String)
 /**
  * Testing the model translation.
  */
@@ -26,11 +26,17 @@ case class CPSTranslateModelTstContext()
 class CPSTranslateModelTest extends CPSTranslateModel[CPSTranslateModelTstContext] {
   @Test
   def test() = {
+    val takeValueToContext = new TakeResultToContext {
+      def pushToContext(text: String, context: CPSTranslateModelTstContext) = context.copy(value = text)
+    }
     val input = """::header56
 ::flatfile
 ::footer55
 """.toStream map ( (x : Char) => (Some(Left(x)), false))
-    val t = ((const("::") -> drop ~ new ValueTaker(8, new QName("", "header", "")) ~ (const("\n") -> drop))*)
-    t(new CFilterIdentity(), new CFilterIdentity())(input, null) foreach (x => print(x))
+    val t = (((const("::") ~ ((repeat(8, takeAnyChar) -> takeValueToContext) ~ const("\n")) ->
+      (drop ~ >((c : CPSTranslateModelTstContext) => Stream(EvText(c.value))) )  )*))
+
+    //
+    t(new CFilterIdentity(), new CFilterIdentity())(input, new CPSTranslateModelTstContext("")) foreach (x => print(x))
   }
 }
