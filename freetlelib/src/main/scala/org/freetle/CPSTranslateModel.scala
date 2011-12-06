@@ -34,6 +34,12 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
             case _ => false
           })
 
+val takeADigit = new ElementMatcherTaker((x :Either[Char, XMLEvent]) => x match {
+            case Left(x) if '0' to '9' contains x => true
+            case _ => false
+          })
+
+
   def const(s :String) : ChainedTransformRoot = {
     s map ((input : Char) => new ElementMatcherTaker(
           (x :Either[Char, XMLEvent]) => x match {

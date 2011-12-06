@@ -25,7 +25,7 @@ case class CPSTranslateModelTstContext(value : String)
 @Test
 class CPSTranslateModelTest extends CPSTranslateModel[CPSTranslateModelTstContext] {
   @Test
-  def testPositiveCase() = {
+  def testPositiveCase() {
     val takeValueToContext = new TakeResultToContext {
       def pushToContext(text: String, context: CPSTranslateModelTstContext) = context.copy(value = text)
     }
@@ -41,7 +41,7 @@ class CPSTranslateModelTest extends CPSTranslateModel[CPSTranslateModelTstContex
   }
 
   @Test
-  def testNegativeCase() = {
+  def testNegativeCase() {
     val takeValueToContext = new TakeResultToContext {
       def pushToContext(text: String, context: CPSTranslateModelTstContext) = context.copy(value = text)
     }
@@ -53,7 +53,13 @@ class CPSTranslateModelTest extends CPSTranslateModel[CPSTranslateModelTstContex
       (drop ~ >((c : CPSTranslateModelTstContext) => Stream(EvText(c.value))) )  )*))
 
     val result = t(new CFilterIdentity(), new CFilterIdentity())(input, new CPSTranslateModelTstContext(""))
-    CPSStreamHelperMethods.removeAllEmptyPositive(result) foreach (x => print(x))
+    CPSStreamHelperMethods.removeAllEmptyPositive(result) foreach (x => assertFalse(x._2))
+  }
+
+  @Test
+  def testTakeADigit() {
+    val input = "01234567899".toStream map ( (x : Char) => (Some(Left(x)), false))
+    (takeADigit+)(new CFilterIdentity(), new CFilterIdentity())(input, null) foreach (x => assertTrue(x._2))
   }
 
 }
