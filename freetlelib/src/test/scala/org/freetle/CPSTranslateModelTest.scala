@@ -25,7 +25,7 @@ case class CPSTranslateModelTstContext(value : String)
 @Test
 class CPSTranslateModelTest extends CPSTranslateModel[CPSTranslateModelTstContext] {
   @Test
-  def test() = {
+  def testPositiveCase() = {
     val takeValueToContext = new TakeResultToContext {
       def pushToContext(text: String, context: CPSTranslateModelTstContext) = context.copy(value = text)
     }
@@ -37,6 +37,23 @@ class CPSTranslateModelTest extends CPSTranslateModel[CPSTranslateModelTstContex
       (drop ~ >((c : CPSTranslateModelTstContext) => Stream(EvText(c.value))) )  )*))
 
     //
-    t(new CFilterIdentity(), new CFilterIdentity())(input, new CPSTranslateModelTstContext("")) foreach (x => print(x))
+    t(new CFilterIdentity(), new CFilterIdentity())(input, new CPSTranslateModelTstContext("")) foreach (x => assertTrue(x._2))
   }
+
+  @Test
+  def testNegativeCase() = {
+    val takeValueToContext = new TakeResultToContext {
+      def pushToContext(text: String, context: CPSTranslateModelTstContext) = context.copy(value = text)
+    }
+    val input = """<>header56
+::flatfile
+::footer55
+""".toStream map ( (x : Char) => (Some(Left(x)), false))
+    val t = (((const("::") ~ ((repeat(8, takeAnyChar) -> takeValueToContext) ~ const("\n")) ->
+      (drop ~ >((c : CPSTranslateModelTstContext) => Stream(EvText(c.value))) )  )*))
+
+    val result = t(new CFilterIdentity(), new CFilterIdentity())(input, new CPSTranslateModelTstContext(""))
+    CPSStreamHelperMethods.removeAllEmptyPositive(result) foreach (x => print(x))
+  }
+
 }

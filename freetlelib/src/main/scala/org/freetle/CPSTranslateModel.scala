@@ -37,7 +37,7 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
   def const(s :String) : ChainedTransformRoot = {
     s map ((input : Char) => new ElementMatcherTaker(
           (x :Either[Char, XMLEvent]) => x match {
-            case Left(input) => true
+            case Left(`input`) => true
             case _ => false
           }
     )) reduce( (x : ChainedTransformRoot, y : ChainedTransformRoot) => new SequenceOperator(x,  y) )
