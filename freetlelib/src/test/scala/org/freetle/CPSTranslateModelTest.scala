@@ -58,6 +58,7 @@ class CPSTranslateModelTest extends CPSTranslateModel[CPSTranslateModelTstContex
 
   @Test
   def testTakeADigit() {
+    assertEquals(Stream.Empty, Stream.continually(0).take(0))
     val input = "01234567899".toStream map ( (x : Char) => (Some(Left(x)), false))
     (takeADigit+)(new CFilterIdentity(), new CFilterIdentity())(input, null) foreach (x => assertTrue(x._2))
   }

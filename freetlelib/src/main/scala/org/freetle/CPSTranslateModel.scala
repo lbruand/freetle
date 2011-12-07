@@ -25,8 +25,19 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
   implicit def convert(c : Char) : Either[Char, XMLEvent] = Left(c)
   implicit def convert(c : XMLEvent) : Either[Char, XMLEvent] = Right(c)
 
-  def repeat(transform : ChainedTransformRoot, minOccur : Int) : ChainedTransformRoot = {
-    Stream.continually(transform).take(minOccur)  reduce(
+  /**
+   * Repeat a transform so it matches the input stream at least minOccur times and to the most maxOccur.
+   * if maxOccur is less than minOccur then it matches exactly minOccur times.
+   */
+  def repeat(transform : ChainedTransformRoot, minOccurs : Int, maxOccurs : Int = -1) : ChainedTransformRoot = {
+    val constStream = Stream.continually(transform).take(minOccurs)
+    val optionalLength= maxOccurs - minOccurs
+    val allStream = if (optionalLength > 0)
+                      constStream.append(Stream.continually(transform?).take(optionalLength))
+                    else
+                      constStream
+
+    allStream reduce(
       (x : ChainedTransformRoot, y : ChainedTransformRoot) => new SequenceOperator(x,  y) )
   }
   val takeAnyChar = new ElementMatcherTaker((x :Either[Char, XMLEvent]) => x match {
