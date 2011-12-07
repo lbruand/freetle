@@ -33,7 +33,7 @@ class CPSTranslateModelTest extends CPSTranslateModel[CPSTranslateModelTstContex
 ::flatfile
 ::footer55
 """.toStream map ( (x : Char) => (Some(Left(x)), false))
-    val t = (((const("::") ~ ((repeat(8, takeAnyChar) -> takeValueToContext) ~ const("\n")) ->
+    val t = (((const("::") ~ ((repeat(takeAnyChar, 8) -> takeValueToContext) ~ const("\n")) ->
       (drop ~ >((c : CPSTranslateModelTstContext) => Stream(EvText(c.value))) )  )*))
 
     //
@@ -49,7 +49,7 @@ class CPSTranslateModelTest extends CPSTranslateModel[CPSTranslateModelTstContex
 ::flatfile
 ::footer55
 """.toStream map ( (x : Char) => (Some(Left(x)), false))
-    val t = (((const("::") ~ ((repeat(8, takeAnyChar) -> takeValueToContext) ~ const("\n")) ->
+    val t = (((const("::") ~ ((repeat(takeAnyChar, 8) -> takeValueToContext) ~ const("\n")) ->
       (drop ~ >((c : CPSTranslateModelTstContext) => Stream(EvText(c.value))) )  )*))
 
     val result = t(new CFilterIdentity(), new CFilterIdentity())(input, new CPSTranslateModelTstContext(""))
