@@ -16,6 +16,7 @@
 package org.freetle
 
 import util._
+import xml.{Node, NodeSeq}
 
 
 /**
@@ -103,5 +104,46 @@ val takeADigit = new ElementMatcherTaker((x :Either[Char, XMLEvent]) => x match 
   class PushText(text: String) extends PushFromContext(x => Stream(Right(new EvText(text)))) {
     override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
   }
+
+    /**
+   * A companion object to PushNode class.
+   * Internal.
+   */
+  private object PushNode {
+
+    def serializeXML(nodeSeq : NodeSeq) : Stream[Either[Char,  XMLEvent]] = {
+      ((nodeSeq map( serializeNodeXML(_))).toStream.flatten)
+    }
+
+    def serializeNodeXML(node : Node) : Stream[Either[Char,  XMLEvent]] =
+      node match {
+      case elem :  scala.xml.Elem //(prefix, label, attributes, scope, children)
+            => {
+                  val qName: QName = if (elem.prefix == null || elem.prefix.isEmpty)
+                                        new QName(elem.scope.getURI(null), elem.label)
+                                     else
+                                        new QName(elem.scope.getURI(elem.prefix), elem.label, elem.prefix)
+                  Stream.cons(Right(new EvElemStart(qName,  null)),
+                          Stream.concat(serializeXML(elem.child),
+                            Stream(Right(new EvElemEnd(qName)))))
+                }
+      case text : scala.xml.Text => Stream(Right(new EvText(text.text)))
+      case comment : scala.xml.Comment => Stream(Right(new EvComment(comment.text)))
+      case pi : scala.xml.ProcInstr => Stream(Right(new EvProcInstr(pi.target, pi.proctext)))
+      case entityRef : scala.xml.EntityRef => Stream(Right(new EvEntityRef(entityRef.entityName)))
+      case atom : scala.xml.Atom[Any] => Stream(Right(new EvText(atom.text)))
+      case _ => Stream(Right(new EvText("error" + node.getClass))) // TODO Throw exception.
+    }
+  }
+  /**
+   * Push a scala xml content down the pipeline.
+   */
+  @SerialVersionUID(599494944949L + 10 *19L)
+  class PushNode(nodeSeq: Option[Context] => NodeSeq) extends PushFromContext(
+      ((x :Context) => Some(x)) andThen nodeSeq andThen PushNode.serializeXML
+  ) {
+    override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
+  }
+
 
 }
