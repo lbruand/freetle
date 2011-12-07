@@ -325,6 +325,22 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
   }
 
   /**
+   * Repeat a transform so it matches the input stream at least minOccur times and to the most maxOccur.
+   * if maxOccur is less than minOccur then it matches exactly minOccur times.
+   */
+  def repeat(transform : ChainedTransformRoot, minOccurs : Int, maxOccurs : Int = -1) : ChainedTransformRoot = {
+    val constStream = Stream.continually(transform).take(minOccurs)
+    val optionalLength= maxOccurs - minOccurs
+    val allStream = if (optionalLength > 0)
+                      constStream.append(Stream.continually(transform?).take(optionalLength))
+                    else
+                      constStream
+
+    allStream reduce(
+      (x : ChainedTransformRoot, y : ChainedTransformRoot) => new SequenceOperator(x,  y) )
+  }
+
+  /**
    * A transform that's context-free
    * (Not using the context, either as input or ouput)
    */
