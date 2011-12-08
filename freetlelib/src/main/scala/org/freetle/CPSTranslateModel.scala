@@ -17,6 +17,8 @@ package org.freetle
 
 import util._
 import xml.{Node, NodeSeq}
+import java.io._
+import io.Source
 
 
 /**
@@ -145,5 +147,59 @@ val takeADigit = new ElementMatcherTaker((x :Either[Char, XMLEvent]) => x match 
     override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
   }
 
+  /**
+   * Util class to build XMLResultStream, save etc...
+   */
+  object ResultStreamUtils {
+
+    def convertCharToCPSStream(input : Iterator[Char]) : CPSStream =
+        (input map ((x :Char) => (Some(Left(x)), false))).toStream
+    /**
+     * Load a XMLResultStream from an InputStream
+     */
+    def loadXMLResultStream(in : InputStream) : CPSStream =
+        convertCharToCPSStream(Source.fromInputStream(in))
+
+    /**
+     * Load a XMLResultStream from a String.
+     */
+    def loadXMLResultStream(str : String) : CPSStream =
+        loadXMLResultStream(new ByteArrayInputStream(str.getBytes))
+
+    /**
+     * Load a XMLResultStream from a String.
+     */
+    def loadXMLResultStream(str : =>Stream[Char]) : CPSStream =
+        convertCharToCPSStream(str.iterator)
+
+    /**
+     * Serialise a XMLResultStream into a XML form.
+     */
+    def serializeXMLResultStream(evStream : =>CPSStream, writer : Writer) : Unit = {
+      evStream foreach (_._1 match {
+                case Some(Right(x : XMLEvent)) => x.appendWriter(writer)
+                case _ => (new EvComment("EmptyPositive")).appendWriter(writer)
+              })
+    }
+
+    /**
+     * Deserialize from an objectInputStream serialized/binary XMLEvent.
+     */
+    def rehydrate(in : ObjectInputStream) : CPSStream = {
+      val read = in.readObject
+      if (read != null) {
+        Stream.cons( (Some((read).asInstanceOf[XMLEvent]), false), rehydrate(in))
+      } else {
+        Stream.Empty
+      }
+    }
+
+    /**
+     * Serialize to an objectOutputStream serialized/binary XMLEvent.
+     */
+    def dehydrate(evStream: CPSStream, dataOut: ObjectOutputStream): Unit = {
+      evStream.foreach(x => {dataOut.writeObject(x._1.get)})
+    }
+  }
 
 }
