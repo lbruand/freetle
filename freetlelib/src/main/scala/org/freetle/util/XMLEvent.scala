@@ -74,7 +74,7 @@ case class EvElemStart(var name : QName = null, var attributes : Map[QName, Stri
     sb.append('"')
   }
 
-  final def appendWriter(sb: Writer): Unit = {
+  final def appendWriter(sb: Writer) {
     sb.append('<')
     if (!name.prefix.isEmpty) {
       sb.append(name.prefix)
@@ -121,7 +121,7 @@ case class EvElemStart(var name : QName = null, var attributes : Map[QName, Stri
 @SerialVersionUID(32004)
 case class EvElemEnd(var name : QName) extends XMLEvent {
   final def this() = this(null)
-  final def appendWriter(sb: Writer): Unit = {
+  final def appendWriter(sb: Writer) {
     sb.append('<')
     sb.append('/')
     if (!name.prefix.isEmpty) {
@@ -146,7 +146,7 @@ case class EvElemEnd(var name : QName) extends XMLEvent {
 @SerialVersionUID(32005)
 case class EvText(var text : String) extends XMLEvent {
   final def this() = this(null)
-  final def appendWriter(sb: Writer): Unit = {
+  final def appendWriter(sb: Writer) {
     sb.append(text)
   }
 
@@ -164,7 +164,7 @@ case class EvText(var text : String) extends XMLEvent {
 @SerialVersionUID(32006)
 case class EvEntityRef(var entity: String) extends XMLEvent {
   final def this() = this(null)
-  final def appendWriter(sb: Writer): Unit = {
+  final def appendWriter(sb: Writer) {
     sb.append('&')
     sb.append(entity)
     sb.append(';')
@@ -183,7 +183,7 @@ case class EvEntityRef(var entity: String) extends XMLEvent {
 @SerialVersionUID(32007)
 case class EvProcInstr(var target: String, var text: String) extends XMLEvent {
   final def this() = this(null, null)
-  final def appendWriter(sb: Writer): Unit = {}
+  final def appendWriter(sb: Writer) {}
 
   final def readExternal(in: ObjectInput) = {
     this.target = in.readUTF
@@ -200,7 +200,7 @@ case class EvProcInstr(var target: String, var text: String) extends XMLEvent {
 @SerialVersionUID(32008)
 case class EvComment(var text: String) extends XMLEvent {
   final def this() = this(null)
-  final def appendWriter(sb: Writer): Unit = {
+  final def appendWriter(sb: Writer) {
     sb.append("<!-- ")
     sb.append(text)
     sb.append(" -->")

@@ -33,7 +33,7 @@ trait FileSplitter[Context] extends CPSXMLModel[Context] {
                                writerConstructor : (Int, Writer) => Writer,
                                occurrence : Int = 0,
                                writerInput : Writer = null,
-                               context : Context) : Unit = {
+                               context : Context) {
     val trans = fileMatcher(new CFilterIdentity(), new CFilterIdentity())
     var that = trans(CPSStreamHelperMethods.turnToTail(evStream), context)
     val writer = writerConstructor(occurrence, writerInput)

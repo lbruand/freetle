@@ -22,7 +22,7 @@ import util.Random
  */
 
 class RandomUtils extends Random {
-  def nextStringLetterOrDigit(sb :StringBuilder, i : Int) : Unit = {
+  def nextStringLetterOrDigit(sb :StringBuilder, i : Int) {
      (1 to i).foreach(x => {
         var c = this.nextPrintableChar()
         while (!c.isLetterOrDigit) {

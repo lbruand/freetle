@@ -39,7 +39,7 @@ class SourceReader(src: Source) extends Reader {
       i - start
   }
   
-  override def close() :Unit = {
+  override def close() {
   }
   
 }
@@ -62,7 +62,7 @@ class StreamReader(stream: =>Stream[Char]) extends Reader {
       i - start
   }
 
-  override def close() :Unit = {
+  override def close() {
   }
 
 }

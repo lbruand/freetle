@@ -225,7 +225,7 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
     /**
      * Serialise a XMLResultStream into a XML form.
      */
-    def serializeXMLResultStream(evStream : =>CPSStream, writer : Writer) : Unit = {
+    def serializeXMLResultStream(evStream : =>CPSStream, writer : Writer) {
       evStream foreach (_._1 match {
                 case Some(Right(x : XMLEvent)) => x.appendWriter(writer)
                 case _ => (new EvComment("EmptyPositive")).appendWriter(writer)
@@ -247,7 +247,7 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
     /**
      * Serialize to an objectOutputStream serialized/binary XMLEvent.
      */
-    def dehydrate(evStream: CPSStream, dataOut: ObjectOutputStream): Unit = {
+    def dehydrate(evStream: CPSStream, dataOut: ObjectOutputStream) {
       evStream.foreach(x => {dataOut.writeObject(x._1.get)})
     }
   }

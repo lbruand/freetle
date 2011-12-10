@@ -126,7 +126,7 @@ class BenchmarkTest {
 """
 
   val random = new RandomUtils()
-  def buildRandomCD(sb : StringBuilder) : Unit = {
+  def buildRandomCD(sb : StringBuilder) {
     sb.append("<cd>\n")
 
     sb.append("<title>the ")

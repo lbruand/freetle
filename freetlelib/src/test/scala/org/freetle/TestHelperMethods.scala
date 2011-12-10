@@ -24,12 +24,16 @@ trait TestHelperMethods[Element, Context] extends CPSModel[Element, Context] {
   /**
    * Asserts that there are only Results in the stream.
    */
-  def assertAllResult( r : CPSStream, str : String = null) :Unit = r.foreach(x => assertTrue(str, x._2))
+  def assertAllResult( r : CPSStream, str : String = null) {
+    r.foreach(x => assertTrue(str, x._2))
+  }
 
   /**
    * Asserts that there are only Tails in the stream.
    */
-  def assertAllTail(r : CPSStream) :Unit = r.foreach(x => assertTrue(!x._2))
+  def assertAllTail(r : CPSStream) {
+    r.foreach(x => assertTrue(!x._2))
+  }
 
   /**
    * Return the longest substream that begins very a Tail.
@@ -39,7 +43,9 @@ trait TestHelperMethods[Element, Context] extends CPSModel[Element, Context] {
   /**
    * Constrains that after the first Tail, there is only Tails.
    */
-  def constraintResultsThenTails(x : CPSStream) : Unit = assertAllTail(findFirstTail(x))
+  def constraintResultsThenTails(x : CPSStream) {
+    assertAllTail(findFirstTail(x))
+  }
 
   /**
    * Number of Results in the Stream.

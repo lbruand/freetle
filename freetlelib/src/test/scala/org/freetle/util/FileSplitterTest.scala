@@ -26,7 +26,7 @@ class FileSplitterTest extends CPSXMLModel[FileSplitterContext] with FileSplitte
 
 
   @Test
-  def test() = {
+  def test() {
     val str = """<Document>
     <File>euhgzuie zeufhenuzehf fzehfeuiezh1</File>
     <File>euhgzuie zeufhenuzehf fzehfeuiezh2</File>

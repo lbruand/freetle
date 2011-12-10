@@ -243,7 +243,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
               metaProcessor.processBinaryOperator(this, new ComposeOperator(_, _), left, right)
     lazy val leftRealized : ChainedTransformRoot = left
     lazy val rightRealized : ChainedTransformRoot = right
-    @inline private def forceStream(result: CPSStream, identitySuccess: CFilterIdentityWithContext, identityFailure: CFilterIdentityWithContext): Unit = {
+    @inline private def forceStream(result: CPSStream, identitySuccess: CFilterIdentityWithContext, identityFailure: CFilterIdentityWithContext) {
       var these = result
       while (!identitySuccess.isApplied && !identityFailure.isApplied && !these.tail.isEmpty) these = these.tail
     }
