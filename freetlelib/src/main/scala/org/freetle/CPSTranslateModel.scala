@@ -25,19 +25,37 @@ import io.Source
  * This model is used to transform a Stream[Char] towards a Stream[XMLEvent]
  */
 class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Context] {
+
+  /**
+   * An implicit used to convert any char to a Element
+   */
   implicit def convert(c : Char) : Either[Char, XMLEvent] = Left(c)
+
+  /**
+   * An implicit used to convert any XMLEvent to a Element
+   */
   implicit def convert(c : XMLEvent) : Either[Char, XMLEvent] = Right(c)
 
+  /**
+   * Recognizes any char value.
+   */
   val takeAnyChar = new ElementMatcherTaker((x :Either[Char, XMLEvent]) => x match {
             case Left(_) => true
             case _ => false
           })
 
+  /**
+   * Recognizes a Digit
+   */
   val takeADigit = new ElementMatcherTaker((x :Either[Char, XMLEvent]) => x match {
             case Left(x) if '0' to '9' contains x => true
             case _ => false
           })
 
+
+  /**
+   * Recognizes a char.
+   */
   class CharElementMatcher(val input : Char) extends CPSElemMatcher {
     def apply(x: Either[Char, XMLEvent] ) : Boolean = x match {
             case Left(`input`) => true
@@ -45,17 +63,34 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
           }
   }
 
+  /**
+   * Recognizes a constant Char.
+   */
   private def constChar(input:Char) : ChainedTransformRoot =
                     new ElementMatcherTaker(new CharElementMatcher(input))
 
+
+  /**
+   * Recognizes a constant String.
+   */
   def const(s :String) : ChainedTransformRoot = {
     s map (constChar(_)) reduce (
         (x : ChainedTransformRoot, y : ChainedTransformRoot) => new SequenceOperator(x,  y) )
   }
 
+
+  /**
+   * A basic element to recurse into the constTree.
+   */
   private def makeBranch( c: Char, t : PrefixMap[ChainedTransformRoot]) : ChainedTransformRoot =
                                 new SequenceOperator(constChar(c), constTree(t))
 
+  /**
+   * You can pass to a constTree a PrefixMap.
+   * This prefixMap associate a constant String with a result.
+   * The constTree factors out common prefix on the left for all entries in order for
+   * the number of choices to be minimum.
+   */
   def constTree(prefixMap :PrefixMap[ChainedTransformRoot]) : ChainedTransformRoot = {
     prefixMap.value match {
       case Some(x) => x
@@ -66,7 +101,6 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
 
   /**
    * A base class to load text tokens to context.
-   * TODO : Test
    */
   abstract class TakeResultToContext extends ContextWritingTransform {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
