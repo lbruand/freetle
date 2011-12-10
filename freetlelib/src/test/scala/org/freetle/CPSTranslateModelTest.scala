@@ -16,7 +16,7 @@
 package org.freetle
 import org.junit._
 import Assert._
-import util.{EvText, EvElemStart, QName}
+import util.{PrefixMap, EvText, EvElemStart, QName}
 
 case class CPSTranslateModelTstContext(value : String)
 /**
@@ -29,10 +29,10 @@ class CPSTranslateModelTest extends CPSTranslateModel[CPSTranslateModelTstContex
     val takeValueToContext = new TakeResultToContext {
       def pushToContext(text: String, context: CPSTranslateModelTstContext) = context.copy(value = text)
     }
-    val input = """::header56
+    val input = ResultStreamUtils.convertCharToCPSStream("""::header56
 ::flatfile
 ::footer55
-""".toStream map ( (x : Char) => (Some(Left(x)), false))
+""".toIterator)
     val t = (((const("::") ~ ((repeat(takeAnyChar, 8) -> takeValueToContext) ~ const("\n")) ->
       (drop ~ >((c : CPSTranslateModelTstContext) => Stream(EvText(c.value))) )  )*))
 
@@ -45,10 +45,10 @@ class CPSTranslateModelTest extends CPSTranslateModel[CPSTranslateModelTstContex
     val takeValueToContext = new TakeResultToContext {
       def pushToContext(text: String, context: CPSTranslateModelTstContext) = context.copy(value = text)
     }
-    val input = """<>header56
+    val input = ResultStreamUtils.convertCharToCPSStream("""<>header56
 ::flatfile
 ::footer55
-""".toStream map ( (x : Char) => (Some(Left(x)), false))
+""".toIterator)
     val t = (((const("::") ~ ((repeat(takeAnyChar, 8) -> takeValueToContext) ~ const("\n")) ->
       (drop ~ >((c : CPSTranslateModelTstContext) => Stream(EvText(c.value))) )  )*))
 
@@ -57,9 +57,29 @@ class CPSTranslateModelTest extends CPSTranslateModel[CPSTranslateModelTstContex
   }
 
   @Test
+  def testPrefixChoice() {
+    val t = constTree(PrefixMap(
+      "aa" -> const("hello"),
+      "aba" -> const("help"),
+      "abb" -> const("hello")
+    ))
+    var input = ResultStreamUtils.convertCharToCPSStream("aahello".toIterator)
+    t(new CFilterIdentity(), new CFilterIdentity())(input, null) foreach (x => assertTrue(x._2))
+
+    input = ResultStreamUtils.convertCharToCPSStream("abahelp".toIterator)
+    t(new CFilterIdentity(), new CFilterIdentity())(input, null) foreach (x => assertTrue(x._2))
+
+    input = ResultStreamUtils.convertCharToCPSStream("abbhello".toIterator)
+    t(new CFilterIdentity(), new CFilterIdentity())(input, null) foreach (x => assertTrue(x._2))
+
+    input = ResultStreamUtils.convertCharToCPSStream("abbhelp".toIterator)
+    assertTrue(t(new CFilterIdentity(), new CFilterIdentity())(input, null) exists (!_._2))
+  }
+
+  @Test
   def testTakeADigit() {
     assertEquals(Stream.Empty, Stream.continually(0).take(0))
-    val input = "01234567899".toStream map ( (x : Char) => (Some(Left(x)), false))
+    val input = ResultStreamUtils.convertCharToCPSStream("01234567899".toIterator)
     (takeADigit+)(new CFilterIdentity(), new CFilterIdentity())(input, null) foreach (x => assertTrue(x._2))
   }
 

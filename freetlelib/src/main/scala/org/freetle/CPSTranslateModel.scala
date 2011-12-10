@@ -33,19 +33,35 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
             case _ => false
           })
 
-val takeADigit = new ElementMatcherTaker((x :Either[Char, XMLEvent]) => x match {
+  val takeADigit = new ElementMatcherTaker((x :Either[Char, XMLEvent]) => x match {
             case Left(x) if '0' to '9' contains x => true
             case _ => false
           })
 
-
-  def const(s :String) : ChainedTransformRoot = {
-    s map ((input : Char) => new ElementMatcherTaker(
-          (x :Either[Char, XMLEvent]) => x match {
+  class CharElementMatcher(val input : Char) extends CPSElemMatcher {
+    def apply(x: Either[Char, XMLEvent] ) : Boolean = x match {
             case Left(`input`) => true
             case _ => false
           }
-    )) reduce( (x : ChainedTransformRoot, y : ChainedTransformRoot) => new SequenceOperator(x,  y) )
+  }
+
+  private def constChar(input:Char) : ChainedTransformRoot =
+                    new ElementMatcherTaker(new CharElementMatcher(input))
+
+  def const(s :String) : ChainedTransformRoot = {
+    s map (constChar(_)) reduce (
+        (x : ChainedTransformRoot, y : ChainedTransformRoot) => new SequenceOperator(x,  y) )
+  }
+
+  private def makeBranch( c: Char, t : PrefixMap[ChainedTransformRoot]) : ChainedTransformRoot =
+                                new SequenceOperator(constChar(c), constTree(t))
+
+  def constTree(prefixMap :PrefixMap[ChainedTransformRoot]) : ChainedTransformRoot = {
+    prefixMap.value match {
+      case Some(x) => x
+      case None => prefixMap.suffixes map ( x => makeBranch(x._1,x._2)  ) reduce(
+                        (x : ChainedTransformRoot, y : ChainedTransformRoot) => new ChoiceOperator(x,  y) )
+    }
   }
 
   /**
