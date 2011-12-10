@@ -456,7 +456,6 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
     def partialapply(in : CPSStream, context : Context) : CPSStream = {
 
-        // TODO The map operator should be factored out uplayer.
         CPSStreamHelperMethods.appendPositiveStream((generator(context) map ( x => (Some(x), true)))).append(in)
       }
   }
