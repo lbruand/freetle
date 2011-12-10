@@ -30,7 +30,7 @@ class SourceReader(src: Source) extends Reader {
   override def read(arr : Array[Char], start : Int, sz : Int) : Int = {
     var i = start
     while (src.hasNext && i - start < sz) {
-      arr(i) = src.next
+      arr(i) = src.next()
       i += 1
     }
     if (i - start == 0 && !src.hasNext)

@@ -48,7 +48,7 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
    * Recognizes a Digit
    */
   val takeADigit = new ElementMatcherTaker((x :Either[Char, XMLEvent]) => x match {
-            case Left(x) if '0' to '9' contains x => true
+            case Left(input) if '0' to '9' contains input => true
             case _ => false
           })
 

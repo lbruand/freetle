@@ -30,7 +30,7 @@ import java.io._
 sealed abstract class XMLEvent extends Externalizable {
   var location : Location = null
   var namespaceContext : NamespaceContext = null
-  override def toString() : String = toStream.mkString
+  override def toString() : String = toStream().mkString
 
   final def toStream() :  Stream[Char] = {
     var sb = new StringWriter()
@@ -61,7 +61,7 @@ case class QName(var namespaceURI : String = XMLConstants.NULL_NS_URI,
 @SerialVersionUID(32003)
 case class EvElemStart(var name : QName = null, var attributes : Map[QName, String] = null) extends XMLEvent {
   final def this() = this(null, null)
-  private final def buildAttrStringBuffer(sb :Writer)(j : Tuple2[QName, String]): Unit = {
+  private final def buildAttrStringBuffer(sb :Writer)(j : (QName, String)): Unit = {
     sb.append(' ')
     if (!j._1.prefix.isEmpty) {
       sb.append(j._1.prefix)

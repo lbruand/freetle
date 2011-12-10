@@ -162,7 +162,7 @@ class BenchmarkTest {
     sb.append(catalogHeader)
     (0 to (n-1)).foreach(x => buildRandomCD(sb))
     sb.append(catalogFooter)
-    sb.result
+    sb.result()
   }
   
   abstract class FreetleBenchmark(val nCatalog : Int = 3) extends Benchmark {
@@ -321,7 +321,7 @@ class BenchmarkTest {
     val benchmarksRun = benchmarks.flatMap(f => sizes.map(f))
     val timings = benchmarksRun.map(x => {
         x.catalogSource = buildRandomCatalog(x.nCatalog)
-        Platform.collectGarbage
+        Platform.collectGarbage()
         val r = (x.name, x.nCatalog, x.catalogSource.length, (x.runBenchmark(warmup + testRetries).drop(warmup).sum/testRetries))
         x.catalogSource = null
         r
