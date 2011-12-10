@@ -35,7 +35,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
 
   
   @Test
-  def testCompose() = {
+  def testCompose() {
     val localMax = max.max(1000) // This is to prevent OutOfMemory problems.
     def createStream : CPSStream = {
       Stream.continually((Some('a'), false)).take(localMax).append(
@@ -49,13 +49,13 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
 
   }
   @Test
-  def testChoiceSimple() = {
+  def testChoiceSimple() {
     def createStream : CPSStream = {
       Stream.continually((Some('a'), false)).take(max).append(
           Stream.continually((Some('b'), false)).take(max)
         )
     }
-    val t = (new ElementMatcherTaker(_.equals('a')) | new ElementMatcherTaker(_.equals('b')))+
+    val t = ((new ElementMatcherTaker(_.equals('a')) | new ElementMatcherTaker(_.equals('b')))+)
 
     t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
                                                                          assertTrue(" char : " + x._1, x._2)
@@ -64,7 +64,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
   }
 
   @Test
-  def testChoiceBacktracking() = {
+  def testChoiceBacktracking() {
     def createStream : CPSStream = {
       Stream.continually(("aaab".toStream map (x => (Some(x), false)))).take(max).flatten
     }
@@ -91,7 +91,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
   }
 
   @Test
-  def testChoiceBacktrackingWithAdvanced() = {
+  def testChoiceBacktrackingWithAdvanced() {
     def createStream : CPSStream = {
       Stream.continually(("aaab".toStream map (x => (Some(x), false)))).take(max).flatten
     }
@@ -118,7 +118,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
   }
 
   @Test
-  def testChoiceNoBacktracking() = {
+  def testChoiceNoBacktracking() {
     def createStream : CPSStream = {
       Stream.continually(("aaab".toStream map (x => (Some(x), false)))).take(max).flatten
     }
@@ -142,7 +142,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
   }
 
   @Test
-  def testSequence() = {
+  def testSequence() {
     def createStream : CPSStream = {
       Stream((Some('a'), false)).append(
           Stream((Some('b'), false))
@@ -160,7 +160,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
   }
 
   @Test
-  def testSequenceWithZeroOrMore() = {
+  def testSequenceWithZeroOrMore() {
     def createStream : CPSStream = {
       Stream.continually((Some('a'), false)).take(max).append(
           Stream.continually((Some('b'), false)).take(max)
@@ -179,7 +179,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
   }
 
   @Test
-  def testSequenceWithOneOrMore() = {
+  def testSequenceWithOneOrMore() {
     def createStream : CPSStream = {
       Stream.continually((Some('a'), false)).take(max).append(
           Stream.continually((Some('b'), false)).take(max)
@@ -200,7 +200,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
    * Prove how one can count the number of occurrence of a rule.
    */
   @Test
-  def testCounting() = {
+  def testCounting() {
     def createStream : CPSStream = Stream.continually((Some('a'), false)).take(max).append(Stream((Some('b'), false)))
     val t = ((new ElementMatcherTaker(_.equals('a')) -> new ContextWritingTransform {
       def metaProcess(metaProcessor : MetaProcessor) =
@@ -217,10 +217,10 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
   }
 
   @Test
-  def testTaker() = {
+  def testTaker() {
     def createStream : CPSStream = Stream.continually((Some('a'), false)).take(max)
 
-    val t = (new ElementMatcherTaker(_.equals('a')))+
+    val t = ((new ElementMatcherTaker(_.equals('a')))+)
 
     t(filterIdentity, filterIdentity)(createStream, null).foreach(x => {
            assertTrue(x._2)

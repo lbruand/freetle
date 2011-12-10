@@ -27,8 +27,9 @@ extends mutable.Map[String, T]
       suffixes(leading) withPrefix (s substring 1)
     }
 
-  override def update(s: String, elem: T) =
+  override def update(s: String, elem: T) {
     withPrefix(s).value = Some(elem)
+  }
 
   override def remove(s: String): Option[T] =
     if (s.isEmpty) { val prev = value; value = None; prev }

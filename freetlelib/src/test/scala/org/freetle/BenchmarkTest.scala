@@ -221,7 +221,7 @@ class BenchmarkTest {
     var resultStringWriter: StringWriter = null
 
 
-    def run() = {
+    def run() {
       source = new StreamSource(new StringReader(new String(catalogSource.getBytes)))
       resultStringWriter = new StringWriter()
       val result = new StreamResult(resultStringWriter)
@@ -262,7 +262,7 @@ class BenchmarkTest {
     var resultStringWriter: StringWriter = null
 
 
-    def run() = {
+    def run() {
       source = new StreamSource(new StringReader(new String(catalogSource.getBytes)))
       resultStringWriter = new StringWriter()
       val result = new StreamResult(resultStringWriter)
@@ -271,7 +271,7 @@ class BenchmarkTest {
       //assertEquals("", resultString) 
     }
 
-    def checkResult() = {
+    def checkResult() {
       // Finished Run.
       /*val resultString: String = resultStringWriter.toString
 
@@ -284,18 +284,22 @@ class BenchmarkTest {
   class FreetleCaseBenchmark(override val nCatalog : Int = 3) extends FreetleBenchmark(nCatalog : Int) {
     override val name = "freetle"
 
-    def run() = FreetleCaseBenchmark.transformer.run(catalogSource = catalogSource)
+    def run() {
+      FreetleCaseBenchmark.transformer.run(catalogSource = catalogSource)
+    }
 
-    def checkResult() = {
+    def checkResult() {
 
     }
   }
   class IdentityCaseBenchmark(override val nCatalog : Int = 3) extends FreetleBenchmark(nCatalog : Int) {
     override val name = "identity"
 
-    def run() = IdentityCaseBenchmark.transformer.run(catalogSource = catalogSource)
+    def run() {
+      IdentityCaseBenchmark.transformer.run(catalogSource = catalogSource)
+    }
 
-    def checkResult() = {
+    def checkResult() {
       //assertEquals("", result)
     }
   }
@@ -307,7 +311,7 @@ class BenchmarkTest {
   }
 
   @Test
-  def testXSLT() = {
+  def testXSLT() {
     val warmup = 4
     val testRetries = 5
     val sizes = (3 to 8).map(_ * 2500)

@@ -31,7 +31,7 @@ case class XMLEventTestContext(a:Int)
 @Test
 class XMLEventTest extends CPSXMLModel[XMLEventTestContext] with TestXMLHelperMethods[XMLEventTestContext] {
   @Test
-  def testLocationAndOffset() = {
+  def testLocationAndOffset() {
     val c = null
     val evStream : CPSStream = mloadStreamFromResource("/org/freetle/input2.xml", Some(c))
 
@@ -66,7 +66,7 @@ class XMLEventTest extends CPSXMLModel[XMLEventTestContext] with TestXMLHelperMe
     val dataOut = new ObjectOutputStream(baout)
     XMLResultStreamUtils.dehydrate(evStream, dataOut)
     dataOut.writeObject(null)
-    dataOut.flush
+    dataOut.flush()
     assertTrue(baout.size > 0)
     val bain = new ByteArrayInputStream(baout.toByteArray)
     val dataIn = new ObjectInputStream(bain)

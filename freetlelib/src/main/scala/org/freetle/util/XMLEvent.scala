@@ -30,27 +30,27 @@ import java.io._
 sealed abstract class XMLEvent extends Externalizable {
   var location : Location = null
   var namespaceContext : NamespaceContext = null
-  override def toString() : String = toStream().mkString
+  override def toString: String = toStream.mkString
 
-  final def toStream() :  Stream[Char] = {
+  final def toStream:  Stream[Char] = {
     var sb = new StringWriter()
     appendWriter(sb)
     sb.toString.toStream
   }
   
-  def appendWriter(writer : Writer) : Unit
+  def appendWriter(writer : Writer)
 }
 @SerialVersionUID(32002)
 case class QName(var namespaceURI : String = XMLConstants.NULL_NS_URI,
                  var localPart: String = null,
                  var prefix : String = XMLConstants.DEFAULT_NS_PREFIX) extends Externalizable {
-  def readExternal(in: ObjectInput) = {
+  def readExternal(in: ObjectInput) {
     namespaceURI = in.readUTF
     localPart = in.readUTF
     prefix = in.readUTF
   }
 
-  def writeExternal(out: ObjectOutput) = {
+  def writeExternal(out: ObjectOutput) {
     out.writeUTF(this.namespaceURI)
     out.writeUTF(this.localPart)
     out.writeUTF(this.prefix)
@@ -61,7 +61,7 @@ case class QName(var namespaceURI : String = XMLConstants.NULL_NS_URI,
 @SerialVersionUID(32003)
 case class EvElemStart(var name : QName = null, var attributes : Map[QName, String] = null) extends XMLEvent {
   final def this() = this(null, null)
-  private final def buildAttrStringBuffer(sb :Writer)(j : (QName, String)): Unit = {
+  private final def buildAttrStringBuffer(sb :Writer)(j : (QName, String)) {
     sb.append(' ')
     if (!j._1.prefix.isEmpty) {
       sb.append(j._1.prefix)
@@ -91,7 +91,7 @@ case class EvElemStart(var name : QName = null, var attributes : Map[QName, Stri
     sb.append('>')
   }
 
-  def readExternal(in: ObjectInput) = {
+  def readExternal(in: ObjectInput) {
     this.name = new QName()
     this.name.readExternal(in)
     val size = in.readInt
@@ -103,7 +103,7 @@ case class EvElemStart(var name : QName = null, var attributes : Map[QName, Stri
     }).toMap[QName, String]
   }
 
-  def writeExternal(out: ObjectOutput) = {
+  def writeExternal(out: ObjectOutput) {
     this.name.writeExternal(out)
     out.writeInt(this.attributes.size)
     this.attributes.foreach[Unit]( x => {
@@ -133,12 +133,12 @@ case class EvElemEnd(var name : QName) extends XMLEvent {
   }
 
 
-  def readExternal(in: ObjectInput) = {
+  def readExternal(in: ObjectInput) {
     this.name = new QName()
     this.name.readExternal(in)
   }
 
-  def writeExternal(out: ObjectOutput) = {
+  def writeExternal(out: ObjectOutput) {
     this.name.writeExternal(out)
   }
 }
@@ -151,11 +151,11 @@ case class EvText(var text : String) extends XMLEvent {
   }
 
 
-  def readExternal(in: ObjectInput) = {
+  def readExternal(in: ObjectInput) {
     this.text = in.readUTF
   }
 
-  def writeExternal(out: ObjectOutput) = {
+  def writeExternal(out: ObjectOutput) {
     out.writeUTF(this.text)
   }
 }
@@ -170,11 +170,11 @@ case class EvEntityRef(var entity: String) extends XMLEvent {
     sb.append(';')
   }
 
-  def readExternal(in: ObjectInput) = {
+  def readExternal(in: ObjectInput) {
     this.entity = in.readUTF
   }
 
-  def writeExternal(out: ObjectOutput) = {
+  def writeExternal(out: ObjectOutput) {
     out.writeUTF(this.entity)
   }
 }
@@ -185,12 +185,12 @@ case class EvProcInstr(var target: String, var text: String) extends XMLEvent {
   final def this() = this(null, null)
   final def appendWriter(sb: Writer) {}
 
-  final def readExternal(in: ObjectInput) = {
+  final def readExternal(in: ObjectInput) {
     this.target = in.readUTF
     this.text = in.readUTF
   }
 
-  final def writeExternal(out: ObjectOutput) = {
+  final def writeExternal(out: ObjectOutput) {
     out.writeUTF(this.target)
     out.writeUTF(this.text)
   }
@@ -205,11 +205,11 @@ case class EvComment(var text: String) extends XMLEvent {
     sb.append(text)
     sb.append(" -->")
   }
-  final def readExternal(in: ObjectInput) = {
+  final def readExternal(in: ObjectInput) {
     this.text = in.readUTF
   }
 
-  final def writeExternal(out: ObjectOutput) = {
+  final def writeExternal(out: ObjectOutput) {
     out.writeUTF(this.text)
   }
 }

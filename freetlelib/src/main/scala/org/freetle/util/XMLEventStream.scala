@@ -141,5 +141,5 @@ final class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
 	  event
   }
   
-  override def hasNext() : Boolean = input.hasNext
+  override def hasNext: Boolean = input.hasNext
 }

@@ -50,7 +50,7 @@ class CPSXMLModelTest extends CPSXMLModel[TstXMLContext] with TestXMLHelperMetho
   }
   
   @Test
-  def testDropFilter() = {
+  def testDropFilter() {
     val evStream = loadStreamFromResource("/org/freetle/input.xml")
 
     val t = <("input") ~
@@ -131,7 +131,7 @@ class CPSXMLModelTest extends CPSXMLModel[TstXMLContext] with TestXMLHelperMetho
   }
 
   @Test
-  def testSumming() = {
+  def testSumming() {
     val c = new TstXMLContext()
     val evStream = loadStreamFromResource("/org/freetle/input2.xml")
     val totalSumTaker = new TakeTextToContext() {
