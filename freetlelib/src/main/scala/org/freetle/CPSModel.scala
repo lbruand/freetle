@@ -68,7 +68,13 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
       cs
     }
 
-    def removeAllEmptyPositive(s : CPSStream) : CPSStream = s.filter( isNotEmptyPositive )
+    /**
+     * remove all the empty Positives.
+     */
+    def removeAllEmptyPositive(s : CPSStream) : CPSStream = {
+      val (result, tail) = s.span(_._2)
+      result.filter(isNotEmptyPositive).append(tail)
+    }
 
     @inline final def isPositive(s : CPSStream) : Boolean = {
       if (s.isEmpty)
