@@ -54,7 +54,7 @@ trait CPSModelTypeDefinition[@specialized Element, @specialized Context] {
 trait CPSModelHelperExtension[@specialized Element, @specialized Context] extends CPSModelTypeDefinition[Element, Context]{
 
   /**
-   * The object CPSStreamHelperMethods is a singleton to store low levels helper functions.
+   * The object CPSStreamHelperMethods is a singleton to store low-level helper functions.
    */
   object CPSStreamHelperMethods {
     @inline val constantEmptyPositive : CPSTupleElement = (None, true)
