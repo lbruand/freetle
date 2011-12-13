@@ -58,7 +58,7 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
    */
   object CPSStreamHelperMethods {
     @inline val constantEmptyPositive : CPSTupleElement = (None, true)
-    @inline def isEmptyPositive(x : CPSTupleElement) : Boolean = x.equals( (None, true) )
+    @inline def isEmptyPositive(x : CPSTupleElement) : Boolean = x.equals( constantEmptyPositive )
     @inline def isNotEmptyPositive(x : CPSTupleElement) : Boolean = !(isEmptyPositive(x))
     @inline def removeWhileEmptyPositive(s : CPSStream) : CPSStream = {
       var cs : CPSStream = s
@@ -69,13 +69,19 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
     }
 
     /**
-     * remove all the empty Positives.
+     * remove all the empty Positives in the stream.
      */
     def removeAllEmptyPositive(s : CPSStream) : CPSStream = {
       val (result, tail) = s.span(_._2)
       result.filter(isNotEmptyPositive).append(tail)
     }
 
+    /**
+     * Is the stream positive.
+     * A stream is positive if:
+     *  * it is not empty
+     *  * and its head is positive.
+     */
     @inline def isPositive(s : CPSStream) : Boolean = {
       if (s.isEmpty)
         false
@@ -83,20 +89,36 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
         s.head._2
     }
 
+    /**
+     * Is the stream only constituted by empty positives.
+     */
     def isOnlyEmptyPositiveStream(s : CPSStream) : Boolean = {
       isPositive(s) && removeWhileEmptyPositive(s).isEmpty
     }
 
+    /**
+     * Make the stream positive if it is not already by appending an empty positive
+     * ahead.
+     */
     @inline def appendPositiveStream(s : CPSStream) : CPSStream = if (!isPositive(s))
                                                                           Stream.cons(CPSStreamHelperMethods.constantEmptyPositive, s)
                                                                         else
                                                                           s
 
+    /**
+     * Pass only a positive stream to the `input` continuation. (private impl.)
+     */
     private def innerAppendPositive(input : =>CFilter)(str : CPSStream, c : Context) : CPSStream =
                                                                         input(appendPositiveStream(str), c)
 
+    /**
+     * Pass only a positive stream to the `input` continuation
+     */
     @inline def appendPositive(input : =>CFilter) : CFilter = innerAppendPositive(input)
 
+    /**
+     * Turn any result into a negative (tail).
+     */
     @inline def turnToTail(s : CPSStream) : CPSStream = s map (x => (x._1, false))
   }
 }
