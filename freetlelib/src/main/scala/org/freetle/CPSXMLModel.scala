@@ -202,9 +202,14 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
    * Matches an EvElemStart
    */
   abstract class EvStartMatcher(nameSpaceMatcher :NameSpaceMatcher) extends EvTagMatcher {
-
+    /**
+     * implement this to check whether the Element is the one we are looking for.
+     */
     def testElem(name : QName, attributes : Map[QName, String]) : Boolean
 
+    /**
+     * Call the testElem method to check the event.
+     */
     def apply(event: XMLEvent) : Boolean = {
       event match {
         case EvElemStart(name, attributes) => {
