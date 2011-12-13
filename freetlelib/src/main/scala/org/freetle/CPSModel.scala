@@ -69,7 +69,7 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
     }
 
     /**
-     * remove all the empty Positives in the stream.
+     * removes all the empty Positives in the stream.
      */
     def removeAllEmptyPositive(s : CPSStream) : CPSStream = {
       val (result, tail) = s.span(_._2)
