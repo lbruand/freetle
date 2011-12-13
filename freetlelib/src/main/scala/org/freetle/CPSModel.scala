@@ -174,11 +174,34 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
    * It defines many shortcuts for operators.
    */
   abstract sealed class ChainedTransformRoot extends ChainedTransform with MetaProcessable {
+    /**
+     * A shortcut to the sequence operator.
+     */
     final def ~(other : => ChainedTransformRoot) : ChainedTransformRoot = new SequenceOperator(this, other)
+
+    /**
+     * A shortcut to the andThen operator. (reverse of the compose operator).
+     */
     final def ->(other : => ChainedTransformRoot) : ChainedTransformRoot = new ComposeOperator(this, other)
+
+    /**
+     * A shortcut to the choice operator.
+     */
     final def |(other : => ChainedTransformRoot) : ChainedTransformRoot = new ChoiceOperator(this, other)
+
+    /**
+     * A shortcut to the zero or more cardinality operator.
+     */
     final def * : ChainedTransformRoot = new ZeroOrMoreOperator(this)
+
+    /**
+     * A shortcut to the at least one cardinality operator.
+     */
     final def + : ChainedTransformRoot = new OneOrMoreOperator(this)
+
+    /**
+     * A shortcut to the optional (zero or one) cardinality operator.
+     */
     final def ? : ChainedTransformRoot = new ZeroOrOneOperator(this)
   }
 
