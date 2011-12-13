@@ -287,7 +287,9 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
    * Util class to build XMLResultStream, save etc...
    */
   object XMLResultStreamUtils {
-
+    /**
+     * converts an iterator of XMLEvent to a negative `CPSStream`.
+     */
     def convertToCPSStream(input : Iterator[XMLEvent]) : CPSStream =
         (input map ((x :XMLEvent) => (Some(x), false))).toStream
 
