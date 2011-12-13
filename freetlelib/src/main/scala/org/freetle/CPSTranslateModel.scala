@@ -22,7 +22,7 @@ import io.Source
 
 
 /**
- * This model is extended to transform a Stream[Char] towards a Stream[XMLEvent]
+ * This model can be extended to transform a Stream[Char] towards a Stream[XMLEvent]
  */
 class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Context] {
 
