@@ -4,6 +4,9 @@ import collection._
 import generic.CanBuildFrom
 import mutable.{MapBuilder, Builder}
 
+/**
+ * The PrefixMap is a prefix dictionnary.
+ */
 class PrefixMap[T]
 extends mutable.Map[String, T]
    with mutable.MapLike[String, T, PrefixMap[T]] {
