@@ -44,7 +44,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
 
   /**
    * Take all the underlying nodes of the current event.
-   * The deepfilter does return the matching end bracket.
+   * The deepfilteruntil does not return the matching end bracket.
    */
   class DeepFilterUntil extends StatefulSelectorUntil[Int] {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { new DeepFilter() })
