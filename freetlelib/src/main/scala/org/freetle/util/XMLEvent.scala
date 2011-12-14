@@ -40,6 +40,10 @@ sealed abstract class XMLEvent extends Externalizable {
   
   def appendWriter(writer : Writer)
 }
+
+/**
+ * This class represents a qualified name.
+ */
 @SerialVersionUID(32002)
 case class QName(var namespaceURI : String = XMLConstants.NULL_NS_URI,
                  var localPart: String = null,
