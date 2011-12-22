@@ -19,13 +19,24 @@ import meta.CPSMeta
 import org.junit._
 import Assert._
 import util._
+import com.weiglewilczek.slf4s.Logging
+import org.apache.log4j.{ConsoleAppender, PatternLayout, BasicConfigurator}
 
 case class TstXMLContext(name :String ="name", totalSum : Int = 0, currentSum : Int = 0)
 
 
 
 @Test
-class CPSXMLModelTest extends CPSXMLModel[TstXMLContext] with TestXMLHelperMethods[TstXMLContext] with CPSMeta[TstXMLContext] {
+class CPSXMLModelTest extends CPSXMLModel[TstXMLContext]
+                      with TestXMLHelperMethods[TstXMLContext]
+                      with CPSMeta[TstXMLContext]
+                      with Logging {
+  val hello : String = {
+    BasicConfigurator.resetConfiguration()
+    BasicConfigurator.configure(new ConsoleAppender(new PatternLayout("%r (%l) [%t] %p %c %x - %m%n")))
+    ""
+  }
+
   @Test
   def testDeepFilter() {
     val s : CPSStream = List(
@@ -132,6 +143,10 @@ class CPSXMLModelTest extends CPSXMLModel[TstXMLContext] with TestXMLHelperMetho
 
   @Test
   def testSumming() {
+
+
+
+    logger.info("testSumming")
     val c = new TstXMLContext()
     val evStream = loadStreamFromResource("/org/freetle/input2.xml")
     val totalSumTaker = new TakeTextToContext() {

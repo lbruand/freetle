@@ -15,6 +15,9 @@
   */
 package org.freetle
 
+import util.LoggingWithConstructorLocation
+import org.apache.log4j.spi.LocationInfo
+
 
 /**
  * Defines types for the CPSModel.
@@ -173,7 +176,8 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
    * Abstract class for all transformations.
    * It defines many shortcuts for operators.
    */
-  abstract sealed class ChainedTransformRoot extends ChainedTransform with MetaProcessable {
+  abstract sealed class ChainedTransformRoot extends ChainedTransform with MetaProcessable with LoggingWithConstructorLocation {
+    override val info: String = new LocationInfo(new RuntimeException(), this.getClass.getName).fullInfo
     /**
      * A shortcut to the sequence operator.
      */
@@ -209,15 +213,18 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
   /**
    *  Base class for all transforms.
    */
-  abstract class TransformBase extends ChainedTransformRoot  {
+  abstract class TransformBase extends ChainedTransformRoot {
     def apply(s : CPSStream, c : Context) : (CPSStream, Context)
 
     private final def callSuccessOrFailure(success : =>CFilter, failure : =>CFilter)(s : CPSStream, c : Context) = {
       val (rs, rc) = apply(s, c)
-      if (CPSStreamHelperMethods.isPositive(rs))
+      if (CPSStreamHelperMethods.isPositive(rs)) {
+        logger.debug("success")
         success(rs, rc)
-      else
+      } else {
+        logger.debug("failure")
         failure(s, c)
+      }
     }
 
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter =
@@ -250,7 +257,10 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
     lazy val rightRealized : ChainedTransformRoot = right
 
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
-      leftRealized(new InnerSequenceOperator(rightRealized(success, failure)), failure)
+      leftRealized(new InnerSequenceOperator({
+        logger.debug("sequence - carry on to the right")
+        rightRealized(success, failure)
+      }), failure)
     }
     
     final class InnerSequenceOperator(input : =>CFilter) extends CFilter {
@@ -309,8 +319,10 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
                      // But it is suboptimal in term of memory usage.
                      // We need identitySuccess to be instantiated so that we can pass further on the context.
         if (identitySuccess.isApplied) {
+          logger.debug("left component is positive => apply right component")
           rightRealized(success, failure)(result, identitySuccess.context.get)
         } else {
+          logger.debug("left component is negative => do not apply right component")
           failure(tl, c)
         }
       }
@@ -327,7 +339,13 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
               metaProcessor.processBinaryOperator(this, new ChoiceOperator(_, _), left, right)
     lazy val leftRealized : ChainedTransformRoot = left
     lazy val rightRealized : ChainedTransformRoot = right
-    def apply(success : =>CFilter, failure : =>CFilter) : CFilter = leftRealized(success, rightRealized(success, failure))
+    def apply(success : =>CFilter, failure : =>CFilter) : CFilter = leftRealized({
+      logger.debug("left component is positive. No need to go on in the choice")
+      success
+    }, {
+      logger.debug("left component is negative. Try the right component")
+      rightRealized(success, failure)
+    })
   }
 
   /**
@@ -470,9 +488,10 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
       if (in.isEmpty)
         Stream.empty
       else
-      if (conditionToStop(currentState))
+      if (conditionToStop(currentState)) {
+        logger.debug("stopping")
         in
-      else
+      } else
         Stream.cons( (in.head._1, true),
                     recurse(in.tail, accumulate(currentState, in.head._1)))
     }
