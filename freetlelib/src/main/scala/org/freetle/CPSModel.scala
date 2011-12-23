@@ -219,10 +219,10 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
     private final def callSuccessOrFailure(success : =>CFilter, failure : =>CFilter)(s : CPSStream, c : Context) = {
       val (rs, rc) = apply(s, c)
       if (CPSStreamHelperMethods.isPositive(rs)) {
-        logger.debug("success")
+        logger.debug("tranform - success")
         success(rs, rc)
       } else {
-        logger.debug("failure")
+        logger.debug("transform - failure")
         failure(s, c)
       }
     }
