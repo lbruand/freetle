@@ -23,7 +23,7 @@ import java.lang.String
 * Mixin providing a Logger for the type mixed into.
 */
 trait LoggingWithConstructorLocation {
-  val info: String // = new LocationInfo(new RuntimeException(), this.getClass.getName)
+  val info: String
   /**
 * Logger for the type mixed into.
 */
