@@ -217,7 +217,7 @@ trait LocationAwareLogger extends Logger {
   }
 
   private final def log(level: Int, msg: String, throwable: Throwable = null) {
-    slf4jLogger.log(null, wrapperClassName, level, "("+locationInfo+")"+msg, null, throwable)
+    slf4jLogger.log(null, wrapperClassName, level, " ("+locationInfo+") "+msg, null, throwable)
   }
 }
 
