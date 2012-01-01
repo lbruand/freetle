@@ -7,6 +7,7 @@
   <description>Freetle is an open source One-pass xml transformation framework.
       It is a pure scala framework and relies on transformation combinators for its internals.
   </description>
+  <url>https://github.com/lbruand/freetle/tree/master/freetlelib/</url>
   <inceptionYear>2010</inceptionYear>
   <properties>
     <scala.version>2.9.1</scala.version>
