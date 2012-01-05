@@ -32,7 +32,7 @@ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPS
 }
 
 class TransformSampleTransformer extends TransformSampleParser {
-  override def element : ChainedTransformRoot = (super.element) -> !>
+  override def element : ChainedTransformRoot = (super.element) -> drop
 }
 
 object TransformSampleMain extends TransformSampleTransformer {
