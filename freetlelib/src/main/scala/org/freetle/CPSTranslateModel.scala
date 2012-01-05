@@ -228,7 +228,7 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
     def serializeXMLResultStream(evStream : =>CPSStream, writer : Writer) {
       evStream foreach (_._1 match {
                 case Some(Right(x : XMLEvent)) => x.appendWriter(writer)
-                case _ => (new EvComment("EmptyPositive")).appendWriter(writer)
+                case _ => {}
               })
     }
 
