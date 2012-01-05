@@ -233,7 +233,7 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
     }
 
     /**
-     * Deserialize from an objectInputStream serialized/binary XMLEvent.
+     * Rehydrate from an objectInputStream serialized/binary XMLEvent.
      */
     def rehydrate(in : ObjectInputStream) : CPSStream = {
       val read = in.readObject
@@ -245,7 +245,7 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
     }
 
     /**
-     * Serialize to an objectOutputStream serialized/binary XMLEvent.
+     * Dehydriate to an objectOutputStream serialized/binary XMLEvent.
      */
     def dehydrate(evStream: CPSStream, dataOut: ObjectOutputStream) {
       evStream.foreach(x => {dataOut.writeObject(x._1.get)})
