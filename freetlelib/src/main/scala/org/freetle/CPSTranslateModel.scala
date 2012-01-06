@@ -87,7 +87,7 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
 
   /**
    * You can pass to a constTree a PrefixMap.
-   * This prefixMap associate a constant String with a result.
+   * This prefixMap associates a constant String with a result.
    * The constTree factors out common prefix on the left for all entries in order for
    * the number of choices to be minimum.
    */
