@@ -17,7 +17,7 @@ package org.freetle
 
 import util._
 import java.io._
-import xml.{MetaData, Node, NodeSeq}
+import xml.{Elem, MetaData, Node, NodeSeq}
 
 /**
  * This is a streaming Continuation Passing Transformation model.
@@ -117,19 +117,23 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
       ((nodeSeq map( serializeNodeXML(_))).toStream.flatten)
     }
 
-    private def createAttr(metaData : MetaData) : Map[QName, String] = {
+    private def createAttributes(elem : scala.xml.Elem) : Map[QName, String] = {
       null
+    }
+
+    private def buildQName(elem: Elem): QName = {
+      if (elem.prefix == null || elem.prefix.isEmpty)
+        new QName(elem.scope.getURI(null), elem.label)
+      else
+        new QName(elem.scope.getURI(elem.prefix), elem.label, elem.prefix)
     }
 
     def serializeNodeXML(node : Node) : Stream[XMLEvent] =
       node match {
       case elem :  scala.xml.Elem //(prefix, label, attributes, scope, children)
             => {
-                  val qName: QName = if (elem.prefix == null || elem.prefix.isEmpty)
-                                        new QName(elem.scope.getURI(null), elem.label)
-                                     else
-                                        new QName(elem.scope.getURI(elem.prefix), elem.label, elem.prefix)
-                  Stream.cons( new EvElemStart(qName,  createAttr(elem.attributes)),
+                  val qName: QName = buildQName(elem)
+                  Stream.cons( new EvElemStart(qName,  createAttributes(elem)),
                           Stream.concat(serializeXML(elem.child),
                             Stream(new EvElemEnd(qName))))
                 }
