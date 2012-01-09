@@ -16,8 +16,8 @@
 package org.freetle
 
 import util._
-import xml.{Node, NodeSeq}
 import java.io._
+import xml.{MetaData, Node, NodeSeq}
 
 /**
  * This is a streaming Continuation Passing Transformation model.
@@ -117,6 +117,10 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
       ((nodeSeq map( serializeNodeXML(_))).toStream.flatten)
     }
 
+    private def createAttr(metaData : MetaData) : Map[QName, String] = {
+      null
+    }
+
     def serializeNodeXML(node : Node) : Stream[XMLEvent] =
       node match {
       case elem :  scala.xml.Elem //(prefix, label, attributes, scope, children)
@@ -125,7 +129,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
                                         new QName(elem.scope.getURI(null), elem.label)
                                      else
                                         new QName(elem.scope.getURI(elem.prefix), elem.label, elem.prefix)
-                  Stream.cons( new EvElemStart(qName,  null),
+                  Stream.cons( new EvElemStart(qName,  createAttr(elem.attributes)),
                           Stream.concat(serializeXML(elem.child),
                             Stream(new EvElemEnd(qName))))
                 }
