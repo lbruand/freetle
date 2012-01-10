@@ -26,6 +26,29 @@ import xml._
 class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
 
   /**
+   * Failure CFilter.
+   * @throws ParsingFailure raised whenever parsing fails and this continuation is called.
+   */
+  class FailsCFilter extends CFilter {
+    def apply(s : CPSStream, c : Context) : CPSStream = {
+      val str = CPSStreamHelperMethods.removeWhileEmptyPositive(s)
+      val failure = if (str.isEmpty) {
+        new ParsingFailure("Parsing failed")
+      } else {
+        str.head._1 match {
+          case Some(x) => new ParsingFailure("Parsing failed offset [" +
+                                             x.location.getCharacterOffset +
+                                            "] (" + x.location.getColumnNumber +
+                                            ":" + x.location.getLineNumber +
+                                            ") token " + x.toString)
+          case _ => new ParsingFailure("Parsing failed")
+        }
+      }
+      throw failure
+    }
+  }
+
+  /**
    * Take all the underlying nodes of the current event.
    * The deepfilter does return the matching end bracket.
    */
