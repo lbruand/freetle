@@ -141,10 +141,14 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     }
 
     private def createAttributes(elem : scala.xml.Elem) : Map[QName, String] = {
-      Map.empty ++ (elem.attributes map (x => x match {
-        case p:PrefixedAttribute => QName(namespaceURI = p.getNamespace(elem), localPart = p.key, prefix = p.pre) -> p.value.mkString
-        case u:UnprefixedAttribute => QName(localPart = u.key) -> u.value.mkString
-      }))
+      if (elem != null && elem.attributes != null) {
+        Map.empty ++ (elem.attributes map (x => x match {
+          case p:PrefixedAttribute => QName(namespaceURI = p.getNamespace(elem), localPart = p.key, prefix = p.pre) -> p.value.mkString
+          case u:UnprefixedAttribute => QName(localPart = u.key) -> u.value.mkString
+        }))
+      } else {
+        null
+      }
     }
 
     private def buildQName(elem: Elem): QName = {
