@@ -145,6 +145,19 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
     def apply(s : CPSStream, c : Context) : CPSStream = s
   }
 
+  /** An exception raised by FailsCFilter */
+  class ParsingFailure(msg :String) extends RuntimeException(msg)
+
+  /**
+   * Failure CFilter.
+   * @throws ParsingFailure raised whenever parsing fails and this continuation is called.
+   */
+  class FailsCFilter extends CFilter {
+    def apply(s : CPSStream, c : Context) : CPSStream = {
+      throw new ParsingFailure("Parsing failed")
+    }
+  }
+
 
   /**
    * A Type that describes a constructor function for TransformBase and subtypes.
