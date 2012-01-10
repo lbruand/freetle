@@ -184,5 +184,18 @@ class CPSXMLModelTest extends CPSXMLModel[TstXMLContext]
     val cout = cfilterIdentityWithContextSuccess.context.get
     assertEquals(20030, cout.totalSum)
     assertEquals(20030, cout.currentSum)
-  }  
+  }
+
+  @Test
+  def testPushNode() {
+    val p = new PushNode(x => x match {
+      case Some(a) => <hello v="helloA">hello</hello>
+      case None => <hello/>
+    })
+    val resultS = p.apply(new CFilterIdentity(), new CFilterIdentity())(Stream.empty, new TstXMLContext())
+    assertEquals("helloA", resultS.head._1 match {
+      case Some(EvElemStart(name, attrs)) => attrs.head._2
+      case _ => "error"
+    })
+  }
 }

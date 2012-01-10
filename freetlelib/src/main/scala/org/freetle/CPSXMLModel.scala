@@ -17,7 +17,7 @@ package org.freetle
 
 import util._
 import java.io._
-import xml.{Elem, MetaData, Node, NodeSeq}
+import xml._
 
 /**
  * This is a streaming Continuation Passing Transformation model.
@@ -118,7 +118,10 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     }
 
     private def createAttributes(elem : scala.xml.Elem) : Map[QName, String] = {
-      null
+      Map.empty ++ (elem.attributes map (x => x match {
+        case p:PrefixedAttribute => QName(namespaceURI = p.getNamespace(elem), localPart = p.key, prefix = p.pre) -> p.value.mkString
+        case u:UnprefixedAttribute => QName(localPart = u.key) -> u.value.mkString
+      }))
     }
 
     private def buildQName(elem: Elem): QName = {
