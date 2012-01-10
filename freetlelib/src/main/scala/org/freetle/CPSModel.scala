@@ -46,6 +46,10 @@ trait CPSModelTypeDefinition[@specialized Element, @specialized Context] {
 
   /**
    * A type to be used only as a trait for the ChainedTransformRoot
+   *
+   * the first parameter refers to the success continuation. (Called whenever the current trans. is a success)
+   *
+   * the second parameter refers to the failure continuation. (Called whenever the current trans. fails)
    */
   type ChainedTransform = (=>CFilter, =>CFilter) => CFilter
 
