@@ -16,9 +16,9 @@
 package org.freetle
 
 import util._
-import xml.{Node, NodeSeq}
 import java.io._
 import io.Source
+import xml._
 
 
 /**
@@ -167,15 +167,30 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
       ((nodeSeq map( serializeNodeXML(_))).toStream.flatten)
     }
 
+    private def createAttributes(elem : scala.xml.Elem) : Map[QName, String] = {
+      if (elem != null && elem.attributes != null) {
+        Map.empty ++ (elem.attributes map (x => x match {
+          case p:PrefixedAttribute => QName(namespaceURI = p.getNamespace(elem), localPart = p.key, prefix = p.pre) -> p.value.mkString
+          case u:UnprefixedAttribute => QName(localPart = u.key) -> u.value.mkString
+        }))
+      } else {
+        null
+      }
+    }
+
+    private def buildQName(elem: Elem): QName = {
+      if (elem.prefix == null || elem.prefix.isEmpty)
+        new QName(elem.scope.getURI(null), elem.label)
+      else
+        new QName(elem.scope.getURI(elem.prefix), elem.label, elem.prefix)
+    }
+
     def serializeNodeXML(node : Node) : Stream[Either[Char,  XMLEvent]] =
       node match {
       case elem :  scala.xml.Elem //(prefix, label, attributes, scope, children)
             => {
-                  val qName: QName = if (elem.prefix == null || elem.prefix.isEmpty)
-                                        new QName(elem.scope.getURI(null), elem.label)
-                                     else
-                                        new QName(elem.scope.getURI(elem.prefix), elem.label, elem.prefix)
-                  Stream.cons(Right(new EvElemStart(qName,  null)),
+                  val qName: QName = buildQName(elem)
+                  Stream.cons(Right(new EvElemStart(qName,  createAttributes(elem))),
                           Stream.concat(serializeXML(elem.child),
                             Stream(Right(new EvElemEnd(qName)))))
                 }
