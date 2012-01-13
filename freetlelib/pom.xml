@@ -35,6 +35,11 @@
       <artifactId>scala-library</artifactId>
       <version>${scala.version}</version>
     </dependency>
+      <dependency>
+          <groupId>msv</groupId>
+          <artifactId>msv</artifactId>
+          <version>20050913</version>
+      </dependency>
     <dependency>
       <groupId>org.scala-tools.sbinary</groupId>
       <artifactId>sbinary_2.9.0</artifactId>

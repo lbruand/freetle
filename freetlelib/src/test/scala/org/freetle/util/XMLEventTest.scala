@@ -30,6 +30,19 @@ case class XMLEventTestContext(a:Int)
  */
 @Test
 class XMLEventTest extends CPSXMLModel[XMLEventTestContext] with TestXMLHelperMethods[XMLEventTestContext] {
+
+  @Test
+  def testXMLStreamEvent() {
+
+    try {
+      new XMLEventStream(new ByteArrayInputStream("hello".getBytes), "file://./hello.xsd")
+    }
+    catch {
+      case e : Exception => {} // It is ok.
+    }
+
+  }
+
   @Test
   def testLocationAndOffset() {
     val c = null

@@ -18,10 +18,13 @@ import scala.io.Source
 import org.codehaus.stax2.{XMLStreamReader2, XMLInputFactory2}
 import com.ctc.wstx.stax.WstxInputFactory
 import javax.xml.stream.{XMLStreamReader, XMLStreamConstants}
+import java.lang.String
+import java.io.{File, InputStream, Reader}
+import java.net.URL
+import org.codehaus.stax2.validation.{XMLValidationSchema, XMLValidationSchemaFactory}
 
 //import javax.xml.stream.XMLInputFactory
 //import javax.xml.stream.XMLStreamReader
-import java.io.{InputStream, Reader}
 
 /**
  * Helper class to read a Source as a Reader.
@@ -84,19 +87,27 @@ object XMLEventStream {
   val factory =  new WstxInputFactory()
   factory.configureForSpeed()
   factory.getConfig.doCoalesceText(true)
+
+
 }
 /**
  * Transform a Source a XMLEvent Iterator for the purpose of making it a Stream afterward.
  * NB: You can create a stream from this using Stream.fromIterator().
  */
-final class XMLEventStream(src: Any) extends Iterator[XMLEvent] {
+final class XMLEventStream(src: Any, xsdURL : String = null) extends Iterator[XMLEvent] {
 
 
-  val input : XMLStreamReader = src match {
-      case in : InputStream => XMLEventStream.factory.createXMLStreamReader(in)
-      case stream : Stream[Char] => XMLEventStream.factory.createXMLStreamReader(new StreamReader(stream))
-      case src :Source => XMLEventStream.factory.createXMLStreamReader("default.xml", new SourceReader(src))
+  val input : XMLStreamReader2 = src match {
+      case in : InputStream => XMLEventStream.factory.createXMLStreamReader(in).asInstanceOf[XMLStreamReader2]
+      case stream : Stream[Char] => XMLEventStream.factory.createXMLStreamReader(new StreamReader(stream)).asInstanceOf[XMLStreamReader2]
+      case src :Source => XMLEventStream.factory.createXMLStreamReader("default.xml", new SourceReader(src)).asInstanceOf[XMLStreamReader2]
   }
+  if (xsdURL != null) {
+    val validationFactory = XMLValidationSchemaFactory.newInstance(XMLValidationSchema.SCHEMA_ID_W3C_SCHEMA)
+    val xmlSchema: XMLValidationSchema = validationFactory.createSchema(new URL(xsdURL))
+    input.validateAgainst(xmlSchema)
+  }
+
   type Attributes = Map[QName, String]
 
   @inline private def fromJavaQName(qn : javax.xml.namespace.QName) : org.freetle.util.QName = {
