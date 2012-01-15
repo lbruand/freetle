@@ -339,8 +339,8 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     /**
      * Load a XMLResultStream from an InputStream
      */
-    def loadXMLResultStream(in : InputStream) : CPSStream =
-        convertToCPSStream(new XMLEventStream(in))
+    def loadXMLResultStream(in : InputStream, xsdURL : String = null) : CPSStream =
+        convertToCPSStream(new XMLEventStream(in, xsdURL))
 
     /**
      * Load a XMLResultStream from a String.
