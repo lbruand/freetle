@@ -1,0 +1,487 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>org.freetle.util</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
+      <script type="text/javascript" src="../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../../lib/package_big.png" />
+        <p id="owner"><a name="org" class="extype" href="../../package.html">org</a>.<a name="org.freetle" class="extype" href="../package.html">freetle</a></p>
+        <h1>util</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="kind">package</span>
+      <span class="symbol"> 
+        <span class="name">util</span>
+        
+        
+      </span>
+      </h4>
+      
+          <div class="fullcommenttop" id="comment"></div>
+        
+
+      <div id="template">
+
+        <div id="mbrsel">
+          <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+          
+          
+          <div id="visbl">
+              <span class="filtertype">Visibility</span>
+              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+            </div>
+        </div>
+
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="org.freetle.util.AlwaysMatcher" data-isabs="false">
+      <a id="AlwaysMatcher:AlwaysMatcher"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="AlwaysMatcher.html"><span class="name">AlwaysMatcher</span></a>
+        
+        <span class="result"> extends XMLEventMatcher</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.freetle.util.AndMatcher" data-isabs="false">
+      <a id="AndMatcher:AndMatcher"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="AndMatcher.html"><span class="name">AndMatcher</span></a>
+        
+        <span class="result"> extends XMLEventMatcher</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.freetle.util.EvComment" data-isabs="false">
+      <a id="EvComment:EvComment"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="EvComment.html"><span class="name">EvComment</span></a>
+        
+        <span class="params">(<span name="text">text: String</span>)</span><span class="result"> extends XMLEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A comment is encountered</p>
+    </li><li visbl="pub" name="org.freetle.util.EvCommentTypeMatcher" data-isabs="false">
+      <a id="EvCommentTypeMatcher:EvCommentTypeMatcher"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="EvCommentTypeMatcher.html"><span class="name">EvCommentTypeMatcher</span></a>
+        
+        <span class="result"> extends XMLEventMatcher with TypeMatcher[EvComment]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.freetle.util.EvElemEnd" data-isabs="false">
+      <a id="EvElemEnd:EvElemEnd"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="EvElemEnd.html"><span class="name">EvElemEnd</span></a>
+        
+        <span class="params">(<span name="name">name: QName</span>)</span><span class="result"> extends XMLEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An element representing a closing tag</p>
+    </li><li visbl="pub" name="org.freetle.util.EvElemEndTypeMatcher" data-isabs="false">
+      <a id="EvElemEndTypeMatcher:EvElemEndTypeMatcher"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="EvElemEndTypeMatcher.html"><span class="name">EvElemEndTypeMatcher</span></a>
+        
+        <span class="result"> extends XMLEventMatcher with TypeMatcher[EvElemEnd]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.freetle.util.EvElemStart" data-isabs="false">
+      <a id="EvElemStart:EvElemStart"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="EvElemStart.html"><span class="name">EvElemStart</span></a>
+        
+        <span class="params">(<span name="name">name: QName</span>, <span name="attributes">attributes: Map[QName, String]</span>)</span><span class="result"> extends XMLEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An element representing an openning tag</p>
+    </li><li visbl="pub" name="org.freetle.util.EvElemStartTypeMatcher" data-isabs="false">
+      <a id="EvElemStartTypeMatcher:EvElemStartTypeMatcher"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="EvElemStartTypeMatcher.html"><span class="name">EvElemStartTypeMatcher</span></a>
+        
+        <span class="result"> extends XMLEventMatcher with TypeMatcher[EvElemStart]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.freetle.util.EvEntityRef" data-isabs="false">
+      <a id="EvEntityRef:EvEntityRef"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="EvEntityRef.html"><span class="name">EvEntityRef</span></a>
+        
+        <span class="params">(<span name="entity">entity: String</span>)</span><span class="result"> extends XMLEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An entity reference is encountered</p>
+    </li><li visbl="pub" name="org.freetle.util.EvEntityRefTypeMatcher" data-isabs="false">
+      <a id="EvEntityRefTypeMatcher:EvEntityRefTypeMatcher"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="EvEntityRefTypeMatcher.html"><span class="name">EvEntityRefTypeMatcher</span></a>
+        
+        <span class="result"> extends XMLEventMatcher with TypeMatcher[EvEntityRef]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.freetle.util.EvProcInstr" data-isabs="false">
+      <a id="EvProcInstr:EvProcInstr"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="EvProcInstr.html"><span class="name">EvProcInstr</span></a>
+        
+        <span class="params">(<span name="target">target: String</span>, <span name="text">text: String</span>)</span><span class="result"> extends XMLEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A processing instruction is encountered</p>
+    </li><li visbl="pub" name="org.freetle.util.EvProcInstrTypeMatcher" data-isabs="false">
+      <a id="EvProcInstrTypeMatcher:EvProcInstrTypeMatcher"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="EvProcInstrTypeMatcher.html"><span class="name">EvProcInstrTypeMatcher</span></a>
+        
+        <span class="result"> extends XMLEventMatcher with TypeMatcher[EvProcInstr]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.freetle.util.EvText" data-isabs="false">
+      <a id="EvText:EvText"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="EvText.html"><span class="name">EvText</span></a>
+        
+        <span class="params">(<span name="text">text: String</span>)</span><span class="result"> extends XMLEvent with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A text node is encountered</p>
+    </li><li visbl="pub" name="org.freetle.util.EvTextTypeMatcher" data-isabs="false">
+      <a id="EvTextTypeMatcher:EvTextTypeMatcher"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="EvTextTypeMatcher.html"><span class="name">EvTextTypeMatcher</span></a>
+        
+        <span class="result"> extends XMLEventMatcher with TypeMatcher[EvText]</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.freetle.util.FilterMatcher" data-isabs="true">
+      <a id="FilterMatcher:FilterMatcher[ParamEvent]"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="FilterMatcher.html"><span class="name">FilterMatcher</span></a>
+        <span class="tparams">[<span name="ParamEvent">+ParamEvent &lt;: XMLEvent</span>]</span>
+        <span class="result"> extends XMLEventMatcher with TypeMatcher[ParamEvent]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>abstract </dd></dl></div>
+    </li><li visbl="pub" name="org.freetle.util.FilterTextMatcher" data-isabs="true">
+      <a id="FilterTextMatcher:FilterTextMatcher"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="FilterTextMatcher.html"><span class="name">FilterTextMatcher</span></a>
+        
+        <span class="result"> extends FilterMatcher[EvText]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>abstract </dd></dl></div>
+    </li><li visbl="pub" name="org.freetle.util.LocationAwareLogger" data-isabs="true">
+      <a id="LocationAwareLogger:LocationAwareLogger"></a>
+      <h4 class="signature">
+      <span class="kind">trait</span>
+      <span class="symbol"> 
+        <a href="LocationAwareLogger.html"><span class="name">LocationAwareLogger</span></a>
+        
+        <span class="result"> extends Logger</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Thin wrapper for a location aware SLF4J logger making use of by-name parameters to improve performance.</p>
+    </li><li visbl="pub" name="org.freetle.util.Logger" data-isabs="true">
+      <a id="Logger:Logger"></a>
+      <h4 class="signature">
+      <span class="kind">trait</span>
+      <span class="symbol"> 
+        <a href="Logger.html"><span class="name">Logger</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Thin wrapper for SLF4J making use of by-name parameters to improve performance.</p>
+    </li><li visbl="pub" name="org.freetle.util.LoggingWithConstructorLocation" data-isabs="true">
+      <a id="LoggingWithConstructorLocation:LoggingWithConstructorLocation"></a>
+      <h4 class="signature">
+      <span class="kind">trait</span>
+      <span class="symbol"> 
+        <a href="LoggingWithConstructorLocation.html"><span class="name">LoggingWithConstructorLocation</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Mixin providing a Logger for the type mixed into.</p>
+    </li><li visbl="pub" name="org.freetle.util.Memoize1" data-isabs="false">
+      <a id="Memoize1:Memoize1[T, R]"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="Memoize1.html"><span class="name">Memoize1</span></a>
+        <span class="tparams">[<span name="T">-T</span>, <span name="R">+R</span>]</span>
+        <span class="result"> extends (T) ⇒ R</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Helper class to memoize1 a one parameter function.</p>
+    </li><li visbl="pub" name="org.freetle.util.NeverMatcher" data-isabs="false">
+      <a id="NeverMatcher:NeverMatcher"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="NeverMatcher.html"><span class="name">NeverMatcher</span></a>
+        
+        <span class="result"> extends XMLEventMatcher</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.freetle.util.OrMatcher" data-isabs="false">
+      <a id="OrMatcher:OrMatcher"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="OrMatcher.html"><span class="name">OrMatcher</span></a>
+        
+        <span class="result"> extends XMLEventMatcher</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.freetle.util.PrefixMap" data-isabs="false">
+      <a id="PrefixMap:PrefixMap[T]"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="PrefixMap.html"><span class="name">PrefixMap</span></a>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        <span class="result"> extends Map[String, T] with MapLike[String, T, PrefixMap[T]]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">The PrefixMap is a prefix dictionnary.</p>
+    </li><li visbl="pub" name="org.freetle.util.QName" data-isabs="false">
+      <a id="QName:QName"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="QName.html"><span class="name">QName</span></a>
+        
+        <span class="params">(<span name="namespaceURI">namespaceURI: String</span>, <span name="localPart">localPart: String</span>, <span name="prefix">prefix: String</span>)</span><span class="result"> extends Externalizable with Product with Serializable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This class represents a qualified name.</p>
+    </li><li visbl="pub" name="org.freetle.util.RandomUtils" data-isabs="false">
+      <a id="RandomUtils:RandomUtils"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="RandomUtils.html"><span class="name">RandomUtils</span></a>
+        
+        <span class="result"> extends Random</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Helper class to Build random data.</p>
+    </li><li visbl="pub" name="org.freetle.util.SourceReader" data-isabs="false">
+      <a id="SourceReader:SourceReader"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="SourceReader.html"><span class="name">SourceReader</span></a>
+        
+        <span class="result"> extends Reader</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Helper class to read a Source as a Reader.</p>
+    </li><li visbl="pub" name="org.freetle.util.SpaceMatcher" data-isabs="false">
+      <a id="SpaceMatcher:SpaceMatcher"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="SpaceMatcher.html"><span class="name">SpaceMatcher</span></a>
+        
+        <span class="result"> extends FilterTextMatcher</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.freetle.util.SpaceOrCommentMatcher" data-isabs="false">
+      <a id="SpaceOrCommentMatcher:SpaceOrCommentMatcher"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="SpaceOrCommentMatcher.html"><span class="name">SpaceOrCommentMatcher</span></a>
+        
+        <span class="result"> extends OrMatcher</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.freetle.util.StreamReader" data-isabs="false">
+      <a id="StreamReader:StreamReader"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="StreamReader.html"><span class="name">StreamReader</span></a>
+        
+        <span class="result"> extends Reader</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Helper class to read a Source as a Reader.</p>
+    </li><li visbl="pub" name="org.freetle.util.TypeMatcher" data-isabs="true">
+      <a id="TypeMatcher:TypeMatcher[ParamEvent]"></a>
+      <h4 class="signature">
+      <span class="kind">trait</span>
+      <span class="symbol"> 
+        <a href="TypeMatcher.html"><span class="name">TypeMatcher</span></a>
+        <span class="tparams">[<span name="ParamEvent">+ParamEvent &lt;: XMLEvent</span>]</span>
+        <span class="result"> extends XMLEventMatcher</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This can not be used directly because of type erasure.</p>
+    </li><li visbl="pub" name="org.freetle.util.XMLEvent" data-isabs="true">
+      <a id="XMLEvent:XMLEvent"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="XMLEvent.html"><span class="name">XMLEvent</span></a>
+        
+        <span class="result"> extends Externalizable</span>
+      </span>
+      </h4>
+      <p class="comment cmt">This class represents an XML event for pull parsing.</p>
+    </li><li visbl="pub" name="org.freetle.util.XMLEventMatcher" data-isabs="true">
+      <a id="XMLEventMatcher:XMLEventMatcher"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="XMLEventMatcher.html"><span class="name">XMLEventMatcher</span></a>
+        
+        <span class="result"> extends (XMLEvent) ⇒ Boolean</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A base class for all matchers.</p>
+    </li><li visbl="pub" name="org.freetle.util.XMLEventStream" data-isabs="false">
+      <a id="XMLEventStream:XMLEventStream"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="XMLEventStream.html"><span class="name">XMLEventStream</span></a>
+        
+        <span class="result"> extends Iterator[XMLEvent]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Transform a Source a XMLEvent Iterator for the purpose of making it a Stream afterward.</p>
+    </li></ol>
+            </div>
+        
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="org.freetle.util.Logger" data-isabs="false">
+      <a id="Logger:Logger"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="Logger$.html"><span class="name">Logger</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Factory for Loggers.</p>
+    </li><li visbl="pub" name="org.freetle.util.Memoize1" data-isabs="false">
+      <a id="Memoize1:Memoize1"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="Memoize1$.html"><span class="name">Memoize1</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.freetle.util.PrefixMap" data-isabs="false">
+      <a id="PrefixMap:PrefixMap"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="PrefixMap$.html"><span class="name">PrefixMap</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.freetle.util.StreamSource" data-isabs="false">
+      <a id="StreamSource:StreamSource"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="StreamSource$.html"><span class="name">StreamSource</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Create a Source from a Char Iterator.</p>
+    </li><li visbl="pub" name="org.freetle.util.XMLEventStream" data-isabs="false">
+      <a id="XMLEventStream:XMLEventStream"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="XMLEventStream$.html"><span class="name">XMLEventStream</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+
+      </div>
+      
+      <div id="tooltip"></div>
+      
+    </body>
+      </html>
