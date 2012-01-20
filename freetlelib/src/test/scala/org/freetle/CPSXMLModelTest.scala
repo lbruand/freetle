@@ -19,7 +19,6 @@ import meta.CPSMeta
 import org.junit._
 import Assert._
 import util._
-import com.weiglewilczek.slf4s.Logging
 import org.apache.log4j.{ConsoleAppender, PatternLayout, BasicConfigurator}
 
 case class TstXMLContext(name :String ="name", totalSum : Int = 0, currentSum : Int = 0)
@@ -30,7 +29,8 @@ case class TstXMLContext(name :String ="name", totalSum : Int = 0, currentSum : 
 class CPSXMLModelTest extends CPSXMLModel[TstXMLContext]
                       with TestXMLHelperMethods[TstXMLContext]
                       with CPSMeta[TstXMLContext]
-                      with Logging {
+                      with LoggingWithConstructorLocation {
+  val info : String = classOf[CPSXMLModelTest].getName
   val hello : String = {
     BasicConfigurator.resetConfiguration()
     BasicConfigurator.configure(new ConsoleAppender(new PatternLayout("%r (%l) [%t] %p %c %x - %m%n")))
