@@ -132,7 +132,7 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
 
 /**
  * This is an abstract streaming Continuation Passing Transformation model.
- * It is capable of working over any type of alphabet (not only XML).
+ * It is capable of working over any type of alphabet (not just XML).
  * It is internally using continuations This was used to solve the stackoverflow problems
  * met in previous backtracking models.
  */
