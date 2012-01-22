@@ -164,6 +164,7 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
  *
  * CPSModel uses [[http://en.wikipedia.org/wiki/Continuation-passing_style Continuation Passing Style]] to run
  * the transformation using bounded memory.
+ *
  */
 class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelperExtension[Element, Context] {
   /**
