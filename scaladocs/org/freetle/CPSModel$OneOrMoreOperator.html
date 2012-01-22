@@ -121,8 +121,8 @@ Apply repeatedly as many times as possible but at least once the <u>underlying t
         <span class="result">: <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">A shortcut to the zero or more cardinality operator.</p><div class="fullcomment"><div class="comment cmt"><p>A shortcut to the zero or more cardinality operator.
-</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd><a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></dd></dl></div>
+      <p class="shortcomment cmt">A shortcut to the zero or more cardinality operator.</p><div class="fullcomment"><div class="comment cmt"><p>A shortcut to the zero or more cardinality operator.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd><a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></dd><dt>See also</dt><dd><span class="cmt"><p>http://en.wikipedia.org/wiki/Kleene_star
+</p></span></dd></dl></div>
     </li><li visbl="pub" name="org.freetle.CPSModel.ChainedTransformRoot#+" data-isabs="false">
       <a id="+:ChainedTransformRoot"></a>
       <h4 class="signature">
@@ -134,6 +134,7 @@ Apply repeatedly as many times as possible but at least once the <u>underlying t
       </span>
       </h4>
       <p class="shortcomment cmt">A shortcut to the at least one cardinality operator.</p><div class="fullcomment"><div class="comment cmt"><p>A shortcut to the at least one cardinality operator.
+a+ is equivalent to aa*.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd><a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></dd></dl></div>
     </li><li visbl="pub" name="org.freetle.CPSModel.ChainedTransformRoot#-&gt;" data-isabs="false">
       <a id="-&gt;(⇒ ChainedTransformRoot):ChainedTransformRoot"></a>
@@ -482,7 +483,9 @@ Apply repeatedly as many times as possible but at least once the <u>underlying t
         <span class="params">(<span name="other">other: ⇒ <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>)</span><span class="result">: <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">A shortcut to the sequence operator.</p><div class="fullcomment"><div class="comment cmt"><p>A shortcut to the sequence operator.
+      <p class="shortcomment cmt">A shortcut to the sequence operator.</p><div class="fullcomment"><div class="comment cmt"><p>A shortcut to the sequence operator.</p><pre>
+val t = a ~ b
+</pre><p>The t transformation recognizes the string &quot;ab&quot;.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd><a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></dd></dl></div>
     </li></ol>
             </div>

@@ -29,8 +29,18 @@
       </h4>
       
           <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>This is a streaming Continuation Passing Transformation model.
-It is capable of working over XML Events.
-</p></div><div class="toggleContainer block">
+It is capable of working over XML Events.</p><p>CPSXMLModel specialize  for a  alphabet.
+it lets you define transformations by writing expressions using :</p><ul><li>A small number of unit transforms</li><li>Operators that let you combine sub-expressions.</li></ul><p> for example, you can extends the CPSXMLModel to define a specific Parser. :</p><pre>
+ class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPSMeta[TransformSampleContext] {
+   def header : ChainedTransformRoot = &lt;(&quot;catalog&quot;)
+   def footer : ChainedTransformRoot = &lt;/(&quot;catalog&quot;)
+   def element : ChainedTransformRoot = &lt;(&quot;cd&quot;) ~ &lt;/(&quot;cd&quot;)
+   def document :ChainedTransformRoot = header ~ ((element)+) ~ footer
+   def transform : ChainedTransformRoot = (document).metaProcess(new SpaceSkipingMetaProcessor())
+ }
+</pre><p> transform is a base rule. It uses a metaprocessor that decorates the transformation to
+ skip all whitespace characters.
+ document is a rule defined as recognizing :</p><ul><li>a <code>header</code> rule (itself recognizing a catalog opening tag).</li><li>one or more <code>element</code> rules.</li><li>a <code>footer</code> rule (itself recognizing a catalog closing tag).</li></ul><p> <code>element</code> recognizes an opening tag followed by a closing tag.</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a name="org.freetle.CPSModel" class="extype" href="CPSModel.html">CPSModel</a>[<a name="org.freetle.util.XMLEvent" class="extype" href="util/XMLEvent.html">XMLEvent</a>, Context], <a name="org.freetle.CPSModelHelperExtension" class="extype" href="CPSModelHelperExtension.html">CPSModelHelperExtension</a>[<a name="org.freetle.util.XMLEvent" class="extype" href="util/XMLEvent.html">XMLEvent</a>, Context], <a name="org.freetle.CPSModelTypeDefinition" class="extype" href="CPSModelTypeDefinition.html">CPSModelTypeDefinition</a>[<a name="org.freetle.util.XMLEvent" class="extype" href="util/XMLEvent.html">XMLEvent</a>, Context], AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div><div class="toggleContainer block">
