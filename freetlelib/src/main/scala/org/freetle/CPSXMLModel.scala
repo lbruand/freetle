@@ -22,6 +22,33 @@ import xml._
 /**
  * This is a streaming Continuation Passing Transformation model.
  * It is capable of working over XML Events.
+ *
+ * CPSXMLModel specialize [[ org.freetle.CPSModel ]] for a [[ org.freetle.util.XMLEvent ]] alphabet.
+ * it lets you define transformations by writing expressions using :
+ *  - A small number of unit transforms
+ *  - Operators that let you combine sub-expressions.
+ *
+ *  for example, you can extends the CPSXMLModel to define a specific Parser. :
+ *
+ *  {{{
+ *  class TransformSampleParser extends CPSXMLModel[TransformSampleContext] with CPSMeta[TransformSampleContext] {
+ *    def header : ChainedTransformRoot = <("catalog")
+ *    def footer : ChainedTransformRoot = </("catalog")
+ *    def element : ChainedTransformRoot = <("cd") ~ </("cd")
+ *    def document :ChainedTransformRoot = header ~ ((element)+) ~ footer
+ *    def transform : ChainedTransformRoot = (document).metaProcess(new SpaceSkipingMetaProcessor())
+ *  }
+ *  }}}
+ *
+ *  transform is a base rule. It uses a metaprocessor that decorates the transformation to
+ *  skip all whitespace characters.
+ *  document is a rule defined as recognizing :
+ *   - a `header` rule (itself recognizing a catalog opening tag).
+ *   - one or more `element` rules.
+ *   - a `footer` rule (itself recognizing a catalog closing tag).
+ *
+ *  `element` recognizes an opening tag followed by a closing tag.
+ *
  */
 class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
 

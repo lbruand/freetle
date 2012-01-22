@@ -136,7 +136,34 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
  * It is internally using continuations This was used to solve the stackoverflow problems
  * met in previous backtracking models.
  *
- * TODO : Talk about the levels of execution.
+ * == defining transformation expression ==
+ *
+ * CPSModel let you define transformation by writing expressions using :
+ *  - A small number of unit transforms
+ *  - Operators that let you combine sub-expressions.
+ *
+ *  example of an expression defined as:
+ *
+ *  {{{
+ *  val t = 'a' ~ ('b'*) ~ ('a' | 'c')
+ *  }}}
+ *
+ *  recognizes:
+ *
+ *  - abbbba
+ *  - abbc
+ *  - aa
+ *  - ac
+ *
+ *  but NOT :
+ *  - aabbc
+ *  - a
+ *
+ *
+ * == Running expressions ==
+ *
+ * CPSModel uses [[http://en.wikipedia.org/wiki/Continuation-passing_style Continuation Passing Style]] to run
+ * the transformation using bounded memory.
  */
 class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelperExtension[Element, Context] {
   /**
