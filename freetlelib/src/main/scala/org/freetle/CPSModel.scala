@@ -135,6 +135,8 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
  * It is capable of working over any type of alphabet (not just XML).
  * It is internally using continuations This was used to solve the stackoverflow problems
  * met in previous backtracking models.
+ *
+ * TODO : Talk about the levels of execution.
  */
 class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelperExtension[Element, Context] {
   /**
