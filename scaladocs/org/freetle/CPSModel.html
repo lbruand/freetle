@@ -34,8 +34,7 @@ It is internally using continuations This was used to solve the stackoverflow pr
 met in previous backtracking models.</p><h4> defining transformation expression </h4><p>CPSModel let you define transformation by writing expressions using :</p><ul><li>A small number of unit transforms</li><li>Operators that let you combine sub-expressions.</li></ul><p> example of an expression defined as:</p><pre>
  val t = 'a' ~ ('b'*) ~ ('a' | 'c')
 </pre><p> recognizes:</p><ul><li>abbbba</li><li>abbc</li><li>aa</li><li>ac</li></ul><p> but NOT :</p><ul><li>aabbc</li><li>a</li></ul><h4> Running expressions </h4><p>CPSModel uses <a href="http://en.wikipedia.org/wiki/Continuation-passing_style">Continuation Passing Style</a> to run
-the transformation using bounded memory.
-</p></div><div class="toggleContainer block">
+the transformation using bounded memory.</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a name="org.freetle.CPSModelHelperExtension" class="extype" href="CPSModelHelperExtension.html">CPSModelHelperExtension</a>[Element, Context], <a name="org.freetle.CPSModelTypeDefinition" class="extype" href="CPSModelTypeDefinition.html">CPSModelTypeDefinition</a>[Element, Context], AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div><div class="toggleContainer block">
