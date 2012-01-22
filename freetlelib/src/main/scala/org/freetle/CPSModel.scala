@@ -197,6 +197,11 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
     override val info: String = new LocationInfo(new RuntimeException(), this.getClass.getName).fullInfo
     /**
      * A shortcut to the sequence operator.
+     * {{{
+     * val t = a ~ b
+     * }}}
+     *
+     * The t transformation recognizes the string "ab".
      */
     final def ~(other : => ChainedTransformRoot) : ChainedTransformRoot = new SequenceOperator(this, other)
 
@@ -212,11 +217,13 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
 
     /**
      * A shortcut to the zero or more cardinality operator.
+     * @see http://en.wikipedia.org/wiki/Kleene_star
      */
     final def * : ChainedTransformRoot = new ZeroOrMoreOperator(this)
 
     /**
      * A shortcut to the at least one cardinality operator.
+     * a+ is equivalent to aa*.
      */
     final def + : ChainedTransformRoot = new OneOrMoreOperator(this)
 
@@ -314,6 +321,10 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
    * Executes first the left operand.
    * If the result given by the left operand is positive,
    * then the right operand is executed on the result and on the context returned by the left operand.
+   *
+   * examples:
+   *
+   *
    */
 
   final class ComposeOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
