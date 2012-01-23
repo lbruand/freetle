@@ -1,0 +1,12 @@
+digraph {
+	"~1" [label = "~" shape=box] ;
+	"~2" [label = "~" shape=box] ;
+	"a1" [label = "a"];
+	"|" [shape=box]
+	"*" [shape=box]
+	"~1"-> "|" -> "a2";
+	"a2" [label = "a"];
+	"|" -> "c";
+	"~1" -> "~2" -> "a1";
+	"~2" -> "*" -> "b";
+}

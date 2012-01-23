@@ -148,6 +148,8 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
  *  val t = 'a' ~ ('b'*) ~ ('a' | 'c')
  *  }}}
  *
+ *  <img src="./expression.svg" alt="graph representing the above expression"/>
+ *
  *  recognizes:
  *
  *  - abbbba
