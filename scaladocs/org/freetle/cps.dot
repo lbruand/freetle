@@ -1,0 +1,41 @@
+digraph G {
+	rankdir=LR;
+	subgraph "cluster_~0" {
+		subgraph "cluster_~1" {
+			subgraph "cluster_*" {
+				"*" -> "b" [color=green]
+				"b" -> "*" [color=green];
+				label = "*";
+				labelloc="t";
+				color=lightgrey;
+			}
+			a1 [label="a"]
+			a1 -> InnerSequenceOperator -> "*" [color=green];
+			label = "~";
+			labelloc="t";
+			color=lightgrey;
+		}
+		subgraph "cluster_|" {
+			a2 [label="a"]
+			"a2" -> "c" [color=red];
+			label = "|";
+			labelloc="t";
+			color=lightgrey;
+		}
+		color=lightgrey;
+		
+		"b" -> "a2" [color=red];
+		label = "~";
+		labelloc="t";
+	}
+	start [shape=doublecircle];
+	success [shape=doublecircle];
+	failure [shape=doublecircle];
+	start -> a1;
+	"a1" -> failure [color=red]
+	a2 -> success [color=green]
+	"c" -> success [color=green]
+	"c" -> failure [color=red]
+
+}
+
