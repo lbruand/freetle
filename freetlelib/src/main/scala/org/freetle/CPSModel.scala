@@ -148,7 +148,7 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
  *  val t = 'a' ~ ('b'*) ~ ('a' | 'c')
  *  }}}
  *
- *  <img src="./expression.svg" alt="graph representing the above expression"/>
+ *  <img src="expression.svg" alt="graph representing the above expression"/>
  *
  *  recognizes:
  *
@@ -165,7 +165,10 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
  * == Running expressions ==
  *
  * CPSModel uses [[http://en.wikipedia.org/wiki/Continuation-passing_style Continuation Passing Style]] to run
- * the transformation using bounded memory.
+ * the transformation in bounded memory.
+ *
+ * At runtime, the expression graph is converted lazily into a continuation graph. For example :
+ * <img src="cps.svg" alt="graph representing a continuation graph"/>
  *
  */
 class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelperExtension[Element, Context] {
