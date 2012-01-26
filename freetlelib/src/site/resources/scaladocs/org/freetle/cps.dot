@@ -3,39 +3,51 @@ digraph G {
 	subgraph "cluster_~0" {
 		subgraph "cluster_~1" {
 			subgraph "cluster_*" {
-				"*" -> "b" [color=green]
-				"b" -> "*" [color=green];
+				"*" -> "b" [color=green arrowtail=diamond dir=both];
+				"b" -> "*" [color=green arrowtail=diamond dir=both];
 				label = "*";
 				labelloc="t";
 				color=lightgrey;
 			}
 			a1 [label="a"]
-			a1 -> InnerSequenceOperator -> "*" [color=green];
+			a1 -> InnerSequenceOperator -> "*" [color=green arrowtail=diamond dir=both];
 			label = "~";
 			labelloc="t";
 			color=lightgrey;
 		}
 		subgraph "cluster_|" {
 			a2 [label="a"]
-			"a2" -> "c" [color=red];
+			"a2" -> "c" [color=red arrowtail=odiamond dir=both];
 			label = "|";
 			labelloc="t";
 			color=lightgrey;
 		}
 		color=lightgrey;
-		
-		"b" -> "a2" [color=red];
+		InnerSequenceOperator2 [label="InnerSequenceOperator"]
+		"b" -> InnerSequenceOperator2 [color=red arrowtail=odiamond dir=both];
+		InnerSequenceOperator2 -> "a2" [color=green arrowtail=diamond dir=both];
 		label = "~";
 		labelloc="t";
+			
 	}
 	start [shape=doublecircle];
 	success [shape=doublecircle];
 	failure [shape=doublecircle];
 	start -> a1;
-	"a1" -> failure [color=red]
-	a2 -> success [color=green]
-	"c" -> success [color=green]
-	"c" -> failure [color=red]
+	"a1" -> failure [color=red arrowtail=odiamond dir=both];
+	a2 -> success [color=green arrowtail=diamond dir=both];
+	"c" -> success [color=green arrowtail=diamond dir=both];
+	"c" -> failure [color=red arrowtail=odiamond dir=both];
+
+	subgraph "cluster_legend" {
+		nodea [label="a"];
+		nodeb [label="b"];
+		nodea -> nodeb [label="failure" color=red arrowtail=odiamond dir=both];
+		nodea -> nodeb [label="success" color=green arrowtail=diamond dir=both];
+		label = "legend";
+		labelloc="t";
+		color=black;
+	}
 
 }
 
