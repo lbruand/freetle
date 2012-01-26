@@ -148,7 +148,10 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
  *  val t = 'a' ~ ('b'*) ~ ('a' | 'c')
  *  }}}
  *
- *  <img src="expression.svg" alt="graph representing the above expression"/>
+ * <object type="image/svg+xml" data="expression.svg" width="348" height="330">
+ *   <param name="src" value="expression.svg">
+ *   alt : <a href="expression.svg">graph representing the above expression</a>
+ * </object>
  *
  *  recognizes:
  *
@@ -168,7 +171,10 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
  * the transformation in bounded memory.
  *
  * At runtime, the expression graph is converted lazily into a continuation graph. For example :
- * <img src="cps.svg" alt="graph representing a continuation graph"/>
+ * <object type="image/svg+xml" data="cps.svg" width="1691" height="446">
+ *   <param name="src" value="cps.svg">
+ *   alt : <a href="cps.svg">graph representing a continuation graph</a>
+ * </object>
  *
  */
 class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelperExtension[Element, Context] {
