@@ -6,12 +6,16 @@ digraph G {
 				"*" -> "b" [color=green arrowtail=diamond dir=both];
 				"b" -> "*" [color=green arrowtail=diamond dir=both];
 				label = "*";
+				labelfontcolor=black;
+				labelfontsize=25;
 				labelloc="t";
 				color=lightgrey;
 			}
 			a1 [label="a"]
 			a1 -> InnerSequenceOperator -> "*" [color=green arrowtail=diamond dir=both];
 			label = "~";
+			labelfontcolor=black;
+			labelfontsize=25;
 			labelloc="t";
 			color=lightgrey;
 		}
@@ -19,6 +23,8 @@ digraph G {
 			a2 [label="a"]
 			"a2" -> "c" [color=red arrowtail=odiamond dir=both];
 			label = "|";
+			labelfontcolor=black;
+			labelfontsize=25;
 			labelloc="t";
 			color=lightgrey;
 		}
@@ -27,6 +33,8 @@ digraph G {
 		"b" -> InnerSequenceOperator2 [color=red arrowtail=odiamond dir=both];
 		InnerSequenceOperator2 -> "a2" [color=green arrowtail=diamond dir=both];
 		label = "~";
+		labelfontcolor=black;
+		labelfontsize=25;
 		labelloc="t";
 			
 	}
@@ -45,6 +53,8 @@ digraph G {
 		nodea -> nodeb [label="failure" color=red arrowtail=odiamond dir=both];
 		nodea -> nodeb [label="success" color=green arrowtail=diamond dir=both];
 		label = "legend";
+		labelfontcolor=black;
+		labelfontsize=25;
 		labelloc="t";
 		color=black;
 	}
