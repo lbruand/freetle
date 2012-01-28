@@ -177,6 +177,13 @@
 	<url>https://github.com/lbruand/freetle/tree/master/freetlelib/</url>
 	<developerConnection>scm:git:git@github.com:lbruand/freetle.git</developerConnection>
   </scm>
+  <developers>
+    <developer>
+      <id>lbruand</id>
+      <name>Lucas Bruand</name>
+      <email>l DOT bruand DOT pro AT gmail.com</email>
+    </developer>
+  </developers>
   <issueManagement>
 	<system>GitHub</system>
         <url>https://github.com/lbruand/freetle/issues</url>
