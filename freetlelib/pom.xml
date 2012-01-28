@@ -7,7 +7,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.freetle</groupId>
   <artifactId>freetle</artifactId>
-  <version>1.0-beta-3</version>
+  <version>1.0-beta-4-SNAPSHOT</version>
   <name>Freetle - Streaming XML Transformations</name>
   <description>Freetle is an open source One-pass xml transformation framework.
       It is a pure scala framework and relies on transformation combinators for its internals.
