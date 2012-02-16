@@ -67,7 +67,7 @@ case class EvElemStart(var name : QName = null, var attributes : Map[QName, Stri
   final def this() = this(null, null)
   private final def buildAttrStringBuffer(sb :Writer)(j : (QName, String)) {
     sb.append(' ')
-    if (!j._1.prefix.isEmpty) {
+    if (j._1.prefix.length() != 0) {
       sb.append(j._1.prefix)
       sb.append(':')
     }
@@ -80,7 +80,7 @@ case class EvElemStart(var name : QName = null, var attributes : Map[QName, Stri
 
   final def appendWriter(sb: Writer) {
     sb.append('<')
-    if (!name.prefix.isEmpty) {
+    if (name.prefix.length() != 0) {
       sb.append(name.prefix)
       sb.append(':')
     }
@@ -128,7 +128,7 @@ case class EvElemEnd(var name : QName) extends XMLEvent {
   final def appendWriter(sb: Writer) {
     sb.append('<')
     sb.append('/')
-    if (!name.prefix.isEmpty) {
+    if (name.prefix.length() != 0) {
       sb.append(name.prefix)
       sb.append(':')
     }
