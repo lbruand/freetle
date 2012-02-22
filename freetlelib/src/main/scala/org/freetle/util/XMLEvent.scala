@@ -78,6 +78,16 @@ case class EvElemStart(var name : QName = null, var attributes : Map[QName, Stri
     sb.append('"')
   }
 
+  private final def buildNamespaceStringBuffer(sb :Writer)(j : (String, String)) {
+    sb.append(' ')
+    sb.append("xmlns:")
+    sb.append(j._1)
+    sb.append('=')
+    sb.append('"')
+    sb.append(j._2)
+    sb.append('"')
+  }
+
   final def appendWriter(sb: Writer) {
     sb.append('<')
     if (name.prefix.length() != 0) {
@@ -91,6 +101,12 @@ case class EvElemStart(var name : QName = null, var attributes : Map[QName, Stri
       attributes.foreach(
         buildAttrStringBuffer(sb)
         )
+    }
+
+    if (namespaces != null) {
+      namespaces.foreach(
+       buildNamespaceStringBuffer(sb)
+      )
     }
     sb.append('>')
   }
