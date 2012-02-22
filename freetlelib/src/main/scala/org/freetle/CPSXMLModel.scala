@@ -84,7 +84,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     def conditionToStop(depth: Int) = (depth <= 0)
 
     def accumulate(depth: Int, element: CPSElementOrPositive) : Int = depth + (element match {
-      case Some(EvElemStart(_, _)) => +1
+      case Some(EvElemStart(_, _, _)) => +1
       case Some(EvElemEnd(_)) => -1
       case _ => 0
     })
@@ -101,7 +101,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     def conditionToStop(depth: Int) = (depth <= 0)
 
     def accumulate(depth: Int, element: CPSElementOrPositive) : Int = depth + (element match {
-      case Some(EvElemStart(_, _)) => +1
+      case Some(EvElemStart(_, _, _)) => +1
       case Some(EvElemEnd(_)) => -1
       case _ => 0
     })
@@ -145,8 +145,8 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
         val elem = sr.head._1.get
         if (matcher(elem)) {
           (elem) match {
-            case EvElemStart(name, attributes)  =>
-              (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(name, attributes, context))
+            case EvElemStart(name, attributes, namespaces)  =>
+              (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(name, attributes, namespaces, context))
             case _ => (stream, context)
           }
         } else {
@@ -154,7 +154,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
         }
       }
     }
-    def pushToContext(name : QName, attributes : Map[QName, String], context : Context) : Context
+    def pushToContext(name : QName, attributes : Map[QName, String], namspaces : Map[String, String], context : Context) : Context
   }
 
   /**
@@ -270,15 +270,15 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     /**
      * implement this to check whether the Element is the one we are looking for.
      */
-    def testElem(name : QName, attributes : Map[QName, String]) : Boolean
+    def testElem(name : QName, attributes : Map[QName, String], namespaces : Map[String, String]) : Boolean
 
     /**
      * Call the testElem method to check the event.
      */
     def apply(event: XMLEvent) : Boolean = {
       event match {
-        case EvElemStart(name, attributes) => {
-           testElem(name, attributes)
+        case EvElemStart(name, attributes, namespaces) => {
+           testElem(name, attributes, namespaces)
         }
         case _ => false
       }
@@ -289,7 +289,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
    * A matcher that matches EvElemStarts based on their localPart.
    */
   class LocalPartEvStartMatcher(localPart : String)(implicit nameSpaceMatcher :NameSpaceMatcher) extends EvStartMatcher(nameSpaceMatcher) {
-    def testElem(name: QName, attributes: Map[QName, String]) =
+    def testElem(name: QName, attributes: Map[QName, String], namespaces : Map[String, String]) =
           localPart.equals(name.localPart) && nameSpaceMatcher(name)
   }
 

@@ -109,6 +109,7 @@ final class XMLEventStream(src: Any, xsdURL : String = null) extends Iterator[XM
   }
 
   type Attributes = Map[QName, String]
+  type Namespaces = Map[String,  String]
 
   @inline private def fromJavaQName(qn : javax.xml.namespace.QName) : org.freetle.util.QName = {
     new QName(namespaceURI = qn.getNamespaceURI,
@@ -121,12 +122,19 @@ final class XMLEventStream(src: Any, xsdURL : String = null) extends Iterator[XM
       x => (fromJavaQName(input.getAttributeName(x)), input.getAttributeValue(x))
       ).toMap
   }
+  
+  @inline private def buildNamespaces(input : XMLStreamReader) : Namespaces = {
+    List.range[Int](0, input.getNamespaceCount).map(
+      x => (input.getNamespacePrefix(x), input.getNamespaceURI(x))
+    ).toMap
+  }
 
   @inline private def buildEvent(input:XMLStreamReader) : XMLEvent = {
     val eventType = input.getEventType
 	  val event : XMLEvent = eventType match {
 	    case XMLStreamConstants.START_ELEMENT => new EvElemStart(fromJavaQName(input.getName),
-                                                               buildAttributes(input)
+                                                               buildAttributes(input),
+                                                               buildNamespaces(input)
                                                                )
       case XMLStreamConstants.END_ELEMENT => new EvElemEnd(fromJavaQName(input.getName))
       case XMLStreamConstants.CHARACTERS => new EvText(input.getText)

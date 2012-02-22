@@ -76,7 +76,7 @@ class CPSXMLModelTest extends CPSXMLModel[TstXMLContext]
     assertAllResult(r, "Result : [" + serializeWithResult(r) + "]" )
     assertEquals("Result : [" + serializeWithResult(r) + "]", evStream.length-8, r.length)
     assertTrue(r.filter(x => (x._1 match {
-      case Some(EvElemStart(QName(_, "value", _), _)) => true
+      case Some(EvElemStart(QName(_, "value", _), _, _)) => true
       case _  => false
     })).isEmpty)
   }
@@ -136,7 +136,7 @@ class CPSXMLModelTest extends CPSXMLModel[TstXMLContext]
     assertAllResult(r, "Result : [" + serializeWithResult(r) + "]" )
     assertEquals("Result : [" + serializeWithResult(r) + "]", evStream.length-8, r.length)
     assertTrue(r.filter(x => (x._1 match {
-      case Some(EvElemStart(QName(_, "value", _), _)) => true
+      case Some(EvElemStart(QName(_, "value", _), _, _)) => true
       case _  => false
     })).isEmpty)
   }
@@ -194,7 +194,7 @@ class CPSXMLModelTest extends CPSXMLModel[TstXMLContext]
     })
     val resultS = p.apply(new CFilterIdentity(), new CFilterIdentity())(Stream.empty, new TstXMLContext())
     assertEquals("helloA", resultS.head._1 match {
-      case Some(EvElemStart(name, attrs)) => attrs.head._2
+      case Some(EvElemStart(name, attrs, namespcs)) => attrs.head._2
       case _ => "error"
     })
   }

@@ -63,7 +63,7 @@ case class QName(var namespaceURI : String = XMLConstants.NULL_NS_URI,
 
 /** An element representing an openning tag */
 @SerialVersionUID(32003)
-case class EvElemStart(var name : QName = null, var attributes : Map[QName, String] = null) extends XMLEvent {
+case class EvElemStart(var name : QName = null, var attributes : Map[QName, String] = null, var namespaces : Map[String, String] = null) extends XMLEvent {
   final def this() = this(null, null)
   private final def buildAttrStringBuffer(sb :Writer)(j : (QName, String)) {
     sb.append(' ')
@@ -98,13 +98,19 @@ case class EvElemStart(var name : QName = null, var attributes : Map[QName, Stri
   def readExternal(in: ObjectInput) {
     this.name = new QName()
     this.name.readExternal(in)
-    val size = in.readInt
-    this.attributes = (1 to size).map(x => {
+    val sizeAttr = in.readInt
+    this.attributes = (1 to sizeAttr).map(x => {
       val name = new QName()
       name.readExternal(in)
       val value = in.readUTF
       (name, value)
     }).toMap[QName, String]
+    val sizeNamespc = in.readInt
+    this.namespaces = (1 to sizeNamespc).map( x => {
+      val prefix = in.readUTF
+      val namespaceURI = in.readUTF
+      (prefix, namespaceURI)
+    }).toMap[String, String]
   }
 
   def writeExternal(out: ObjectOutput) {
@@ -115,6 +121,14 @@ case class EvElemStart(var name : QName = null, var attributes : Map[QName, Stri
       attributeName.writeExternal(out)
       out.writeUTF(attributeValue)
     })
+    val namespc : Map[String, String]= if (this.namespaces == null) Map.empty else this.namespaces
+    out.writeInt(namespc.size)
+    namespc.foreach[Unit]( x => {
+      val (prefix : String, namespaceURI : String) = x
+      out.writeUTF(prefix)
+      out.writeUTF(namespaceURI)
+    })
+    
   }
 
 
