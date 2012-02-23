@@ -22,6 +22,7 @@ import java.lang.String
 import java.io.{File, InputStream, Reader}
 import java.net.URL
 import org.codehaus.stax2.validation.{XMLValidationSchema, XMLValidationSchemaFactory}
+import javax.xml.XMLConstants
 
 //import javax.xml.stream.XMLInputFactory
 //import javax.xml.stream.XMLStreamReader
@@ -125,7 +126,10 @@ final class XMLEventStream(src: Any, xsdURL : String = null) extends Iterator[XM
   
   @inline private def buildNamespaces(input : XMLStreamReader) : Namespaces = {
     List.range[Int](0, input.getNamespaceCount).map(
-      x => (input.getNamespacePrefix(x), input.getNamespaceURI(x))
+      x => (if (input.getNamespacePrefix(x) == null)
+              XMLConstants.DEFAULT_NS_PREFIX
+            else input.getNamespacePrefix(x),
+            input.getNamespaceURI(x))
     ).toMap
   }
 

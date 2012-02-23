@@ -80,8 +80,11 @@ case class EvElemStart(var name : QName = null, var attributes : Map[QName, Stri
 
   private final def buildNamespaceStringBuffer(sb :Writer)(j : (String, String)) {
     sb.append(' ')
-    sb.append("xmlns:")
-    sb.append(j._1)
+    sb.append("xmlns")
+    if (!XMLConstants.DEFAULT_NS_PREFIX.equals(j._1)) {
+      sb.append(':')
+      sb.append(j._1)
+    }
     sb.append('=')
     sb.append('"')
     sb.append(j._2)
