@@ -34,27 +34,44 @@ trait FileSplitter[Context] extends CPSXMLModel[Context] {
                                occurrence : Int = 0,
                                writerInput : Writer = null,
                                context : Context) {
+
+    // TODO in the event of an exception the current writer is not closed.
     val trans = fileMatcher(new CFilterIdentity(), new CFilterIdentity())
     var that = trans(CPSStreamHelperMethods.turnToTail(evStream), context)
-    val writer = writerConstructor(occurrence, writerInput)
-    var read : Boolean = false
-    while (!that.isEmpty && that.head._2) {
-      read = true
-      that.head._1 match {
-              case Some(x : XMLEvent) => x.appendWriter(writer)
-              case None => ()
-              }
-      that = that.tail
+    var writer : Writer = null
+    var read: Boolean = false
+    try {
+      writer = writerConstructor(occurrence, writerInput)
+
+      while (!that.isEmpty && that.head._2) {
+        read = true
+        that.head._1 match {
+          case Some(x: XMLEvent) => x.appendWriter(writer)
+          case None => ()
+        }
+        that = that.tail
+      }
+
+      writer.flush()
+    }
+    catch {
+      case e => {
+        if (writer != null) {
+          writer.close()
+        }
+        throw e
+      }
     }
 
-    writer.flush()
-    if (!that.isEmpty && read) {
+
+    if (!that.isEmpty && read) { // Go ahead
       serializeXMLResultStream(that,
-                               writerConstructor = writerConstructor,
-                               occurrence = occurrence + 1,
-                               writer,
-                               context
+        writerConstructor = writerConstructor,
+        occurrence = occurrence + 1,
+        writer,
+        context
       )
     }
+
   }
 }
