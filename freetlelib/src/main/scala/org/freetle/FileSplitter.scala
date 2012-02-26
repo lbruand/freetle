@@ -22,7 +22,7 @@ import util.{EvComment, XMLEvent}
 /**
  * This trait can be used to cut a single stream into multiple files.
  * It matches repeatedly `fileMatcher` and each chunk thus matched can be
- * written into an writer created using `writerContructor`.
+ * written into an writer created using `writerConstructor`.
  */
 
 trait FileSplitter[Context] extends CPSXMLModel[Context] {
