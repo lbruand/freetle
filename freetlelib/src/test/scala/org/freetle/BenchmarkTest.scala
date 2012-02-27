@@ -51,7 +51,9 @@ abstract class BaseCaseBenchmarkTransform
 }
 
 class IdentityCaseBenchmarkTransform extends BaseCaseBenchmarkTransform {
-  override val transform = new CFilterIdentity()
+  override val transform =  new CFilter {
+    def apply(s : CPSStream, c : FreetleCaseBenchmarkContext) : CPSStream = s map (x => (x._1, true))
+  }
 }
 
 class FreetleCaseBenchmarkTransform extends BaseCaseBenchmarkTransform {

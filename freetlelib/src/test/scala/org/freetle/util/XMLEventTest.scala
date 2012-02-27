@@ -69,7 +69,7 @@ class XMLEventTest extends CPSXMLModel[XMLEventTestContext] with TestXMLHelperMe
     <message>
         <value>10010</value>
     </message>
-</input>""", serialize(evStream))
+</input>""", serialize(evStream map (x => (x._1, true) )))
   }
 
   @Test

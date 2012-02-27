@@ -18,6 +18,7 @@ package org.freetle
 import util._
 import java.io._
 import xml._
+import java.lang.String
 
 /**
  * This is a streaming Continuation Passing Transformation model.
@@ -381,13 +382,23 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
     def loadXMLResultStream(str : =>Stream[Char]) : CPSStream =
         convertToCPSStream(new XMLEventStream(str))
 
+    val CANNOTPARSE: String = "Could not parse the whole input."
+
     /**
      * Serialise a XMLResultStream into a XML form.
      */
     def serializeXMLResultStream(evStream : =>CPSStream, writer : Writer) {
-      evStream foreach (_._1 match {
-                case Some(x : XMLEvent) => x.appendWriter(writer)
-                case _ => (new EvComment("EmptyPositive")).appendWriter(writer)
+      evStream foreach (_ match {
+                case (Some(x : XMLEvent), true) => x.appendWriter(writer)
+                case (None, true) => (new EvComment("EmptyPositive")).appendWriter(writer)
+                case (Some(x : XMLEvent), false) => if (x.location != null)
+                                        throw new ParsingFailure(CANNOTPARSE + " [" + x.location.getColumnNumber +
+                                                                                ":" + x.location.getLineNumber +
+                                                                                "/" + x.location.getCharacterOffset +
+                                                                                "]")
+                                      else
+                                        throw new ParsingFailure(CANNOTPARSE)
+                case (None, false) => throw new ParsingFailure(CANNOTPARSE)
               })
     }
 

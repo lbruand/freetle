@@ -241,8 +241,9 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
      * Serialise a XMLResultStream into a XML form.
      */
     def serializeXMLResultStream(evStream : =>CPSStream, writer : Writer) {
-      evStream foreach (_._1 match {
-                case Some(Right(x : XMLEvent)) => x.appendWriter(writer)
+      evStream foreach (_ match {
+                case (Some(Right(x : XMLEvent)), true) => x.appendWriter(writer)
+                case (_, false) => throw new ParsingFailure("Could not parse the whole input.")
                 case _ => {}
               })
     }
