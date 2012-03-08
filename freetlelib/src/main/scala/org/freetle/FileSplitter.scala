@@ -18,6 +18,8 @@ package org.freetle
 import annotation.tailrec
 import java.io.Writer
 import util.{EvComment, XMLEvent}
+import javax.xml.stream.{XMLStreamWriter, XMLOutputFactory}
+import com.ctc.wstx.stax.WstxOutputFactory
 
 /**
  * This trait can be used to cut a single stream into multiple files.
@@ -44,16 +46,23 @@ trait FileSplitter[Context] extends CPSXMLModel[Context] {
     var read: Boolean = false
     try {
       writer = writerConstructor(occurrence, writerInput)
-
+      val outputFactory : WstxOutputFactory = new WstxOutputFactory()
+      outputFactory.configureForSpeed()
+      val xmlStreamWriter : XMLStreamWriter = outputFactory.createXMLStreamWriter(writer)
       while (!that.isEmpty && that.head._2) {
-        read = true
+
         that.head._1 match {
-          case Some(x: XMLEvent) => x.appendWriter(writer)
+          case Some(x: XMLEvent) => {
+                                      read = true
+                                      x.appendTo(xmlStreamWriter)
+                                    }
           case None => ()
         }
         that = that.tail
       }
-
+      if (read) {
+        xmlStreamWriter.close()
+      }
       writer.flush()
     }
     catch {

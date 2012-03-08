@@ -73,7 +73,7 @@ class FreetleCaseBenchmarkTransform extends BaseCaseBenchmarkTransform {
         }
       }
 
-      val t = (<("catalog") -> drop
+      val t = (<("catalog")
               )~
                   (((( (<("cd") ~
                       <("title") ~
@@ -109,8 +109,7 @@ class FreetleCaseBenchmarkTransform extends BaseCaseBenchmarkTransform {
                     )
                     )
                   )  *) ~
-              (</("catalog") -> drop
-                      )
+              (</("catalog"))
       val filterIdentity = new CFilterIdentity()
       val m = t.metaProcess(new SpaceSkipingMetaProcessor())
       m(filterIdentity, filterIdentity)
@@ -316,7 +315,7 @@ class BenchmarkTest {
   def testXSLT() {
     val warmup = 4
     val testRetries = 5
-    val sizes = (3 to 8).map(_ * 2500)
+    val sizes = (3 to 8).map(_ * 250)
     //val sizes = Stream(1000)
     val benchmarks = List(
          (x :Int) => new XSLTCaseBenchmark(nCatalog = x),

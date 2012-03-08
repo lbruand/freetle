@@ -16,10 +16,10 @@
  
 package org.freetle.util
 
-import javax.xml.stream.Location
 import javax.xml.namespace.NamespaceContext
 import javax.xml.XMLConstants
 import java.io._
+import javax.xml.stream.{XMLStreamWriter, Location}
 
 /** This class represents an XML event for pull parsing.
  *  Pull parsing means that during the traversal of the XML
@@ -37,8 +37,14 @@ sealed abstract class XMLEvent extends Externalizable {
     appendWriter(sb)
     sb.toString.toStream
   }
-  
+
+  /**
+   * Testing purposes only. Use appendTo instead.
+   * @param writer
+   */
   def appendWriter(writer : Writer)
+
+  def appendTo(serializer : XMLStreamWriter)
 }
 
 /**
@@ -114,6 +120,25 @@ case class EvElemStart(var name : QName = null, var attributes : Map[QName, Stri
     sb.append('>')
   }
 
+  final def appendTo(serializer : XMLStreamWriter) {
+    serializer.writeStartElement(name.prefix, name.localPart, name.namespaceURI)
+    if (attributes != null) {
+      attributes.foreach[Unit](
+        attr => {
+          serializer.writeAttribute(attr._1.prefix, attr._1.namespaceURI, attr._1.localPart, attr._2)
+        })
+    }
+    if (namespaces != null) {
+      namespaces.foreach[Unit](
+        namespace => {
+          if (XMLConstants.DEFAULT_NS_PREFIX.equals(namespace._1))
+            serializer.writeDefaultNamespace(namespace._2)
+          else
+            serializer.writeNamespace(namespace._1, namespace._2)
+        })
+    }
+  }
+
   def readExternal(in: ObjectInput) {
     this.name = new QName()
     this.name.readExternal(in)
@@ -169,6 +194,9 @@ case class EvElemEnd(var name : QName) extends XMLEvent {
     sb.append('>')
   }
 
+  final def appendTo(serializer : XMLStreamWriter) {
+    serializer.writeEndElement()
+  }
 
   def readExternal(in: ObjectInput) {
     this.name = new QName()
@@ -187,6 +215,9 @@ case class EvText(var text : String) extends XMLEvent {
     sb.append(text)
   }
 
+  final def appendTo(serializer : XMLStreamWriter) {
+    serializer.writeCharacters(text)
+  }
 
   def readExternal(in: ObjectInput) {
     this.text = in.readUTF
@@ -207,6 +238,10 @@ case class EvEntityRef(var entity: String) extends XMLEvent {
     sb.append(';')
   }
 
+  final def appendTo(serializer : XMLStreamWriter) {
+    serializer.writeEntityRef(entity)
+  }
+
   def readExternal(in: ObjectInput) {
     this.entity = in.readUTF
   }
@@ -221,6 +256,10 @@ case class EvEntityRef(var entity: String) extends XMLEvent {
 case class EvProcInstr(var target: String, var text: String) extends XMLEvent {
   final def this() = this(null, null)
   final def appendWriter(sb: Writer) {}
+
+  final def appendTo(serializer : XMLStreamWriter) {
+    serializer.writeProcessingInstruction(target, text)
+  }
 
   final def readExternal(in: ObjectInput) {
     this.target = in.readUTF
@@ -242,6 +281,11 @@ case class EvComment(var text: String) extends XMLEvent {
     sb.append(text)
     sb.append(" -->")
   }
+
+  final def appendTo(serializer : XMLStreamWriter) {
+    serializer.writeComment(text)
+  }
+
   final def readExternal(in: ObjectInput) {
     this.text = in.readUTF
   }

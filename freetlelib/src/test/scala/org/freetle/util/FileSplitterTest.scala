@@ -28,9 +28,9 @@ class FileSplitterTest extends CPSXMLModel[FileSplitterContext] with FileSplitte
   @Test
   def test() {
     val str = """<Document>
-    <File>euhgzuie zeufhenuzehf fzehfeuiezh1</File>
-    <File>euhgzuie zeufhenuzehf fzehfeuiezh2</File>
-    <File>euhgzuie zeufhenuzehf fzehfeuiezh3</File>
+    <File><doc1>euhgzuie zeufhenuzehf fzehfeuiezh1</doc1></File>
+    <File><doc2>euhgzuie zeufhenuzehf fzehfeuiezh2</doc2></File>
+    <File><doc3>euhgzuie zeufhenuzehf fzehfeuiezh3</doc3></File>
     </Document>
     """
     var inStream = XMLResultStreamUtils.loadXMLResultStream(str)
@@ -39,7 +39,7 @@ class FileSplitterTest extends CPSXMLModel[FileSplitterContext] with FileSplitte
 
       if (inputWriter != null) {
         val res = inputWriter.toString
-        assertTrue("occurrence nb "+occurrence + " val=["+ res+"]", res.endsWith(""+occurrence))
+        assertTrue("occurrence nb "+occurrence + " val=["+ res+"]", res.endsWith(""+occurrence+">"))
       }
       new StringWriter()
     }, context = null)

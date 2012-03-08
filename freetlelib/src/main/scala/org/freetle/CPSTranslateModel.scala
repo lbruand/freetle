@@ -19,6 +19,7 @@ import util._
 import java.io._
 import io.Source
 import xml._
+import javax.xml.stream.{XMLOutputFactory, XMLStreamWriter}
 
 
 /**
@@ -241,11 +242,21 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
      * Serialise a XMLResultStream into a XML form.
      */
     def serializeXMLResultStream(evStream : =>CPSStream, writer : Writer) {
+      val output : XMLOutputFactory = XMLOutputFactory.newInstance();
+      val xmlStreamWriter : XMLStreamWriter = output.createXMLStreamWriter(writer)
+      serializeXMLResultStreamToXMLStreamWriter(evStream, xmlStreamWriter)
+      xmlStreamWriter.close()
+    }
+
+    /**
+     * SerializeXMLResultStreeam
+     */
+    def serializeXMLResultStreamToXMLStreamWriter(evStream : =>CPSStream, writer : XMLStreamWriter) {
       evStream foreach (_ match {
-                case (Some(Right(x : XMLEvent)), true) => x.appendWriter(writer)
-                case (_, false) => throw new ParsingFailure("Could not parse the whole input.")
-                case _ => {}
-              })
+        case (Some(Right(x : XMLEvent)), true) => x.appendTo(writer)
+        case (_, false) => throw new ParsingFailure("Could not parse the whole input.")
+        case _ => {}
+      })
     }
 
     /**

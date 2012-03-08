@@ -19,6 +19,8 @@ import util._
 import java.io._
 import xml._
 import java.lang.String
+import javax.xml.stream.{XMLStreamWriter, XMLOutputFactory}
+import com.ctc.wstx.stax.WstxOutputFactory
 
 /**
  * This is a streaming Continuation Passing Transformation model.
@@ -384,13 +386,25 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
 
     val CANNOTPARSE: String = "Could not parse the whole input."
 
+
     /**
      * Serialise a XMLResultStream into a XML form.
      */
     def serializeXMLResultStream(evStream : =>CPSStream, writer : Writer) {
+      val outputFactory : WstxOutputFactory = new WstxOutputFactory()
+      outputFactory.configureForSpeed()
+      val xmlStreamWriter : XMLStreamWriter = outputFactory.createXMLStreamWriter(writer)
+      serializeXMLResultStreamToXMLStreamWriter(evStream, xmlStreamWriter)
+      xmlStreamWriter.close()
+    }
+
+    /**
+     * SerializeXMLResultStreeam
+     */
+    def serializeXMLResultStreamToXMLStreamWriter(evStream : =>CPSStream, writer : XMLStreamWriter) {
       evStream foreach (_ match {
-                case (Some(x : XMLEvent), true) => x.appendWriter(writer)
-                case (None, true) => (new EvComment("EmptyPositive")).appendWriter(writer)
+                case (Some(x : XMLEvent), true) => x.appendTo(writer)
+                case (None, true) => (new EvComment("EmptyPositive")).appendTo(writer)
                 case (Some(x : XMLEvent), false) => if (x.location != null)
                                         throw new ParsingFailure(CANNOTPARSE + " [" + x.location.getColumnNumber +
                                                                                 ":" + x.location.getLineNumber +
