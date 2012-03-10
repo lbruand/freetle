@@ -126,7 +126,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
         (sr.head._1.get) match {
           case EvText(txt) =>
             (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(txt, context))
-          case _ => (stream, context)
+          case _ => (Stream.cons( (None, true), sr.tail), pushToContext("", context))
         }
       }
     }
@@ -348,8 +348,9 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
   }
   /**
    * Shortcut to take text.
+   * Can fake a empty text by using the ? cardinality operator.
    */
-  val takeText = new ElementMatcherTaker(new EvTextTypeMatcher())
+  val takeText = (new ElementMatcherTaker(new EvTextTypeMatcher()))?
 
   /**
    * Shortcut to take space or comment.

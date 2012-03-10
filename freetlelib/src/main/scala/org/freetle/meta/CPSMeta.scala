@@ -24,10 +24,10 @@ import org.freetle.CPSXMLModel
 trait CPSMeta[Context] extends CPSXMLModel[Context] {
   class SpaceSkipingMetaProcessor extends MetaProcessor {
     def processTransform(th : TransformBase, instantiate : InstantiateTransform) : ChainedTransformRoot = {
-      if (th == drop) {
+      if (th == drop || th == takeText || th.isInstanceOf[TakeTextToContext]) {
         th
       } else {
-        instantiate() ~ ((takeSpace)*)
+        ((takeSpace)*) ~ instantiate()
       }
     }
     def processUnaryOperator(th : UnaryOperator, instantiate : InstantiateUnaryOperator, underlying : =>ChainedTransformRoot) : ChainedTransformRoot = {
