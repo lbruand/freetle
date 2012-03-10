@@ -21,7 +21,6 @@ import xml._
 import java.lang.String
 import javax.xml.stream.{XMLStreamWriter, XMLOutputFactory}
 import com.ctc.wstx.stax.WstxOutputFactory
-import org.freetle.CPSXMLModel.DeepFilterUntil
 
 /**
  * This is a streaming Continuation Passing Transformation model.
