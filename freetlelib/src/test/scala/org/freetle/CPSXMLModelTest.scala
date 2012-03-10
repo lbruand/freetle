@@ -20,6 +20,7 @@ import org.junit._
 import Assert._
 import util._
 import org.apache.log4j.{ConsoleAppender, PatternLayout, BasicConfigurator}
+import java.io.StringReader
 
 case class TstXMLContext(name :String ="name", totalSum : Int = 0, currentSum : Int = 0)
 
@@ -139,6 +140,141 @@ class CPSXMLModelTest extends CPSXMLModel[TstXMLContext]
       case Some(EvElemStart(QName(_, "value", _), _, _)) => true
       case _  => false
     })).isEmpty)
+  }
+
+  @Test
+  def testEmptyString() {
+    logger.info("testEmptyString")
+    val c = new TstXMLContext()
+    val input = """
+<input>
+    <text></text>
+</input>
+
+
+"""
+    val t = <("input") ~ <("text") ~ takeText ~ </("text") ~ </("input")
+    val (_, _, r) = runTransform(t, input, c)
+    assertAllResult(r)
+  }
+
+  @Test
+  def testTakeTextHello() {
+    logger.info("testTakeTextHello")
+    val c = new TstXMLContext()
+    val input = """
+<input>
+    <text>   hello  </text>
+</input>
+
+
+"""
+    val t = <("input") ~ <("text") ~ takeText ~ </("text") ~ </("input")
+    val (_, _, r) = runTransform(t, input, c)
+    assertAllResult(r)
+  }
+
+  @Test
+  def testTakeTextHelloToContext() {
+    logger.info("testTakeTextHelloToContext")
+    val c = new TstXMLContext()
+    val input = """
+<input>
+    <text>   hello  </text>
+</input>
+
+
+"""
+    val t = <("input") ~ <("text") ~ new TakeTextToContext {
+      def pushToContext(text: String, context: TstXMLContext) = context.copy(name = text)
+    } ~ </("text") ~ </("input")
+    val (suc, _, r) = runTransform(t, input, c)
+    assertAllResult(r)
+    assertEquals("   hello  ", suc.get.name)
+  }
+
+  @Test
+  def testTakeTextEmptyToContext() {
+    logger.info("testTakeTextEmptyToContext")
+    val c = new TstXMLContext()
+    val input = """
+<input>
+    <text></text>
+</input>
+
+
+"""
+    val t = <("input") ~ <("text") ~ new TakeTextToContext {
+      def pushToContext(text: String, context: TstXMLContext) = context.copy(name = text)
+    } ~ </("text") ~ </("input")
+    val (suc, _, r) = runTransform(t, input, c)
+    assertAllResult(r)
+    assertEquals("", suc.get.name)
+  }
+
+  @Test
+  def testTakeTextSecondEmptyToContext() {
+    logger.info("testTakeTextSecondEmptyToContext")
+    val c = new TstXMLContext()
+    val input = """
+<input>
+    <text/>
+</input>
+
+
+"""
+    val t = <("input") ~ <("text") ~ new TakeTextToContext {
+      def pushToContext(text: String, context: TstXMLContext) = context.copy(name = text)
+    } ~ </("text") ~ </("input")
+    val (suc, _, r) = runTransform(t, input, c)
+    assertAllResult(r)
+    assertEquals("", suc.get.name)
+  }
+
+  @Test
+  def testTakeTextWhiteSpaceToContext() {
+    logger.info("testTakeTextWhiteSpaceToContext")
+    val c = new TstXMLContext()
+    val input = """
+<input>
+    <text>  </text>
+</input>
+
+
+"""
+    val t = <("input") ~ <("text") ~ new TakeTextToContext {
+      def pushToContext(text: String, context: TstXMLContext) = context.copy(name = text)
+    } ~ </("text") ~ </("input")
+    val (suc, _, r) = runTransform(t, input, c)
+    assertAllResult(r)
+    assertEquals("  ", suc.get.name)
+  }
+
+  @Test
+  def testNoTagText() {
+    logger.info("testNoTagText")
+    val c = new TstXMLContext()
+    val input = """
+<input>
+</input>
+
+
+"""
+    val t = <("input") ~ <("text") ~ takeText ~ </("text") ~ </("input")
+    val (_, _, r) = runTransform(t, input, c)
+    constraintResultsThenTails(r)
+
+  }
+
+
+  def runTransform(t : ChainedTransformRoot, input : String, c : TstXMLContext) = {
+    val evStream = XMLResultStreamUtils.loadXMLResultStream(input)
+    val tmeta = t.metaProcess(new SpaceSkipingMetaProcessor())
+    val cfilterIdentityWithContextSuccess = new CFilterIdentityWithContext()
+    val cfilterIdentityWithContextFailure = new CFilterIdentityWithContext()
+    val result = (tmeta)(cfilterIdentityWithContextSuccess, cfilterIdentityWithContextFailure)(evStream, c)
+    result.force
+    (cfilterIdentityWithContextSuccess.context, cfilterIdentityWithContextFailure.context, result)
   }
 
   @Test

@@ -126,7 +126,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
         (sr.head._1.get) match {
           case EvText(txt) =>
             (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(txt, context))
-          case _ => (Stream.cons( (None, true), sr.tail), pushToContext("", context))
+          case _ => (Stream.cons( (None, true), sr), pushToContext("", context))
         }
       }
     }
