@@ -21,6 +21,7 @@ import xml._
 import java.lang.String
 import javax.xml.stream.{XMLStreamWriter, XMLOutputFactory}
 import com.ctc.wstx.stax.WstxOutputFactory
+import org.freetle.CPSXMLModel.DeepFilterUntil
 
 /**
  * This is a streaming Continuation Passing Transformation model.
@@ -100,7 +101,7 @@ class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
    * The deepfilteruntil does not return the matching end bracket.
    */
   class DeepFilterUntil extends StatefulSelectorUntil[Int] {
-    def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { new DeepFilter() })
+    def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { new DeepFilterUntil() })
     def conditionToStop(depth: Int) = (depth <= 0)
 
     def accumulate(depth: Int, element: CPSElementOrPositive) : Int = depth + (element match {
