@@ -66,6 +66,7 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
   object CPSStreamHelperMethods {
     @inline val constantEmptyPositive : CPSTupleElement = (None, true)
     @inline def isEmptyPositive(x : CPSTupleElement) : Boolean = x.equals( constantEmptyPositive )
+    @inline def isNotEmpty(x : CPSTupleElement) : Boolean = (!x._1.isEmpty)
     @inline def isNotEmptyPositive(x : CPSTupleElement) : Boolean = !(isEmptyPositive(x))
     @inline def removeWhileEmptyPositive(s : CPSStream) : CPSStream = {
       var cs : CPSStream = s
@@ -126,7 +127,7 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
     /**
      * Turn any result into a negative (tail).
      */
-    @inline def turnToTail(s : CPSStream) : CPSStream = s map (x => (x._1, false))
+    @inline def turnToTail(s : CPSStream) : CPSStream = s filter (isNotEmpty) map (x => (x._1, false))
   }
 }
 
