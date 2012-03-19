@@ -33,7 +33,7 @@ trait FileSplitter[Context] extends CPSXMLModel[Context] {
   /**
    * Serialise a XMLResultStream into a XML form.
    */
-  @tailrec final def serializeXMLResultStream(evStream : =>CPSStream,
+  final def serializeXMLResultStream(evStream : =>CPSStream,
                                writerConstructor : (Int, Writer) => Writer,
                                occurrence : Int = 0,
                                writerInput : Writer = null,
@@ -41,48 +41,51 @@ trait FileSplitter[Context] extends CPSXMLModel[Context] {
 
     // TODO in the event of an exception the current writer is not closed.
     val trans = fileMatcher(new CFilterIdentity(), new CFilterIdentity())
-    var that = trans(CPSStreamHelperMethods.turnToTail(evStream), context)
-    var writer : Writer = null
-    var read: Boolean = false
-    try {
-      writer = writerConstructor(occurrence, writerInput)
-      val outputFactory : WstxOutputFactory = new WstxOutputFactory()
-      outputFactory.configureForSpeed()
-      val xmlStreamWriter : XMLStreamWriter = outputFactory.createXMLStreamWriter(writer)
-      while (!that.isEmpty && that.head._2) {
+    var that = evStream
+    var myOcc = occurrence
+    var carryOnWhileLoop = true
+    var writer : Writer = writerInput
 
-        that.head._1 match {
-          case Some(x: XMLEvent) => {
-                                      read = true
-                                      x.appendTo(xmlStreamWriter)
-                                    }
-          case None => ()
+    while (carryOnWhileLoop) {
+      that = trans(CPSStreamHelperMethods.turnToTail(that), context)
+
+      var read: Boolean = false
+      try {
+        writer = writerConstructor(myOcc, writer)
+        val outputFactory : WstxOutputFactory = new WstxOutputFactory()
+        outputFactory.configureForSpeed()
+        val xmlStreamWriter : XMLStreamWriter = outputFactory.createXMLStreamWriter(writer)
+        while (!that.isEmpty && that.head._2) {
+
+          that.head._1 match {
+            case Some(x: XMLEvent) => {
+              read = true
+              x.appendTo(xmlStreamWriter)
+            }
+            case None => ()
+          }
+          that = that.tail
         }
-        that = that.tail
-      }
-      if (read) {
-        xmlStreamWriter.close()
-      }
-      writer.flush()
-    }
-    catch {
-      case e => {
-        if (writer != null) {
-          writer.close()
+        if (read) {
+          xmlStreamWriter.close()
         }
-        throw e
+        writer.flush()
+      }
+      catch {
+        case e => {
+          if (writer != null) {
+            writer.close()
+          }
+          throw e
+        }
+      }
+      carryOnWhileLoop = (!that.isEmpty && read)
+      if (carryOnWhileLoop) { // Go ahead
+        myOcc += 1
       }
     }
 
 
-    if (!that.isEmpty && read) { // Go ahead
-      serializeXMLResultStream(that,
-        writerConstructor = writerConstructor,
-        occurrence = occurrence + 1,
-        writer,
-        context
-      )
-    }
 
   }
 }
