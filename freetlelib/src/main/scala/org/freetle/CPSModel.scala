@@ -214,6 +214,11 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
    * A Type that describes a constructor function for a BinaryOperator.
    */
   type InstantiateBinaryOperator = ((=>ChainedTransformRoot, =>ChainedTransformRoot) => ChainedTransformRoot)
+  /**
+   * A Type that describes a constructor function for a MultiOperator.
+   */
+  type InstantiateMultiOperator = (Map[String, ()=>ChainedTransformRoot] => ChainedTransformRoot)
+
 
   /**
    * A metaProcessor to metatransform the transformations themselves. 
@@ -222,6 +227,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
     def processTransform(th :TransformBase, instantiate : InstantiateTransform) : ChainedTransformRoot
     def processUnaryOperator(th : UnaryOperator, instantiate : InstantiateUnaryOperator, underlying : =>ChainedTransformRoot) : ChainedTransformRoot
     def processBinaryOperator(th : BinaryOperator, instantiate : InstantiateBinaryOperator, left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) : ChainedTransformRoot
+    def processMultiOperator(th : MultiOperator, instantiate : InstantiateMultiOperator, map : Map[String, () => ChainedTransformRoot]) :ChainedTransformRoot
   }
   /**
    * Something that is usable by a MetaProcessor.
@@ -312,6 +318,11 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
    * A base class for Binary operators (which combine two different transforms, named left and right)
    */
   abstract class BinaryOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends Operator
+
+  /**
+   * A base class for Binary operators (which combine two different transforms, named left and right)
+   */
+  abstract class MultiOperator(map : Map[String, ()=>ChainedTransformRoot]) extends Operator
 
   /**
    * Executes in sequence the left operand and then the right operand if left operand has returned a result.
@@ -416,6 +427,15 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
       logger.debug("left component is negative. Try the right component")
       rightRealized(success, failure)
     })
+  }
+
+  /**
+   * MultiChoiceOperator
+   */
+  abstract class MultiChoiceOperator(map : Map[String, ()=>ChainedTransformRoot]) extends MultiOperator(map) {
+    def extract(context : Context) : String
+    def apply(success : =>CFilter, failure : =>CFilter) : CFilter =
+                (s : CPSStream, c : Context) => map.apply(extract(c))()(success, failure)(s, c)
   }
 
   /**
