@@ -36,5 +36,9 @@ trait CPSMeta[Context] extends CPSXMLModel[Context] {
     def processBinaryOperator(th : BinaryOperator, instantiate : InstantiateBinaryOperator, left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) : ChainedTransformRoot = {
       instantiate(left.metaProcess(this), right.metaProcess(this))
     }
+    def processMultiOperator(th : MultiOperator, instantiate : InstantiateMultiOperator, mapper : Map[String, () => ChainedTransformRoot]) :ChainedTransformRoot = {
+      instantiate(mapper map (x => (x._1, () => (x._2().metaProcess(this)))))
+    }
+    
   }
 }
