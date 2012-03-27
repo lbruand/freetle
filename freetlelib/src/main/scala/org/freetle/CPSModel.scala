@@ -241,8 +241,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
    * Abstract class for all transformations.
    * It defines many shortcuts for operators.
    */
-  abstract sealed class ChainedTransformRoot extends ChainedTransform with MetaProcessable with LoggingWithConstructorLocation {
-    override val info: String = new LocationInfo(new RuntimeException(), this.getClass.getName).fullInfo
+  abstract sealed class ChainedTransformRoot extends ChainedTransform with MetaProcessable {
     /**
      * A shortcut to the sequence operator.
      * {{{
@@ -291,10 +290,8 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
     private final def callSuccessOrFailure(success : =>CFilter, failure : =>CFilter)(s : CPSStream, c : Context) = {
       val (rs, rc) = apply(s, c)
       if (CPSStreamHelperMethods.isPositive(rs)) {
-        logger.debug("tranform - success")
         success(rs, rc)
       } else {
-        logger.debug("transform - failure")
         failure(s, c)
       }
     }
@@ -335,7 +332,6 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
 
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
       leftRealized(new InnerSequenceOperator({
-        logger.debug("sequence - carry on to the right")
         rightRealized(success, failure)
       }), failure)
     }
@@ -400,10 +396,8 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
                      // But it is suboptimal in term of memory usage.
                      // We need identitySuccess to be instantiated so that we can pass further on the context.
         if (identitySuccess.isApplied) {
-          logger.debug("left component is positive => apply right component")
           rightRealized(success, failure)(result, identitySuccess.context.get)
         } else {
-          logger.debug("left component is negative => do not apply right component")
           failure(tl, c)
         }
       }
@@ -421,10 +415,8 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
     lazy val leftRealized : ChainedTransformRoot = left
     lazy val rightRealized : ChainedTransformRoot = right
     def apply(success : =>CFilter, failure : =>CFilter) : CFilter = leftRealized({
-      logger.debug("left component is positive. No need to go on in the choice")
       success
     }, {
-      logger.debug("left component is negative. Try the right component")
       rightRealized(success, failure)
     })
   }
@@ -579,7 +571,6 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
         Stream.empty
       else
       if (conditionToStop(currentState)) {
-        logger.debug("stopping")
         in
       } else
         Stream.cons( (in.head._1, true),
