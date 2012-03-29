@@ -335,8 +335,9 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
         rightRealized(success, failure)
       }), failure)
     }
-    
-    final class InnerSequenceOperator(input : =>CFilter) extends CFilter {
+  }
+
+  final class InnerSequenceOperator(input : =>CFilter) extends CFilter {
       def apply(s : CPSStream, c : Context) : CPSStream = {
         if (s.isEmpty) {
           input(s, c)
@@ -352,7 +353,6 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
         }
       }
     }
-  }
 
   /**
    * An Identity CFilter that keeps that context in reference.
