@@ -15,9 +15,6 @@
   */
 package org.freetle
 
-import util.LoggingWithConstructorLocation
-import org.apache.log4j.spi.LocationInfo
-
 
 /**
  * Defines types for the CPSModel.
