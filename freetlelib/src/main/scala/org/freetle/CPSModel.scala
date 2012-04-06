@@ -579,7 +579,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
     }
   }
 
-    /**
+  /**
    * This is a template transform to select in the stream using an accumulator.
    */
   abstract class StatefulSelectorUntil[State] extends AbstractStatefulSelector[State] {
@@ -601,7 +601,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
     }
   }
 
-    /**
+  /**
    * Base class to push from context.
    */
   class PushFromContext(val generator : Context => Stream[Element]) extends ContextReadingTransform {
