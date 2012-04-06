@@ -551,6 +551,11 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
         s
     }
   }
+
+  /**
+   * an AbstractStatefulSelector performs a selection based on a state.
+   * @tparam State A type representing the current state.
+   */
   abstract class AbstractStatefulSelector[State] extends ContextFreeTransform {
     def conditionToStop(state : State) : Boolean
     def accumulate(state : State, element : CPSElementOrPositive) : State
