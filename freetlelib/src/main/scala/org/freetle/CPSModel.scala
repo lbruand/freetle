@@ -160,8 +160,7 @@ trait CPSModelHelperExtension[@specialized Element, @specialized Context] extend
  *
  *  but NOT :
  *  - aabbc
- *  - a
- *
+ *  - a *
  *
  * == Running expressions ==
  *
@@ -490,7 +489,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
 
   /**
    * A transform that's context-free
-   * (Not using the context, either as input or ouput)
+   * (Not using the context, either as input or output)
    */
   abstract class ContextFreeTransform extends TransformBase {
     def partialapply(s : CPSStream) : CPSStream
