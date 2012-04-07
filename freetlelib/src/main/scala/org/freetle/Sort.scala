@@ -19,22 +19,36 @@ import collection.mutable.ListBuffer
 import collection.immutable.TreeMap
 
 /**
- *
+ * The Sort trait is used to sort a stream.
  */
 
 trait Sort[Element, Context] extends CPSModel[Element, Context]{
+  /**
+   *
+   * @param itemSplitter used to split items before sorting them.
+   * @param keyExtractor extract a key out of an item.
+   * @param evStream
+   * @param context
+   * @return
+   */
   final def sort(itemSplitter : ChainedTransformRoot, keyExtractor : ChainedTransformRoot)(evStream : => CPSStream, context : Context) : CPSStream = {
     var listBuffer = new ListBuffer[CPSStream]()
     var currentStream = evStream
+
+    // Split the stream into the listBuffer.
     while (!currentStream.isEmpty) {
       val result = itemSplitter(new CFilterIdentity(), new CFilterIdentity())(currentStream, context)
       val (hd, tl) = result.span(p => p._2)
       currentStream = tl
       listBuffer.append(hd)
     }
-    // TODO : Sort the result according the keyExtractor.
+    currentStream = null
+
+    // Insert all the listBuffer into a TreeMap.
     val treeMap = TreeMap.empty[String, CPSStream] ++ ((listBuffer map (
       x => ((keyExtractor(new CFilterIdentity(), new CFilterIdentity())(x, context).mkString) -> x))).toIterator)
+
+    // get all values then flatten them into an unique stream.
     treeMap.values.flatten.toStream
   }
 }
