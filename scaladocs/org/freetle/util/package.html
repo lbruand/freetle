@@ -21,7 +21,7 @@
 
       <h4 class="signature" id="signature">
       <span class="kind">package</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">util</span>
         
         
@@ -51,7 +51,7 @@
       <a id="AlwaysMatcher:AlwaysMatcher"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="AlwaysMatcher.html"><span class="name">AlwaysMatcher</span></a>
         
         <span class="result"> extends XMLEventMatcher</span>
@@ -62,7 +62,7 @@
       <a id="AndMatcher:AndMatcher"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="AndMatcher.html"><span class="name">AndMatcher</span></a>
         
         <span class="result"> extends XMLEventMatcher</span>
@@ -73,7 +73,7 @@
       <a id="EvComment:EvComment"></a>
       <h4 class="signature">
       <span class="kind">case class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="EvComment.html"><span class="name">EvComment</span></a>
         
         <span class="params">(<span name="text">text: String</span>)</span><span class="result"> extends XMLEvent with Product with Serializable</span>
@@ -84,7 +84,7 @@
       <a id="EvCommentTypeMatcher:EvCommentTypeMatcher"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="EvCommentTypeMatcher.html"><span class="name">EvCommentTypeMatcher</span></a>
         
         <span class="result"> extends XMLEventMatcher with TypeMatcher[EvComment]</span>
@@ -95,7 +95,7 @@
       <a id="EvElemEnd:EvElemEnd"></a>
       <h4 class="signature">
       <span class="kind">case class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="EvElemEnd.html"><span class="name">EvElemEnd</span></a>
         
         <span class="params">(<span name="name">name: QName</span>)</span><span class="result"> extends XMLEvent with Product with Serializable</span>
@@ -106,7 +106,7 @@
       <a id="EvElemEndTypeMatcher:EvElemEndTypeMatcher"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="EvElemEndTypeMatcher.html"><span class="name">EvElemEndTypeMatcher</span></a>
         
         <span class="result"> extends XMLEventMatcher with TypeMatcher[EvElemEnd]</span>
@@ -117,10 +117,10 @@
       <a id="EvElemStart:EvElemStart"></a>
       <h4 class="signature">
       <span class="kind">case class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="EvElemStart.html"><span class="name">EvElemStart</span></a>
         
-        <span class="params">(<span name="name">name: QName</span>, <span name="attributes">attributes: Map[QName, String]</span>)</span><span class="result"> extends XMLEvent with Product with Serializable</span>
+        <span class="params">(<span name="name">name: QName</span>, <span name="attributes">attributes: Map[QName, String]</span>, <span name="namespaces">namespaces: Map[String, String]</span>)</span><span class="result"> extends XMLEvent with Product with Serializable</span>
       </span>
       </h4>
       <p class="comment cmt">An element representing an openning tag</p>
@@ -128,7 +128,7 @@
       <a id="EvElemStartTypeMatcher:EvElemStartTypeMatcher"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="EvElemStartTypeMatcher.html"><span class="name">EvElemStartTypeMatcher</span></a>
         
         <span class="result"> extends XMLEventMatcher with TypeMatcher[EvElemStart]</span>
@@ -139,7 +139,7 @@
       <a id="EvEntityRef:EvEntityRef"></a>
       <h4 class="signature">
       <span class="kind">case class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="EvEntityRef.html"><span class="name">EvEntityRef</span></a>
         
         <span class="params">(<span name="entity">entity: String</span>)</span><span class="result"> extends XMLEvent with Product with Serializable</span>
@@ -150,7 +150,7 @@
       <a id="EvEntityRefTypeMatcher:EvEntityRefTypeMatcher"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="EvEntityRefTypeMatcher.html"><span class="name">EvEntityRefTypeMatcher</span></a>
         
         <span class="result"> extends XMLEventMatcher with TypeMatcher[EvEntityRef]</span>
@@ -161,7 +161,7 @@
       <a id="EvProcInstr:EvProcInstr"></a>
       <h4 class="signature">
       <span class="kind">case class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="EvProcInstr.html"><span class="name">EvProcInstr</span></a>
         
         <span class="params">(<span name="target">target: String</span>, <span name="text">text: String</span>)</span><span class="result"> extends XMLEvent with Product with Serializable</span>
@@ -172,7 +172,7 @@
       <a id="EvProcInstrTypeMatcher:EvProcInstrTypeMatcher"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="EvProcInstrTypeMatcher.html"><span class="name">EvProcInstrTypeMatcher</span></a>
         
         <span class="result"> extends XMLEventMatcher with TypeMatcher[EvProcInstr]</span>
@@ -183,7 +183,7 @@
       <a id="EvText:EvText"></a>
       <h4 class="signature">
       <span class="kind">case class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="EvText.html"><span class="name">EvText</span></a>
         
         <span class="params">(<span name="text">text: String</span>)</span><span class="result"> extends XMLEvent with Product with Serializable</span>
@@ -194,7 +194,7 @@
       <a id="EvTextTypeMatcher:EvTextTypeMatcher"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="EvTextTypeMatcher.html"><span class="name">EvTextTypeMatcher</span></a>
         
         <span class="result"> extends XMLEventMatcher with TypeMatcher[EvText]</span>
@@ -205,7 +205,7 @@
       <a id="FilterMatcher:FilterMatcher[ParamEvent]"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="FilterMatcher.html"><span class="name">FilterMatcher</span></a>
         <span class="tparams">[<span name="ParamEvent">+ParamEvent &lt;: XMLEvent</span>]</span>
         <span class="result"> extends XMLEventMatcher with TypeMatcher[ParamEvent]</span>
@@ -216,7 +216,7 @@
       <a id="FilterTextMatcher:FilterTextMatcher"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="FilterTextMatcher.html"><span class="name">FilterTextMatcher</span></a>
         
         <span class="result"> extends FilterMatcher[EvText]</span>
@@ -227,7 +227,7 @@
       <a id="LocationAwareLogger:LocationAwareLogger"></a>
       <h4 class="signature">
       <span class="kind">trait</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="LocationAwareLogger.html"><span class="name">LocationAwareLogger</span></a>
         
         <span class="result"> extends Logger</span>
@@ -238,7 +238,7 @@
       <a id="Logger:Logger"></a>
       <h4 class="signature">
       <span class="kind">trait</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="Logger.html"><span class="name">Logger</span></a>
         
         <span class="result"> extends AnyRef</span>
@@ -249,7 +249,7 @@
       <a id="LoggingWithConstructorLocation:LoggingWithConstructorLocation"></a>
       <h4 class="signature">
       <span class="kind">trait</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="LoggingWithConstructorLocation.html"><span class="name">LoggingWithConstructorLocation</span></a>
         
         <span class="result"> extends AnyRef</span>
@@ -260,7 +260,7 @@
       <a id="Memoize1:Memoize1[T, R]"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="Memoize1.html"><span class="name">Memoize1</span></a>
         <span class="tparams">[<span name="T">-T</span>, <span name="R">+R</span>]</span>
         <span class="result"> extends (T) ⇒ R</span>
@@ -271,7 +271,7 @@
       <a id="NeverMatcher:NeverMatcher"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="NeverMatcher.html"><span class="name">NeverMatcher</span></a>
         
         <span class="result"> extends XMLEventMatcher</span>
@@ -282,7 +282,7 @@
       <a id="OrMatcher:OrMatcher"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="OrMatcher.html"><span class="name">OrMatcher</span></a>
         
         <span class="result"> extends XMLEventMatcher</span>
@@ -293,7 +293,7 @@
       <a id="PrefixMap:PrefixMap[T]"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="PrefixMap.html"><span class="name">PrefixMap</span></a>
         <span class="tparams">[<span name="T">T</span>]</span>
         <span class="result"> extends Map[String, T] with MapLike[String, T, PrefixMap[T]]</span>
@@ -304,7 +304,7 @@
       <a id="QName:QName"></a>
       <h4 class="signature">
       <span class="kind">case class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="QName.html"><span class="name">QName</span></a>
         
         <span class="params">(<span name="namespaceURI">namespaceURI: String</span>, <span name="localPart">localPart: String</span>, <span name="prefix">prefix: String</span>)</span><span class="result"> extends Externalizable with Product with Serializable</span>
@@ -315,7 +315,7 @@
       <a id="RandomUtils:RandomUtils"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="RandomUtils.html"><span class="name">RandomUtils</span></a>
         
         <span class="result"> extends Random</span>
@@ -326,7 +326,7 @@
       <a id="SourceReader:SourceReader"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="SourceReader.html"><span class="name">SourceReader</span></a>
         
         <span class="result"> extends Reader</span>
@@ -337,7 +337,7 @@
       <a id="SpaceMatcher:SpaceMatcher"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="SpaceMatcher.html"><span class="name">SpaceMatcher</span></a>
         
         <span class="result"> extends FilterTextMatcher</span>
@@ -348,7 +348,7 @@
       <a id="SpaceOrCommentMatcher:SpaceOrCommentMatcher"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="SpaceOrCommentMatcher.html"><span class="name">SpaceOrCommentMatcher</span></a>
         
         <span class="result"> extends OrMatcher</span>
@@ -359,7 +359,7 @@
       <a id="StreamReader:StreamReader"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="StreamReader.html"><span class="name">StreamReader</span></a>
         
         <span class="result"> extends Reader</span>
@@ -370,7 +370,7 @@
       <a id="TypeMatcher:TypeMatcher[ParamEvent]"></a>
       <h4 class="signature">
       <span class="kind">trait</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="TypeMatcher.html"><span class="name">TypeMatcher</span></a>
         <span class="tparams">[<span name="ParamEvent">+ParamEvent &lt;: XMLEvent</span>]</span>
         <span class="result"> extends XMLEventMatcher</span>
@@ -381,7 +381,7 @@
       <a id="XMLEvent:XMLEvent"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="XMLEvent.html"><span class="name">XMLEvent</span></a>
         
         <span class="result"> extends Externalizable</span>
@@ -392,7 +392,7 @@
       <a id="XMLEventMatcher:XMLEventMatcher"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="XMLEventMatcher.html"><span class="name">XMLEventMatcher</span></a>
         
         <span class="result"> extends (XMLEvent) ⇒ Boolean</span>
@@ -403,7 +403,7 @@
       <a id="XMLEventStream:XMLEventStream"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="XMLEventStream.html"><span class="name">XMLEventStream</span></a>
         
         <span class="result"> extends Iterator[XMLEvent]</span>
@@ -412,7 +412,7 @@
       <p class="comment cmt">Transform a Source a XMLEvent Iterator for the purpose of making it a Stream afterward.</p>
     </li></ol>
             </div>
-        
+
         
 
         <div class="values members" id="values">
@@ -421,7 +421,7 @@
       <a id="Logger:Logger"></a>
       <h4 class="signature">
       <span class="kind">object</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="Logger$.html"><span class="name">Logger</span></a>
         
         <span class="result"> extends AnyRef</span>
@@ -432,7 +432,7 @@
       <a id="Memoize1:Memoize1"></a>
       <h4 class="signature">
       <span class="kind">object</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="Memoize1$.html"><span class="name">Memoize1</span></a>
         
         <span class="result"> extends AnyRef</span>
@@ -443,7 +443,7 @@
       <a id="PrefixMap:PrefixMap"></a>
       <h4 class="signature">
       <span class="kind">object</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="PrefixMap$.html"><span class="name">PrefixMap</span></a>
         
         <span class="result"> extends AnyRef</span>
@@ -454,7 +454,7 @@
       <a id="StreamSource:StreamSource"></a>
       <h4 class="signature">
       <span class="kind">object</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="StreamSource$.html"><span class="name">StreamSource</span></a>
         
         <span class="result"> extends AnyRef</span>
@@ -465,7 +465,7 @@
       <a id="XMLEventStream:XMLEventStream"></a>
       <h4 class="signature">
       <span class="kind">object</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="XMLEventStream$.html"><span class="name">XMLEventStream</span></a>
         
         <span class="result"> extends AnyRef</span>
@@ -480,8 +480,8 @@
         
 
       </div>
-      
+
       <div id="tooltip"></div>
-      
+
     </body>
       </html>

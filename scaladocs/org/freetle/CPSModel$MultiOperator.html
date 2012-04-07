@@ -2,36 +2,39 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>org.freetle.util.StreamReader</title>
+          <title>org.freetle.CPSModel.MultiOperator</title>
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
-      <script type="text/javascript" src="../../../lib/jquery.js"></script>
-      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="../../../lib/template.js"></script>
-      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
+      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
     
         </head>
         <body class="type">
       <div id="definition">
-        <img src="../../../lib/class_big.png" />
-        <p id="owner"><a name="org" class="extype" href="../../package.html">org</a>.<a name="org.freetle" class="extype" href="../package.html">freetle</a>.<a name="org.freetle.util" class="extype" href="package.html">util</a></p>
-        <h1>StreamReader</h1>
+        <img src="../../lib/class_big.png" />
+        <p id="owner"><a name="org" class="extype" href="../package.html">org</a>.<a name="org.freetle" class="extype" href="package.html">freetle</a>.<a name="org.freetle.CPSModel" class="extype" href="CPSModel.html">CPSModel</a></p>
+        <h1>MultiOperator</h1>
       </div>
 
       <h4 class="signature" id="signature">
       <span class="kind">class</span>
       <span class="symbol">
-        <span class="name">StreamReader</span>
+        <span class="name">MultiOperator</span>
         
-        <span class="result"> extends <span name="java.io.Reader" class="extype">Reader</span></span>
+        <span class="result"> extends <a name="org.freetle.CPSModel.Operator" class="extype" href="CPSModel$Operator.html">Operator</a></span>
       </span>
       </h4>
       
-          <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Helper class to read a Source as a Reader.
-</p></div><div class="toggleContainer block">
+          <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>A base class for Binary operators (which combine two different transforms, named left and right)
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>abstract </dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span name="java.io.Reader" class="extype">Reader</span>, <span name="java.io.Closeable" class="extype">Closeable</span>, <span name="java.lang.Readable" class="extype">Readable</span>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+          <div class="superTypes hiddenContent"><a name="org.freetle.CPSModel.Operator" class="extype" href="CPSModel$Operator.html">Operator</a>, <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a>, <a name="org.freetle.CPSModel.MetaProcessable" class="extype" href="CPSModel$MetaProcessable.html">MetaProcessable</a>, (⇒ CFilter, ⇒ CFilter) ⇒ CFilter, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+        </div><div class="toggleContainer block">
+          <span class="toggle">Known Subclasses</span>
+          <div class="subClasses hiddenContent"><a name="org.freetle.CPSModel.MultiChoiceOperator" class="extype" href="CPSModel$MultiChoiceOperator.html">MultiChoiceOperator</a></div>
         </div></div>
         
 
@@ -47,7 +50,7 @@
                 <span class="filtertype">Inherited</span>
                 <ol><li class="hideall out"><span>Hide All</span></li>
                 <li class="showall in"><span>Show all</span></li></ol>
-                <ol id="linearization"><li name="org.freetle.util.StreamReader" class="in"><span>StreamReader</span></li><li name="java.io.Reader" class="in"><span>Reader</span></li><li name="java.io.Closeable" class="in"><span>Closeable</span></li><li name="java.lang.Readable" class="in"><span>Readable</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+                <ol id="linearization"><li name="org.freetle.CPSModel.MultiOperator" class="in"><span>MultiOperator</span></li><li name="org.freetle.CPSModel.Operator" class="in"><span>Operator</span></li><li name="org.freetle.CPSModel.ChainedTransformRoot" class="in"><span>ChainedTransformRoot</span></li><li name="org.freetle.CPSModel.MetaProcessable" class="in"><span>MetaProcessable</span></li><li name="scala.Function2" class="in"><span>Function2</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
               </div>
           <div id="visbl">
               <span class="filtertype">Visibility</span>
@@ -57,14 +60,14 @@
 
         <div class="members" id="constructors">
               <h3>Instance Constructors</h3>
-              <ol><li visbl="pub" name="org.freetle.util.StreamReader#this" data-isabs="false">
-      <a id="this:StreamReader"></a>
+              <ol><li visbl="pub" name="org.freetle.CPSModel.MultiOperator#this" data-isabs="false">
+      <a id="this:MultiOperator"></a>
       <h4 class="signature">
       <span class="kind">new</span>
       <span class="symbol">
-        <span class="name">StreamReader</span>
+        <span class="name">MultiOperator</span>
         
-        <span class="params">(<span name="stream">stream: ⇒ Stream[<span name="scala.Char" class="extype">Char</span>]</span>)</span>
+        <span class="params">(<span name="map">map: Map[String, () ⇒ <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a>]</span>)</span>
       </span>
       </h4>
       
@@ -73,10 +76,35 @@
 
         
 
+        <div class="values members" id="values">
+              <h3>Abstract Value Members</h3>
+              <ol><li visbl="pub" name="scala.Function2#apply" data-isabs="true">
+      <a id="apply(⇒ CFilter,⇒ CFilter):CFilter"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">apply</span>
         
+        <span class="params">(<span name="v1">v1: ⇒ CFilter</span>, <span name="v2">v2: ⇒ CFilter</span>)</span><span class="result">: CFilter</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>abstract </dd><dt>Definition Classes</dt><dd>Function2</dd></dl></div>
+    </li><li visbl="pub" name="org.freetle.CPSModel.MetaProcessable#metaProcess" data-isabs="true">
+      <a id="metaProcess(MetaProcessor):ChainedTransformRoot"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">metaProcess</span>
+        
+        <span class="params">(<span name="metaProcessor">metaProcessor: <a name="org.freetle.CPSModel.MetaProcessor" class="extype" href="CPSModel$MetaProcessor.html">MetaProcessor</a></span>)</span><span class="result">: <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>abstract </dd><dt>Definition Classes</dt><dd><a name="org.freetle.CPSModel.MetaProcessable" class="extype" href="CPSModel$MetaProcessable.html">MetaProcessable</a></dd></dl></div>
+    </li></ol>
+            </div>
 
         <div class="values members" id="values">
-              <h3>Value Members</h3>
+              <h3>Concrete Value Members</h3>
               <ol><li visbl="pub" name="scala.AnyRef#!=" data-isabs="false">
       <a id="!=(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -110,6 +138,43 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="org.freetle.CPSModel.ChainedTransformRoot#*" data-isabs="false">
+      <a id="*:ChainedTransformRoot"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">*</span>
+        
+        <span class="result">: <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A shortcut to the zero or more cardinality operator.</p><div class="fullcomment"><div class="comment cmt"><p>A shortcut to the zero or more cardinality operator.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd><a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></dd><dt>See also</dt><dd><span class="cmt"><p>http://en.wikipedia.org/wiki/Kleene_star
+</p></span></dd></dl></div>
+    </li><li visbl="pub" name="org.freetle.CPSModel.ChainedTransformRoot#+" data-isabs="false">
+      <a id="+:ChainedTransformRoot"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">+</span>
+        
+        <span class="result">: <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A shortcut to the at least one cardinality operator.</p><div class="fullcomment"><div class="comment cmt"><p>A shortcut to the at least one cardinality operator.
+a+ is equivalent to aa*.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd><a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></dd></dl></div>
+    </li><li visbl="pub" name="org.freetle.CPSModel.ChainedTransformRoot#-&gt;" data-isabs="false">
+      <a id="-&gt;(⇒ ChainedTransformRoot):ChainedTransformRoot"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">-&gt;</span>
+        
+        <span class="params">(<span name="other">other: ⇒ <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>)</span><span class="result">: <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A shortcut to the andThen operator.</p><div class="fullcomment"><div class="comment cmt"><p>A shortcut to the andThen operator. (reverse of the compose operator).
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd><a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#==" data-isabs="false">
       <a id="==(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -132,6 +197,18 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="org.freetle.CPSModel.ChainedTransformRoot#?" data-isabs="false">
+      <a id="?:ChainedTransformRoot"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">?</span>
+        
+        <span class="result">: <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A shortcut to the optional (zero or one) cardinality operator.</p><div class="fullcomment"><div class="comment cmt"><p>A shortcut to the optional (zero or one) cardinality operator.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd><a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></dd></dl></div>
     </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
       <a id="asInstanceOf[T0]:T0"></a>
       <h4 class="signature">
@@ -153,21 +230,21 @@
         <span class="params">()</span><span class="result">: AnyRef</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="org.freetle.util.StreamReader#close" data-isabs="false">
-      <a id="close():Unit"></a>
+    </li><li visbl="pub" name="scala.Function2#curried" data-isabs="false">
+      <a id="curried:(⇒ CFilter) ⇒ (⇒ CFilter) ⇒ CFilter"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol">
-        <span class="name">close</span>
+        <span class="name">curried</span>
         
-        <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="result">: (⇒ CFilter) ⇒ (⇒ CFilter) ⇒ CFilter</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="org.freetle.util.StreamReader" class="extype" href="">StreamReader</a> → Reader → Closeable</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function2</dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -200,7 +277,7 @@
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -237,31 +314,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="java.io.Reader#mark" data-isabs="false">
-      <a id="mark(Int):Unit"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">mark</span>
-        
-        <span class="params">(<span name="arg0">arg0: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Reader</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">()</span>
-              
-        </dd></dl></div>
-    </li><li visbl="pub" name="java.io.Reader#markSupported" data-isabs="false">
-      <a id="markSupported():Boolean"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">markSupported</span>
-        
-        <span class="params">()</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Reader</dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -295,112 +347,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="org.freetle.util.StreamReader#read" data-isabs="false">
-      <a id="read(Array[Char],Int,Int):Int"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">read</span>
-        
-        <span class="params">(<span name="arr">arr: <span name="scala.Array" class="extype">Array</span>[<span name="scala.Char" class="extype">Char</span>]</span>, <span name="start">start: <span name="scala.Int" class="extype">Int</span></span>, <span name="sz">sz: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="org.freetle.util.StreamReader" class="extype" href="">StreamReader</a> → Reader</dd></dl></div>
-    </li><li visbl="pub" name="java.io.Reader#read" data-isabs="false">
-      <a id="read(Array[Char]):Int"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">read</span>
-        
-        <span class="params">(<span name="arg0">arg0: <span name="scala.Array" class="extype">Array</span>[<span name="scala.Char" class="extype">Char</span>]</span>)</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Reader</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">()</span>
-              
-        </dd></dl></div>
-    </li><li visbl="pub" name="java.io.Reader#read" data-isabs="false">
-      <a id="read():Int"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">read</span>
-        
-        <span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Reader</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">()</span>
-              
-        </dd></dl></div>
-    </li><li visbl="pub" name="java.io.Reader#read" data-isabs="false">
-      <a id="read(CharBuffer):Int"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">read</span>
-        
-        <span class="params">(<span name="arg0">arg0: <span name="java.nio.CharBuffer" class="extype">CharBuffer</span></span>)</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Reader → Readable</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">()</span>
-              
-        </dd></dl></div>
-    </li><li visbl="pub" name="java.io.Reader#ready" data-isabs="false">
-      <a id="ready():Boolean"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">ready</span>
-        
-        <span class="params">()</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Reader</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">()</span>
-              
-        </dd></dl></div>
-    </li><li visbl="pub" name="java.io.Reader#reset" data-isabs="false">
-      <a id="reset():Unit"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">reset</span>
-        
-        <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Reader</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">()</span>
-              
-        </dd></dl></div>
-    </li><li visbl="pub" name="java.io.Reader#skip" data-isabs="false">
-      <a id="skip(Long):Long"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">skip</span>
-        
-        <span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Long" class="extype">Long</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Reader</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">()</span>
-              
-        </dd></dl></div>
-    </li><li visbl="pub" name="org.freetle.util.StreamReader#src" data-isabs="false">
-      <a id="src:Stream[Char]"></a>
-      <h4 class="signature">
-      <span class="kind">var</span>
-      <span class="symbol">
-        <span class="name">src</span>
-        
-        <span class="result">: Stream[<span name="scala.Char" class="extype">Char</span>]</span>
-      </span>
-      </h4>
-      
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">
@@ -412,7 +358,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#toString" data-isabs="false">
+    </li><li visbl="pub" name="scala.Function2#toString" data-isabs="false">
       <a id="toString():String"></a>
       <h4 class="signature">
       <span class="kind">def</span>
@@ -422,7 +368,18 @@
         <span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function2 → AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.Function2#tupled" data-isabs="false">
+      <a id="tupled:((⇒ CFilter, ⇒ CFilter)) ⇒ CFilter"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">tupled</span>
+        
+        <span class="result">: ((⇒ CFilter, ⇒ CFilter)) ⇒ CFilter</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function2</dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
       <a id="wait():Unit"></a>
       <h4 class="signature">
@@ -465,17 +422,62 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li visbl="pub" name="org.freetle.CPSModel.ChainedTransformRoot#|" data-isabs="false">
+      <a id="|(⇒ ChainedTransformRoot):ChainedTransformRoot"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">|</span>
+        
+        <span class="params">(<span name="other">other: ⇒ <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>)</span><span class="result">: <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A shortcut to the choice operator.</p><div class="fullcomment"><div class="comment cmt"><p>A shortcut to the choice operator.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd><a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></dd></dl></div>
+    </li><li visbl="pub" name="org.freetle.CPSModel.ChainedTransformRoot#~" data-isabs="false">
+      <a id="~(⇒ ChainedTransformRoot):ChainedTransformRoot"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">~</span>
+        
+        <span class="params">(<span name="other">other: ⇒ <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>)</span><span class="result">: <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A shortcut to the sequence operator.</p><div class="fullcomment"><div class="comment cmt"><p>A shortcut to the sequence operator.</p><pre>
+val t = a ~ b
+</pre><p>The t transformation recognizes the string &quot;ab&quot;.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd><a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></dd></dl></div>
     </li></ol>
             </div>
 
+        <div class="values members" id="values">
+              <h3>Deprecated Value Members</h3>
+              <ol><li visbl="pub" name="scala.Function2#curry" data-isabs="false">
+      <a id="curry:(⇒ CFilter) ⇒ (⇒ CFilter) ⇒ CFilter"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name deprecated">curry</span>
         
+        <span class="result">: (⇒ CFilter) ⇒ (⇒ CFilter) ⇒ CFilter</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function2</dd><dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p>Use 'curried' instead</p></dd></dl></div>
+    </li></ol>
+            </div>
 
-        <div name="java.io.Reader" class="parent">
-              <h3>Inherited from <span name="java.io.Reader" class="extype">Reader</span></h3>
-            </div><div name="java.io.Closeable" class="parent">
-              <h3>Inherited from <span name="java.io.Closeable" class="extype">Closeable</span></h3>
-            </div><div name="java.lang.Readable" class="parent">
-              <h3>Inherited from <span name="java.lang.Readable" class="extype">Readable</span></h3>
+        <div name="org.freetle.CPSModel.Operator" class="parent">
+              <h3>Inherited from <a name="org.freetle.CPSModel.Operator" class="extype" href="CPSModel$Operator.html">Operator</a></h3>
+            </div><div name="org.freetle.CPSModel.ChainedTransformRoot" class="parent">
+              <h3>Inherited from <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></h3>
+            </div><div name="org.freetle.CPSModel.MetaProcessable" class="parent">
+              <h3>Inherited from <a name="org.freetle.CPSModel.MetaProcessable" class="extype" href="CPSModel$MetaProcessable.html">MetaProcessable</a></h3>
+            </div><div name="scala.Function2" class="parent">
+              <h3>Inherited from (⇒ CFilter, ⇒ CFilter) ⇒ CFilter</h3>
             </div><div name="scala.AnyRef" class="parent">
               <h3>Inherited from AnyRef</h3>
             </div><div name="scala.Any" class="parent">

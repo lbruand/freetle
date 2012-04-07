@@ -21,7 +21,7 @@
 
       <h4 class="signature" id="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">XMLEventStream</span>
         
         <span class="result"> extends Iterator[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -62,7 +62,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="this:XMLEventStream"></a>
       <h4 class="signature">
       <span class="kind">new</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">XMLEventStream</span>
         
         <span class="params">(<span name="src">src: <span name="scala.Any" class="extype">Any</span></span>, <span name="xsdURL">xsdURL: <span name="java.lang.String" class="extype">String</span></span>)</span>
@@ -78,16 +78,27 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="Attributes:Attributes"></a>
       <h4 class="signature">
       <span class="kind">type</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">Attributes</span>
         
         <span class="result"> = <span name="scala.collection.immutable.Map" class="extype">Map</span>[<a name="org.freetle.util.QName" class="extype" href="QName.html">QName</a>, <span name="java.lang.String" class="extype">String</span>]</span>
       </span>
       </h4>
       
+    </li><li visbl="pub" name="org.freetle.util.XMLEventStream#Namespaces" data-isabs="false">
+      <a id="Namespaces:Namespaces"></a>
+      <h4 class="signature">
+      <span class="kind">type</span>
+      <span class="symbol">
+        <span class="name">Namespaces</span>
+        
+        <span class="result"> = <span name="scala.collection.immutable.Map" class="extype">Map</span>[<span name="java.lang.String" class="extype">String</span>, <span name="java.lang.String" class="extype">String</span>]</span>
+      </span>
+      </h4>
+      
     </li></ol>
             </div>
-        
+
         
 
         <div class="values members" id="values">
@@ -96,7 +107,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="!=(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">!=</span>
         
         <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -107,7 +118,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">!=</span>
         
         <span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -118,7 +129,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="##():Int"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">##</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
@@ -129,7 +140,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="++[B&gt;:XMLEvent](⇒ GenTraversableOnce[B]):Iterator[B]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">++</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="that">that: ⇒ <span name="scala.collection.GenTraversableOnce" class="extype">GenTraversableOnce</span>[B]</span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[B]</span>
@@ -140,7 +151,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="/:[B](B)((B, XMLEvent) ⇒ B):B"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">/:</span>
         <span class="tparams">[<span name="B">B</span>]</span>
         <span class="params">(<span name="z">z: B</span>)</span><span class="params">(<span name="op">op: (B, <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ B</span>)</span><span class="result">: B</span>
@@ -151,7 +162,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="/:\[A1&gt;:XMLEvent](A1)((A1, A1) ⇒ A1):A1"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">/:\</span>
         <span class="tparams">[<span name="A1">A1 &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="z">z: A1</span>)</span><span class="params">(<span name="op">op: (A1, A1) ⇒ A1</span>)</span><span class="result">: A1</span>
@@ -162,7 +173,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id=":\[B](B)((XMLEvent, B) ⇒ B):B"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">:\</span>
         <span class="tparams">[<span name="B">B</span>]</span>
         <span class="params">(<span name="z">z: B</span>)</span><span class="params">(<span name="op">op: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>, B) ⇒ B</span>)</span><span class="result">: B</span>
@@ -173,7 +184,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="==(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">==</span>
         
         <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -184,7 +195,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">==</span>
         
         <span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -195,7 +206,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="addString(StringBuilder):StringBuilder"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">addString</span>
         
         <span class="params">(<span name="b">b: StringBuilder</span>)</span><span class="result">: StringBuilder</span>
@@ -206,7 +217,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="addString(StringBuilder,String):StringBuilder"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">addString</span>
         
         <span class="params">(<span name="b">b: StringBuilder</span>, <span name="sep">sep: String</span>)</span><span class="result">: StringBuilder</span>
@@ -217,7 +228,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="addString(StringBuilder,String,String,String):StringBuilder"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">addString</span>
         
         <span class="params">(<span name="b">b: StringBuilder</span>, <span name="start">start: String</span>, <span name="sep">sep: String</span>, <span name="end">end: String</span>)</span><span class="result">: StringBuilder</span>
@@ -228,7 +239,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="aggregate[B](B)((B, XMLEvent) ⇒ B,(B, B) ⇒ B):B"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">aggregate</span>
         <span class="tparams">[<span name="B">B</span>]</span>
         <span class="params">(<span name="z">z: B</span>)</span><span class="params">(<span name="seqop">seqop: (B, <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ B</span>, <span name="combop">combop: (B, B) ⇒ B</span>)</span><span class="result">: B</span>
@@ -239,7 +250,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="asInstanceOf[T0]:T0"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">asInstanceOf</span>
         <span class="tparams">[<span name="T0">T0</span>]</span>
         <span class="result">: T0</span>
@@ -250,7 +261,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="buffered:BufferedIterator[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">buffered</span>
         
         <span class="result">: <span name="scala.collection.BufferedIterator" class="extype">BufferedIterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -261,7 +272,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="clone():AnyRef"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">clone</span>
         
         <span class="params">()</span><span class="result">: AnyRef</span>
@@ -275,7 +286,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="collect[B](PartialFunction[XMLEvent, B]):Iterator[B]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">collect</span>
         <span class="tparams">[<span name="B">B</span>]</span>
         <span class="params">(<span name="pf">pf: <span name="scala.PartialFunction" class="extype">PartialFunction</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>, B]</span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[B]</span>
@@ -289,7 +300,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="collectFirst[B](PartialFunction[XMLEvent, B]):Option[B]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">collectFirst</span>
         <span class="tparams">[<span name="B">B</span>]</span>
         <span class="params">(<span name="pf">pf: <span name="scala.PartialFunction" class="extype">PartialFunction</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>, B]</span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[B]</span>
@@ -300,7 +311,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="contains(Any):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">contains</span>
         
         <span class="params">(<span name="elem">elem: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -311,7 +322,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="copyToArray[B&gt;:XMLEvent](Array[B],Int,Int):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">copyToArray</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="xs">xs: <span name="scala.Array" class="extype">Array</span>[B]</span>, <span name="start">start: <span name="scala.Int" class="extype">Int</span></span>, <span name="len">len: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -322,7 +333,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="copyToArray[B&gt;:XMLEvent](Array[B]):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">copyToArray</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="xs">xs: <span name="scala.Array" class="extype">Array</span>[B]</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -333,7 +344,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="copyToArray[B&gt;:XMLEvent](Array[B],Int):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">copyToArray</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="xs">xs: <span name="scala.Array" class="extype">Array</span>[B]</span>, <span name="start">start: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -344,7 +355,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="copyToBuffer[B&gt;:XMLEvent](Buffer[B]):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">copyToBuffer</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="dest">dest: <span name="scala.collection.mutable.Buffer" class="extype">Buffer</span>[B]</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -355,7 +366,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="count((XMLEvent) ⇒ Boolean):Int"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">count</span>
         
         <span class="params">(<span name="p">p: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
@@ -366,7 +377,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="drop(Int):Iterator[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">drop</span>
         
         <span class="params">(<span name="n">n: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -377,7 +388,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="dropWhile((XMLEvent) ⇒ Boolean):Iterator[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">dropWhile</span>
         
         <span class="params">(<span name="p">p: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -388,7 +399,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="duplicate:(Iterator[XMLEvent], Iterator[XMLEvent])"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">duplicate</span>
         
         <span class="result">: (<span name="scala.collection.Iterator" class="extype">Iterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>], <span name="scala.collection.Iterator" class="extype">Iterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>])</span>
@@ -399,7 +410,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">eq</span>
         
         <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -410,7 +421,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="equals(Any):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">equals</span>
         
         <span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -421,7 +432,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="exists((XMLEvent) ⇒ Boolean):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">exists</span>
         
         <span class="params">(<span name="p">p: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -432,7 +443,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="filter((XMLEvent) ⇒ Boolean):Iterator[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">filter</span>
         
         <span class="params">(<span name="p">p: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -443,7 +454,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="filterNot((XMLEvent) ⇒ Boolean):Iterator[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">filterNot</span>
         
         <span class="params">(<span name="p">p: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -454,7 +465,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="finalize():Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">finalize</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -468,7 +479,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="find((XMLEvent) ⇒ Boolean):Option[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">find</span>
         
         <span class="params">(<span name="p">p: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -479,7 +490,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="flatMap[B]((XMLEvent) ⇒ GenTraversableOnce[B]):Iterator[B]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">flatMap</span>
         <span class="tparams">[<span name="B">B</span>]</span>
         <span class="params">(<span name="f">f: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ <span name="scala.collection.GenTraversableOnce" class="extype">GenTraversableOnce</span>[B]</span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[B]</span>
@@ -490,7 +501,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="fold[A1&gt;:XMLEvent](A1)((A1, A1) ⇒ A1):A1"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">fold</span>
         <span class="tparams">[<span name="A1">A1 &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="z">z: A1</span>)</span><span class="params">(<span name="op">op: (A1, A1) ⇒ A1</span>)</span><span class="result">: A1</span>
@@ -501,7 +512,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="foldLeft[B](B)((B, XMLEvent) ⇒ B):B"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">foldLeft</span>
         <span class="tparams">[<span name="B">B</span>]</span>
         <span class="params">(<span name="z">z: B</span>)</span><span class="params">(<span name="op">op: (B, <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ B</span>)</span><span class="result">: B</span>
@@ -512,7 +523,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="foldRight[B](B)((XMLEvent, B) ⇒ B):B"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">foldRight</span>
         <span class="tparams">[<span name="B">B</span>]</span>
         <span class="params">(<span name="z">z: B</span>)</span><span class="params">(<span name="op">op: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>, B) ⇒ B</span>)</span><span class="result">: B</span>
@@ -523,7 +534,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="forall((XMLEvent) ⇒ Boolean):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">forall</span>
         
         <span class="params">(<span name="p">p: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -534,7 +545,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="foreach[U]((XMLEvent) ⇒ U):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">foreach</span>
         <span class="tparams">[<span name="U">U</span>]</span>
         <span class="params">(<span name="f">f: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ U</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -545,7 +556,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="getClass():java.lang.Class[_]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">getClass</span>
         
         <span class="params">()</span><span class="result">: java.lang.Class[_]</span>
@@ -556,7 +567,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="grouped[B&gt;:XMLEvent](Int):GroupedIterator[B]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">grouped</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="size">size: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.collection.Iterator.GroupedIterator" class="extype">GroupedIterator</span>[B]</span>
@@ -567,7 +578,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="hasDefiniteSize:Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">hasDefiniteSize</span>
         
         <span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -578,7 +589,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="hasNext:Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">hasNext</span>
         
         <span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -589,7 +600,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="hashCode():Int"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">hashCode</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
@@ -600,7 +611,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="indexOf[B&gt;:XMLEvent](B):Int"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">indexOf</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="elem">elem: B</span>)</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
@@ -611,7 +622,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="indexWhere((XMLEvent) ⇒ Boolean):Int"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">indexWhere</span>
         
         <span class="params">(<span name="p">p: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
@@ -622,7 +633,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="input:XMLStreamReader2"></a>
       <h4 class="signature">
       <span class="kind">val</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">input</span>
         
         <span class="result">: <span name="org.codehaus.stax2.XMLStreamReader2" class="extype">XMLStreamReader2</span></span>
@@ -633,7 +644,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="isEmpty:Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">isEmpty</span>
         
         <span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -644,7 +655,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="isInstanceOf[T0]:Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">isInstanceOf</span>
         <span class="tparams">[<span name="T0">T0</span>]</span>
         <span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -655,7 +666,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="isTraversableAgain:Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">isTraversableAgain</span>
         
         <span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -666,7 +677,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="length:Int"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">length</span>
         
         <span class="result">: <span name="scala.Int" class="extype">Int</span></span>
@@ -677,7 +688,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="map[B]((XMLEvent) ⇒ B):Iterator[B]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">map</span>
         <span class="tparams">[<span name="B">B</span>]</span>
         <span class="params">(<span name="f">f: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ B</span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[B]</span>
@@ -688,7 +699,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="max[B&gt;:XMLEvent](Ordering[B]):XMLEvent"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">max</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span class="implicit">implicit </span><span name="cmp">cmp: Ordering[B]</span>)</span><span class="result">: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>
@@ -699,7 +710,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="maxBy[B]((XMLEvent) ⇒ B)(Ordering[B]):XMLEvent"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">maxBy</span>
         <span class="tparams">[<span name="B">B</span>]</span>
         <span class="params">(<span name="f">f: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ B</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="cmp">cmp: Ordering[B]</span>)</span><span class="result">: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>
@@ -710,7 +721,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="min[B&gt;:XMLEvent](Ordering[B]):XMLEvent"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">min</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span class="implicit">implicit </span><span name="cmp">cmp: Ordering[B]</span>)</span><span class="result">: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>
@@ -721,7 +732,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="minBy[B]((XMLEvent) ⇒ B)(Ordering[B]):XMLEvent"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">minBy</span>
         <span class="tparams">[<span name="B">B</span>]</span>
         <span class="params">(<span name="f">f: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ B</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="cmp">cmp: Ordering[B]</span>)</span><span class="result">: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>
@@ -732,7 +743,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="mkString:String"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">mkString</span>
         
         <span class="result">: String</span>
@@ -743,7 +754,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="mkString(String):String"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">mkString</span>
         
         <span class="params">(<span name="sep">sep: String</span>)</span><span class="result">: String</span>
@@ -754,7 +765,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="mkString(String,String,String):String"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">mkString</span>
         
         <span class="params">(<span name="start">start: String</span>, <span name="sep">sep: String</span>, <span name="end">end: String</span>)</span><span class="result">: String</span>
@@ -765,7 +776,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">ne</span>
         
         <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -776,7 +787,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="next():XMLEvent"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">next</span>
         
         <span class="params">()</span><span class="result">: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>
@@ -787,7 +798,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="nonEmpty:Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">nonEmpty</span>
         
         <span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -798,7 +809,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="notify():Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">notify</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -809,7 +820,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="notifyAll():Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">notifyAll</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -820,7 +831,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="padTo[A1&gt;:XMLEvent](Int,A1):Iterator[A1]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">padTo</span>
         <span class="tparams">[<span name="A1">A1 &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="len">len: <span name="scala.Int" class="extype">Int</span></span>, <span name="elem">elem: A1</span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[A1]</span>
@@ -831,7 +842,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="partition((XMLEvent) ⇒ Boolean):(Iterator[XMLEvent], Iterator[XMLEvent])"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">partition</span>
         
         <span class="params">(<span name="p">p: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: (<span name="scala.collection.Iterator" class="extype">Iterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>], <span name="scala.collection.Iterator" class="extype">Iterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>])</span>
@@ -842,7 +853,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="patch[B&gt;:XMLEvent](Int,Iterator[B],Int):Iterator[B]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">patch</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="from">from: <span name="scala.Int" class="extype">Int</span></span>, <span name="patchElems">patchElems: <span name="scala.collection.Iterator" class="extype">Iterator</span>[B]</span>, <span name="replaced">replaced: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[B]</span>
@@ -853,7 +864,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="product[B&gt;:XMLEvent](Numeric[B]):B"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">product</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span class="implicit">implicit </span><span name="num">num: Numeric[B]</span>)</span><span class="result">: B</span>
@@ -864,7 +875,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="reduce[A1&gt;:XMLEvent]((A1, A1) ⇒ A1):A1"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">reduce</span>
         <span class="tparams">[<span name="A1">A1 &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="op">op: (A1, A1) ⇒ A1</span>)</span><span class="result">: A1</span>
@@ -875,7 +886,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="reduceLeft[B&gt;:XMLEvent]((B, XMLEvent) ⇒ B):B"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">reduceLeft</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="op">op: (B, <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ B</span>)</span><span class="result">: B</span>
@@ -886,7 +897,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="reduceLeftOption[B&gt;:XMLEvent]((B, XMLEvent) ⇒ B):Option[B]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">reduceLeftOption</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="op">op: (B, <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ B</span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[B]</span>
@@ -897,7 +908,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="reduceOption[A1&gt;:XMLEvent]((A1, A1) ⇒ A1):Option[A1]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">reduceOption</span>
         <span class="tparams">[<span name="A1">A1 &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="op">op: (A1, A1) ⇒ A1</span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[A1]</span>
@@ -908,7 +919,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="reduceRight[B&gt;:XMLEvent]((XMLEvent, B) ⇒ B):B"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">reduceRight</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="op">op: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>, B) ⇒ B</span>)</span><span class="result">: B</span>
@@ -919,7 +930,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="reduceRightOption[B&gt;:XMLEvent]((XMLEvent, B) ⇒ B):Option[B]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">reduceRightOption</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="op">op: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>, B) ⇒ B</span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[B]</span>
@@ -930,7 +941,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="reversed:List[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">reversed</span>
         
         <span class="result">: List[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -941,7 +952,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="sameElements(Iterator[_]):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">sameElements</span>
         
         <span class="params">(<span name="that">that: Iterator[_]</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -952,7 +963,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="scanLeft[B](B)((B, XMLEvent) ⇒ B):Iterator[B]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">scanLeft</span>
         <span class="tparams">[<span name="B">B</span>]</span>
         <span class="params">(<span name="z">z: B</span>)</span><span class="params">(<span name="op">op: (B, <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ B</span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[B]</span>
@@ -963,7 +974,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="scanRight[B](B)((XMLEvent, B) ⇒ B):Iterator[B]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">scanRight</span>
         <span class="tparams">[<span name="B">B</span>]</span>
         <span class="params">(<span name="z">z: B</span>)</span><span class="params">(<span name="op">op: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>, B) ⇒ B</span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[B]</span>
@@ -974,7 +985,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="seq:Iterator[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">seq</span>
         
         <span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -985,7 +996,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="size:Int"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">size</span>
         
         <span class="result">: <span name="scala.Int" class="extype">Int</span></span>
@@ -996,7 +1007,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="slice(Int,Int):Iterator[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">slice</span>
         
         <span class="params">(<span name="from">from: <span name="scala.Int" class="extype">Int</span></span>, <span name="until">until: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -1007,7 +1018,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="sliding[B&gt;:XMLEvent](Int,Int):GroupedIterator[B]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">sliding</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="size">size: <span name="scala.Int" class="extype">Int</span></span>, <span name="step">step: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.collection.Iterator.GroupedIterator" class="extype">GroupedIterator</span>[B]</span>
@@ -1018,7 +1029,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="span((XMLEvent) ⇒ Boolean):(Iterator[XMLEvent], Iterator[XMLEvent])"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">span</span>
         
         <span class="params">(<span name="p">p: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: (<span name="scala.collection.Iterator" class="extype">Iterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>], <span name="scala.collection.Iterator" class="extype">Iterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>])</span>
@@ -1029,7 +1040,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="sum[B&gt;:XMLEvent](Numeric[B]):B"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">sum</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span class="implicit">implicit </span><span name="num">num: Numeric[B]</span>)</span><span class="result">: B</span>
@@ -1040,7 +1051,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">synchronized</span>
         <span class="tparams">[<span name="T0">T0</span>]</span>
         <span class="params">(<span name="arg0">arg0: ⇒ T0</span>)</span><span class="result">: T0</span>
@@ -1051,7 +1062,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="take(Int):Iterator[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">take</span>
         
         <span class="params">(<span name="n">n: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -1062,7 +1073,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="takeWhile((XMLEvent) ⇒ Boolean):Iterator[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">takeWhile</span>
         
         <span class="params">(<span name="p">p: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -1073,7 +1084,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="toArray[B&gt;:XMLEvent](ClassManifest[B]):Array[B]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">toArray</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: ClassManifest[B]</span>)</span><span class="result">: <span name="scala.Array" class="extype">Array</span>[B]</span>
@@ -1084,7 +1095,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="toBuffer[B&gt;:XMLEvent]:Buffer[B]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">toBuffer</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="result">: <span name="scala.collection.mutable.Buffer" class="extype">Buffer</span>[B]</span>
@@ -1095,7 +1106,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="toIndexedSeq[B&gt;:XMLEvent]:IndexedSeq[B]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">toIndexedSeq</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="result">: <span name="scala.collection.immutable.IndexedSeq" class="extype">IndexedSeq</span>[B]</span>
@@ -1106,7 +1117,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="toIterable:Iterable[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">toIterable</span>
         
         <span class="result">: <span name="scala.collection.Iterable" class="extype">Iterable</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -1117,7 +1128,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="toIterator:Iterator[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">toIterator</span>
         
         <span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -1128,7 +1139,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="toList:List[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">toList</span>
         
         <span class="result">: List[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -1139,7 +1150,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="toMap[T, U](&lt;:&lt;[XMLEvent, (T, U)]):Map[T, U]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">toMap</span>
         <span class="tparams">[<span name="T">T</span>, <span name="U">U</span>]</span>
         <span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <span name="scala.Predef.&lt;:&lt;" class="extype">&lt;:&lt;</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>, (T, U)]</span>)</span><span class="result">: <span name="scala.collection.immutable.Map" class="extype">Map</span>[T, U]</span>
@@ -1150,7 +1161,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="toSeq:Seq[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">toSeq</span>
         
         <span class="result">: <span name="scala.collection.Seq" class="extype">Seq</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -1161,7 +1172,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="toSet[B&gt;:XMLEvent]:Set[B]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">toSet</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="result">: <span name="scala.collection.immutable.Set" class="extype">Set</span>[B]</span>
@@ -1172,7 +1183,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="toStream:Stream[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">toStream</span>
         
         <span class="result">: <span name="scala.collection.immutable.Stream" class="extype">Stream</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -1183,7 +1194,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="toString():String"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">toString</span>
         
         <span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
@@ -1194,7 +1205,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="toTraversable:Traversable[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">toTraversable</span>
         
         <span class="result">: <span name="scala.collection.Traversable" class="extype">Traversable</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -1205,7 +1216,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="wait():Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">wait</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -1219,7 +1230,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="wait(Long,Int):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">wait</span>
         
         <span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>, <span name="arg1">arg1: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -1233,7 +1244,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="wait(Long):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">wait</span>
         
         <span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -1247,7 +1258,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="withFilter((XMLEvent) ⇒ Boolean):Iterator[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">withFilter</span>
         
         <span class="params">(<span name="p">p: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -1258,7 +1269,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="zip[B](Iterator[B]):Iterator[(XMLEvent, B)]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">zip</span>
         <span class="tparams">[<span name="B">B</span>]</span>
         <span class="params">(<span name="that">that: <span name="scala.collection.Iterator" class="extype">Iterator</span>[B]</span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[(<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>, B)]</span>
@@ -1269,7 +1280,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="zipAll[B, A1&gt;:XMLEvent, B1&gt;:B](Iterator[B],A1,B1):Iterator[(A1, B1)]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">zipAll</span>
         <span class="tparams">[<span name="B">B</span>, <span name="A1">A1 &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>, <span name="B1">B1 &gt;: B</span>]</span>
         <span class="params">(<span name="that">that: <span name="scala.collection.Iterator" class="extype">Iterator</span>[B]</span>, <span name="thisElem">thisElem: A1</span>, <span name="thatElem">thatElem: B1</span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[(A1, B1)]</span>
@@ -1280,7 +1291,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="zipWithIndex:Iterator[(XMLEvent, Int)] { ... /* 2 definitions in type refinement */ }"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">zipWithIndex</span>
         
         <span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[(<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>, <span name="scala.Int" class="extype">Int</span>)] { ... /* 2 definitions in type refinement */ }</span>
@@ -1296,7 +1307,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="append[B&gt;:XMLEvent](Iterator[B]):Iterator[B]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name deprecated">append</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="that">that: <span name="scala.collection.Iterator" class="extype">Iterator</span>[B]</span>)</span><span class="result">: <span name="scala.collection.Iterator" class="extype">Iterator</span>[B]</span>
@@ -1310,7 +1321,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="counted:CountedIterator[XMLEvent]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name deprecated">counted</span>
         
         <span class="result">: <span name="scala.CountedIterator" class="extype">CountedIterator</span>[<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>]</span>
@@ -1324,7 +1335,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="findIndexOf((XMLEvent) ⇒ Boolean):Int"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name deprecated">findIndexOf</span>
         
         <span class="params">(<span name="p">p: (<a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a>) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
@@ -1338,7 +1349,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="readInto[B&gt;:XMLEvent](Array[B]):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name deprecated">readInto</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="xs">xs: <span name="scala.Array" class="extype">Array</span>[B]</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -1352,7 +1363,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="readInto[B&gt;:XMLEvent](Array[B],Int):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name deprecated">readInto</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="xs">xs: <span name="scala.Array" class="extype">Array</span>[B]</span>, <span name="start">start: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -1366,7 +1377,7 @@ NB: You can create a stream from this using Stream.fromIterator().
       <a id="readInto[B&gt;:XMLEvent](Array[B],Int,Int):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name deprecated">readInto</span>
         <span class="tparams">[<span name="B">B &gt;: <a name="org.freetle.util.XMLEvent" class="extype" href="XMLEvent.html">XMLEvent</a></span>]</span>
         <span class="params">(<span name="xs">xs: <span name="scala.Array" class="extype">Array</span>[B]</span>, <span name="start">start: <span name="scala.Int" class="extype">Int</span></span>, <span name="sz">sz: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -1392,8 +1403,8 @@ NB: You can create a stream from this using Stream.fromIterator().
             </div>
 
       </div>
-      
+
       <div id="tooltip"></div>
-      
+
     </body>
       </html>

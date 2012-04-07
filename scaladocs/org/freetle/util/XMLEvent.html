@@ -21,7 +21,7 @@
 
       <h4 class="signature" id="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">XMLEvent</span>
         
         <span class="result"> extends <span name="java.io.Externalizable" class="extype">Externalizable</span></span>
@@ -73,7 +73,7 @@
       <a id="this:XMLEvent"></a>
       <h4 class="signature">
       <span class="kind">new</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">XMLEvent</span>
         
         <span class="params">()</span>
@@ -84,25 +84,37 @@
             </div>
 
         
-        
+
         <div class="values members" id="values">
               <h3>Abstract Value Members</h3>
-              <ol><li visbl="pub" name="org.freetle.util.XMLEvent#appendWriter" data-isabs="true">
+              <ol><li visbl="pub" name="org.freetle.util.XMLEvent#appendTo" data-isabs="true">
+      <a id="appendTo(XMLStreamWriter):Unit"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">appendTo</span>
+        
+        <span class="params">(<span name="serializer">serializer: <span name="javax.xml.stream.XMLStreamWriter" class="extype">XMLStreamWriter</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>abstract </dd></dl></div>
+    </li><li visbl="pub" name="org.freetle.util.XMLEvent#appendWriter" data-isabs="true">
       <a id="appendWriter(Writer):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">appendWriter</span>
         
         <span class="params">(<span name="writer">writer: <span name="java.io.Writer" class="extype">Writer</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>abstract </dd></dl></div>
+      <p class="shortcomment cmt">Testing purposes only.</p><div class="fullcomment"><div class="comment cmt"><p>Testing purposes only. Use appendTo instead.</p></div><dl class="paramcmts block"><dt class="param">writer</dt><dd class="cmt"><p>
+</p></dd></dl><dl class="attributes block"> <dt>Attributes</dt><dd>abstract </dd></dl></div>
     </li><li visbl="pub" name="java.io.Externalizable#readExternal" data-isabs="true">
       <a id="readExternal(ObjectInput):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">readExternal</span>
         
         <span class="params">(<span name="arg0">arg0: <span name="java.io.ObjectInput" class="extype">ObjectInput</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -118,7 +130,7 @@
       <a id="writeExternal(ObjectOutput):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">writeExternal</span>
         
         <span class="params">(<span name="arg0">arg0: <span name="java.io.ObjectOutput" class="extype">ObjectOutput</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -137,7 +149,7 @@
       <a id="!=(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">!=</span>
         
         <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -148,7 +160,7 @@
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">!=</span>
         
         <span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -159,7 +171,7 @@
       <a id="##():Int"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">##</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
@@ -170,7 +182,7 @@
       <a id="==(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">==</span>
         
         <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -181,7 +193,7 @@
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">==</span>
         
         <span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -192,7 +204,7 @@
       <a id="asInstanceOf[T0]:T0"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">asInstanceOf</span>
         <span class="tparams">[<span name="T0">T0</span>]</span>
         <span class="result">: T0</span>
@@ -203,7 +215,7 @@
       <a id="clone():AnyRef"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">clone</span>
         
         <span class="params">()</span><span class="result">: AnyRef</span>
@@ -217,7 +229,7 @@
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">eq</span>
         
         <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -228,7 +240,7 @@
       <a id="equals(Any):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">equals</span>
         
         <span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -239,7 +251,7 @@
       <a id="finalize():Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">finalize</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -253,7 +265,7 @@
       <a id="getClass():java.lang.Class[_]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">getClass</span>
         
         <span class="params">()</span><span class="result">: java.lang.Class[_]</span>
@@ -264,7 +276,7 @@
       <a id="hashCode():Int"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">hashCode</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
@@ -275,7 +287,7 @@
       <a id="isInstanceOf[T0]:Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">isInstanceOf</span>
         <span class="tparams">[<span name="T0">T0</span>]</span>
         <span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -286,7 +298,7 @@
       <a id="location:Location"></a>
       <h4 class="signature">
       <span class="kind">var</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">location</span>
         
         <span class="result">: <span name="javax.xml.stream.Location" class="extype">Location</span></span>
@@ -297,7 +309,7 @@
       <a id="namespaceContext:NamespaceContext"></a>
       <h4 class="signature">
       <span class="kind">var</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">namespaceContext</span>
         
         <span class="result">: <span name="javax.xml.namespace.NamespaceContext" class="extype">NamespaceContext</span></span>
@@ -308,7 +320,7 @@
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">ne</span>
         
         <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -319,7 +331,7 @@
       <a id="notify():Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">notify</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -330,7 +342,7 @@
       <a id="notifyAll():Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">notifyAll</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -341,7 +353,7 @@
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">synchronized</span>
         <span class="tparams">[<span name="T0">T0</span>]</span>
         <span class="params">(<span name="arg0">arg0: ⇒ T0</span>)</span><span class="result">: T0</span>
@@ -352,7 +364,7 @@
       <a id="toStream:Stream[Char]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">toStream</span>
         
         <span class="result">: Stream[<span name="scala.Char" class="extype">Char</span>]</span>
@@ -363,7 +375,7 @@
       <a id="toString():String"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">toString</span>
         
         <span class="params">()</span><span class="result">: String</span>
@@ -374,7 +386,7 @@
       <a id="wait():Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">wait</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -388,7 +400,7 @@
       <a id="wait(Long,Int):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">wait</span>
         
         <span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>, <span name="arg1">arg1: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -402,7 +414,7 @@
       <a id="wait(Long):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">wait</span>
         
         <span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -428,8 +440,8 @@
             </div>
 
       </div>
-      
+
       <div id="tooltip"></div>
-      
+
     </body>
       </html>

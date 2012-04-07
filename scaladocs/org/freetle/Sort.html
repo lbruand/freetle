@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>org.freetle.CPSTranslateModel</title>
+          <title>org.freetle.Sort</title>
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
@@ -14,24 +14,24 @@
         </head>
         <body class="type">
       <div id="definition">
-        <img src="../../lib/class_big.png" />
+        <img src="../../lib/trait_big.png" />
         <p id="owner"><a name="org" class="extype" href="../package.html">org</a>.<a name="org.freetle" class="extype" href="package.html">freetle</a></p>
-        <h1>CPSTranslateModel</h1>
+        <h1>Sort</h1>
       </div>
 
       <h4 class="signature" id="signature">
-      <span class="kind">class</span>
+      <span class="kind">trait</span>
       <span class="symbol">
-        <span class="name">CPSTranslateModel</span>
-        <span class="tparams">[<span name="Context">Context</span>]</span>
-        <span class="result"> extends <a name="org.freetle.CPSModel" class="extype" href="CPSModel.html">CPSModel</a>[<span name="scala.Either" class="extype">Either</span>[<span name="scala.Char" class="extype">Char</span>, <a name="org.freetle.util.XMLEvent" class="extype" href="util/XMLEvent.html">XMLEvent</a>], Context]</span>
+        <span class="name">Sort</span>
+        <span class="tparams">[<span name="Element">Element</span>, <span name="Context">Context</span>]</span>
+        <span class="result"> extends <a name="org.freetle.CPSModel" class="extype" href="CPSModel.html">CPSModel</a>[Element, Context]</span>
       </span>
       </h4>
       
-          <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>This model can be extended to transform a Stream[Char] towards a Stream[XMLEvent]
+          <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>The Sort trait is used to sort a stream.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a name="org.freetle.CPSModel" class="extype" href="CPSModel.html">CPSModel</a>[<span name="scala.Either" class="extype">Either</span>[<span name="scala.Char" class="extype">Char</span>, <a name="org.freetle.util.XMLEvent" class="extype" href="util/XMLEvent.html">XMLEvent</a>], Context], <a name="org.freetle.CPSModelHelperExtension" class="extype" href="CPSModelHelperExtension.html">CPSModelHelperExtension</a>[<span name="scala.Either" class="extype">Either</span>[<span name="scala.Char" class="extype">Char</span>, <a name="org.freetle.util.XMLEvent" class="extype" href="util/XMLEvent.html">XMLEvent</a>], Context], <a name="org.freetle.CPSModelTypeDefinition" class="extype" href="CPSModelTypeDefinition.html">CPSModelTypeDefinition</a>[<span name="scala.Either" class="extype">Either</span>[<span name="scala.Char" class="extype">Char</span>, <a name="org.freetle.util.XMLEvent" class="extype" href="util/XMLEvent.html">XMLEvent</a>], Context], AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+          <div class="superTypes hiddenContent"><a name="org.freetle.CPSModel" class="extype" href="CPSModel.html">CPSModel</a>[Element, Context], <a name="org.freetle.CPSModelHelperExtension" class="extype" href="CPSModelHelperExtension.html">CPSModelHelperExtension</a>[Element, Context], <a name="org.freetle.CPSModelTypeDefinition" class="extype" href="CPSModelTypeDefinition.html">CPSModelTypeDefinition</a>[Element, Context], AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div></div>
         
 
@@ -47,7 +47,7 @@
                 <span class="filtertype">Inherited</span>
                 <ol><li class="hideall out"><span>Hide All</span></li>
                 <li class="showall in"><span>Show all</span></li></ol>
-                <ol id="linearization"><li name="org.freetle.CPSTranslateModel" class="in"><span>CPSTranslateModel</span></li><li name="org.freetle.CPSModel" class="in"><span>CPSModel</span></li><li name="org.freetle.CPSModelHelperExtension" class="in"><span>CPSModelHelperExtension</span></li><li name="org.freetle.CPSModelTypeDefinition" class="in"><span>CPSModelTypeDefinition</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+                <ol id="linearization"><li name="org.freetle.Sort" class="in"><span>Sort</span></li><li name="org.freetle.CPSModel" class="in"><span>CPSModel</span></li><li name="org.freetle.CPSModelHelperExtension" class="in"><span>CPSModelHelperExtension</span></li><li name="org.freetle.CPSModelTypeDefinition" class="in"><span>CPSModelTypeDefinition</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
               </div>
           <div id="visbl">
               <span class="filtertype">Visibility</span>
@@ -55,21 +55,7 @@
             </div>
         </div>
 
-        <div class="members" id="constructors">
-              <h3>Instance Constructors</h3>
-              <ol><li visbl="pub" name="org.freetle.CPSTranslateModel#this" data-isabs="false">
-      <a id="this:CPSTranslateModel[Context]"></a>
-      <h4 class="signature">
-      <span class="kind">new</span>
-      <span class="symbol">
-        <span class="name">CPSTranslateModel</span>
         
-        <span class="params">()</span>
-      </span>
-      </h4>
-      
-    </li></ol>
-            </div>
 
         <div class="types members" id="types">
               <h3>Type Members</h3>
@@ -137,7 +123,7 @@
       <span class="symbol">
         <span class="name">CPSElemMatcher</span>
         
-        <span class="result"> = (<span name="scala.Either" class="extype">Either</span>[<span name="scala.Char" class="extype">Char</span>, <a name="org.freetle.util.XMLEvent" class="extype" href="util/XMLEvent.html">XMLEvent</a>]) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>
+        <span class="result"> = (Element) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt">A function that matches elements.</p><div class="fullcomment"><div class="comment cmt"><p>A function that matches elements.
@@ -149,7 +135,7 @@
       <span class="symbol">
         <span class="name">CPSElementOrPositive</span>
         
-        <span class="result"> = <span name="scala.Option" class="extype">Option</span>[<span name="scala.Either" class="extype">Either</span>[<span name="scala.Char" class="extype">Char</span>, <a name="org.freetle.util.XMLEvent" class="extype" href="util/XMLEvent.html">XMLEvent</a>]]</span>
+        <span class="result"> = <span name="scala.Option" class="extype">Option</span>[Element]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">A type that contains either Some(Element) or None</p><div class="fullcomment"><div class="comment cmt"><p>A type that contains either Some(Element) or None</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="org.freetle.CPSModelTypeDefinition" class="extype" href="CPSModelTypeDefinition.html">CPSModelTypeDefinition</a></dd></dl></div>
@@ -218,17 +204,6 @@ which indicates whether this Element is a Result (value true) or a Tail
       </span>
       </h4>
       <p class="comment cmt">Abstract class for all transformations.</p>
-    </li><li visbl="pub" name="org.freetle.CPSTranslateModel.CharElementMatcher" data-isabs="false">
-      <a id="CharElementMatcher:CharElementMatcher"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol">
-        <a href="CPSTranslateModel$CharElementMatcher.html"><span class="name">CharElementMatcher</span></a>
-        
-        <span class="result"> extends (Either[Char, XMLEvent]) ⇒ Boolean</span>
-      </span>
-      </h4>
-      <p class="comment cmt">Recognizes a char.</p>
     </li><li visbl="pub" name="org.freetle.CPSModel.ChoiceOperator" data-isabs="false">
       <a id="ChoiceOperator:ChoiceOperator"></a>
       <h4 class="signature">
@@ -448,17 +423,6 @@ Used by the MetaProcessor.
       </span>
       </h4>
       <p class="comment cmt">An exception raised by FailsCFilter</p>
-    </li><li visbl="pub" name="org.freetle.CPSTranslateModel.PushFormattedText" data-isabs="false">
-      <a id="PushFormattedText:PushFormattedText"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol">
-        <a href="CPSTranslateModel$PushFormattedText.html"><span class="name">PushFormattedText</span></a>
-        
-        <span class="result"> extends PushFromContext</span>
-      </span>
-      </h4>
-      <p class="comment cmt">Push Formatted text from the context down to output stream.</p>
     </li><li visbl="pub" name="org.freetle.CPSModel.PushFromContext" data-isabs="false">
       <a id="PushFromContext:PushFromContext"></a>
       <h4 class="signature">
@@ -470,28 +434,6 @@ Used by the MetaProcessor.
       </span>
       </h4>
       <p class="comment cmt">Base class to push from context.</p>
-    </li><li visbl="pub" name="org.freetle.CPSTranslateModel.PushNode" data-isabs="false">
-      <a id="PushNode:PushNode"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol">
-        <a href="CPSTranslateModel$PushNode.html"><span class="name">PushNode</span></a>
-        
-        <span class="result"> extends PushFromContext</span>
-      </span>
-      </h4>
-      <p class="comment cmt">Push a scala xml content down the pipeline.</p>
-    </li><li visbl="pub" name="org.freetle.CPSTranslateModel.PushText" data-isabs="false">
-      <a id="PushText:PushText"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol">
-        <a href="CPSTranslateModel$PushText.html"><span class="name">PushText</span></a>
-        
-        <span class="result"> extends PushFromContext</span>
-      </span>
-      </h4>
-      <p class="comment cmt">Output text downstream.</p>
     </li><li visbl="pub" name="org.freetle.CPSModel.SequenceOperator" data-isabs="false">
       <a id="SequenceOperator:SequenceOperator"></a>
       <h4 class="signature">
@@ -525,17 +467,6 @@ Used by the MetaProcessor.
       </span>
       </h4>
       <p class="comment cmt">This is a template transform to select in the stream using an accumulator.</p>
-    </li><li visbl="pub" name="org.freetle.CPSTranslateModel.TakeResultToContext" data-isabs="true">
-      <a id="TakeResultToContext:TakeResultToContext"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol">
-        <a href="CPSTranslateModel$TakeResultToContext.html"><span class="name">TakeResultToContext</span></a>
-        
-        <span class="result"> extends ContextWritingTransform</span>
-      </span>
-      </h4>
-      <p class="comment cmt">A base class to load text tokens to context.</p>
     </li><li visbl="pub" name="org.freetle.CPSModel.TransformBase" data-isabs="true">
       <a id="TransformBase:TransformBase"></a>
       <h4 class="signature">
@@ -643,17 +574,6 @@ Used by the MetaProcessor.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="org.freetle.CPSTranslateModel.&gt;" data-isabs="false">
-      <a id="&gt;:&gt;"></a>
-      <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol">
-        <a href="CPSTranslateModel$$greater$.html"><span class="name">&gt;</span></a>
-        
-        <span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      <p class="comment cmt">Shortcut to output various objects downstream.</p>
     </li><li visbl="pub" name="org.freetle.CPSModelHelperExtension.CPSStreamHelperMethods" data-isabs="false">
       <a id="CPSStreamHelperMethods:CPSStreamHelperMethods"></a>
       <h4 class="signature">
@@ -665,17 +585,6 @@ Used by the MetaProcessor.
       </span>
       </h4>
       <p class="comment cmt">The object CPSStreamHelperMethods is a singleton to store low-level helper functions.</p>
-    </li><li visbl="pub" name="org.freetle.CPSTranslateModel.ResultStreamUtils" data-isabs="false">
-      <a id="ResultStreamUtils:ResultStreamUtils"></a>
-      <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol">
-        <a href="CPSTranslateModel$ResultStreamUtils$.html"><span class="name">ResultStreamUtils</span></a>
-        
-        <span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      <p class="comment cmt">Util class to build XMLResultStream, save etc.</p>
     </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
       <a id="asInstanceOf[T0]:T0"></a>
       <h4 class="signature">
@@ -701,58 +610,6 @@ Used by the MetaProcessor.
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="org.freetle.CPSTranslateModel#const" data-isabs="false">
-      <a id="const(String):ChainedTransformRoot"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">const</span>
-        
-        <span class="params">(<span name="s">s: String</span>)</span><span class="result">: <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Recognizes a constant String.</p>
-    </li><li visbl="pub" name="org.freetle.CPSTranslateModel#constTree" data-isabs="false">
-      <a id="constTree(PrefixMap[ChainedTransformRoot]):ChainedTransformRoot"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">constTree</span>
-        
-        <span class="params">(<span name="prefixMap">prefixMap: <a name="org.freetle.util.PrefixMap" class="extype" href="util/PrefixMap.html">PrefixMap</a>[<a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a>]</span>)</span><span class="result">: <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">You can pass to a constTree a PrefixMap.</p><div class="fullcomment"><div class="comment cmt"><p>You can pass to a constTree a PrefixMap.
-This prefixMap associates a constant String with a result.
-The constTree factors out common prefix on the left for all entries in order for
-the number of choices to be minimum.
-</p></div></div>
-    </li><li visbl="pub" name="org.freetle.CPSTranslateModel#convert" data-isabs="false">
-      <a id="convert(XMLEvent):Either[Char, XMLEvent]"></a>
-      <h4 class="signature">
-      <span class="kind">implicit def</span>
-      <span class="symbol">
-        <span class="name">convert</span>
-        
-        <span class="params">(<span name="c">c: <a name="org.freetle.util.XMLEvent" class="extype" href="util/XMLEvent.html">XMLEvent</a></span>)</span><span class="result">: <span name="scala.Either" class="extype">Either</span>[<span name="scala.Char" class="extype">Char</span>, <a name="org.freetle.util.XMLEvent" class="extype" href="util/XMLEvent.html">XMLEvent</a>]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">An implicit used to convert any XMLEvent to a Element
-</p><div class="fullcomment"><div class="comment cmt"><p>An implicit used to convert any XMLEvent to a Element
-</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd></dl></div>
-    </li><li visbl="pub" name="org.freetle.CPSTranslateModel#convert" data-isabs="false">
-      <a id="convert(Char):Either[Char, XMLEvent]"></a>
-      <h4 class="signature">
-      <span class="kind">implicit def</span>
-      <span class="symbol">
-        <span class="name">convert</span>
-        
-        <span class="params">(<span name="c">c: <span name="scala.Char" class="extype">Char</span></span>)</span><span class="result">: <span name="scala.Either" class="extype">Either</span>[<span name="scala.Char" class="extype">Char</span>, <a name="org.freetle.util.XMLEvent" class="extype" href="util/XMLEvent.html">XMLEvent</a>]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">An implicit used to convert any char to a Element
-</p><div class="fullcomment"><div class="comment cmt"><p>An implicit used to convert any char to a Element
-</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd></dl></div>
     </li><li visbl="pub" name="org.freetle.CPSModel.drop" data-isabs="false">
       <a id="drop:drop"></a>
       <h4 class="signature">
@@ -879,6 +736,18 @@ the number of choices to be minimum.
       <p class="shortcomment cmt">Repeat a transform so it matches the input stream at least minOccur times and to the most maxOccur.</p><div class="fullcomment"><div class="comment cmt"><p>Repeat a transform so it matches the input stream at least minOccur times and to the most maxOccur.
 if maxOccur is less than minOccur then it matches exactly minOccur times.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="org.freetle.CPSModel" class="extype" href="CPSModel.html">CPSModel</a></dd></dl></div>
+    </li><li visbl="pub" name="org.freetle.Sort#sort" data-isabs="false">
+      <a id="sort(ChainedTransformRoot,ChainedTransformRoot)(⇒ CPSStream,Context):CPSStream"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">sort</span>
+        
+        <span class="params">(<span name="itemSplitter">itemSplitter: <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>, <span name="keyExtractor">keyExtractor: <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>)</span><span class="params">(<span name="inputStream">inputStream: ⇒ CPSStream</span>, <span name="context">context: Context</span>)</span><span class="result">: CPSStream</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Sort the inputStream by split into items and sorting them using the keyExtractor.</p><div class="fullcomment"><div class="comment cmt"><p>Sort the inputStream by split into items and sorting them using the keyExtractor.</p></div><dl class="paramcmts block"><dt class="param">itemSplitter</dt><dd class="cmt"><p>used to split items before sorting them.</p></dd><dt class="param">keyExtractor</dt><dd class="cmt"><p>extract a key out of an item.</p></dd><dt class="param">inputStream</dt><dd class="cmt"></dd><dt class="param">context</dt><dd class="cmt"></dd><dt>returns</dt><dd class="cmt"><p>a sorted stream.
+</p></dd></dl><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">
@@ -890,29 +759,6 @@ if maxOccur is less than minOccur then it matches exactly minOccur times.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="org.freetle.CPSTranslateModel#takeADigit" data-isabs="false">
-      <a id="takeADigit:ElementMatcherTaker"></a>
-      <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol">
-        <span class="name">takeADigit</span>
-        
-        <span class="result">: <a name="org.freetle.CPSModel.ElementMatcherTaker" class="extype" href="CPSModel$ElementMatcherTaker.html">ElementMatcherTaker</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Recognizes a Digit
-</p>
-    </li><li visbl="pub" name="org.freetle.CPSTranslateModel#takeAnyChar" data-isabs="false">
-      <a id="takeAnyChar:ElementMatcherTaker"></a>
-      <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol">
-        <span class="name">takeAnyChar</span>
-        
-        <span class="result">: <a name="org.freetle.CPSModel.ElementMatcherTaker" class="extype" href="CPSModel$ElementMatcherTaker.html">ElementMatcherTaker</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Recognizes any char value.</p>
     </li><li visbl="pub" name="scala.AnyRef#toString" data-isabs="false">
       <a id="toString():String"></a>
       <h4 class="signature">
@@ -972,11 +818,11 @@ if maxOccur is less than minOccur then it matches exactly minOccur times.
         
 
         <div name="org.freetle.CPSModel" class="parent">
-              <h3>Inherited from <a name="org.freetle.CPSModel" class="extype" href="CPSModel.html">CPSModel</a>[<span name="scala.Either" class="extype">Either</span>[<span name="scala.Char" class="extype">Char</span>, <a name="org.freetle.util.XMLEvent" class="extype" href="util/XMLEvent.html">XMLEvent</a>], Context]</h3>
+              <h3>Inherited from <a name="org.freetle.CPSModel" class="extype" href="CPSModel.html">CPSModel</a>[Element, Context]</h3>
             </div><div name="org.freetle.CPSModelHelperExtension" class="parent">
-              <h3>Inherited from <a name="org.freetle.CPSModelHelperExtension" class="extype" href="CPSModelHelperExtension.html">CPSModelHelperExtension</a>[<span name="scala.Either" class="extype">Either</span>[<span name="scala.Char" class="extype">Char</span>, <a name="org.freetle.util.XMLEvent" class="extype" href="util/XMLEvent.html">XMLEvent</a>], Context]</h3>
+              <h3>Inherited from <a name="org.freetle.CPSModelHelperExtension" class="extype" href="CPSModelHelperExtension.html">CPSModelHelperExtension</a>[Element, Context]</h3>
             </div><div name="org.freetle.CPSModelTypeDefinition" class="parent">
-              <h3>Inherited from <a name="org.freetle.CPSModelTypeDefinition" class="extype" href="CPSModelTypeDefinition.html">CPSModelTypeDefinition</a>[<span name="scala.Either" class="extype">Either</span>[<span name="scala.Char" class="extype">Char</span>, <a name="org.freetle.util.XMLEvent" class="extype" href="util/XMLEvent.html">XMLEvent</a>], Context]</h3>
+              <h3>Inherited from <a name="org.freetle.CPSModelTypeDefinition" class="extype" href="CPSModelTypeDefinition.html">CPSModelTypeDefinition</a>[Element, Context]</h3>
             </div><div name="scala.AnyRef" class="parent">
               <h3>Inherited from AnyRef</h3>
             </div><div name="scala.Any" class="parent">

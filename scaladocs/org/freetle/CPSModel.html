@@ -21,7 +21,7 @@
 
       <h4 class="signature" id="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">CPSModel</span>
         <span class="tparams">[<span name="Element">Element</span>, <span name="Context">Context</span>]</span>
         <span class="result"> extends <a name="org.freetle.CPSModelHelperExtension" class="extype" href="CPSModelHelperExtension.html">CPSModelHelperExtension</a>[Element, Context]</span>
@@ -36,7 +36,7 @@ met in previous backtracking models.</p><h4> defining transformation expression 
 </pre><p><object type="image/svg+xml" data="expression.svg" width="348" height="330">
   <param name="src" value="expression.svg">
   alt : <a href="expression.svg">graph representing the above expression</a>
-</object></p><p> recognizes:</p><ul><li>abbbba</li><li>abbc</li><li>aa</li><li>ac</li></ul><p> but NOT :</p><ul><li>aabbc</li><li>a</li></ul><h4> Running expressions </h4><p>CPSModel uses <a href="http://en.wikipedia.org/wiki/Continuation-passing_style">Continuation Passing Style</a> to run
+</object></p><p> recognizes:</p><ul><li>abbbba</li><li>abbc</li><li>aa</li><li>ac</li></ul><p> but NOT :</p><ul><li>aabbc</li><li>a *</li></ul><h4> Running expressions </h4><p>CPSModel uses <a href="http://en.wikipedia.org/wiki/Continuation-passing_style">Continuation Passing Style</a> to run
 the transformation in bounded memory.</p><p>At runtime, the expression graph is converted lazily into a continuation graph. For example :
 <object type="image/svg+xml" data="cps.svg" width="1691" height="446">
   <param name="src" value="cps.svg">
@@ -46,7 +46,7 @@ the transformation in bounded memory.</p><p>At runtime, the expression graph is 
           <div class="superTypes hiddenContent"><a name="org.freetle.CPSModelHelperExtension" class="extype" href="CPSModelHelperExtension.html">CPSModelHelperExtension</a>[Element, Context], <a name="org.freetle.CPSModelTypeDefinition" class="extype" href="CPSModelTypeDefinition.html">CPSModelTypeDefinition</a>[Element, Context], AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div><div class="toggleContainer block">
           <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a name="org.freetle.meta.CPSMeta" class="extype" href="meta/CPSMeta.html">CPSMeta</a>, <a name="org.freetle.CPSTranslateModel" class="extype" href="CPSTranslateModel.html">CPSTranslateModel</a>, <a name="org.freetle.CPSXMLModel" class="extype" href="CPSXMLModel.html">CPSXMLModel</a>, <a name="org.freetle.FileSplitter" class="extype" href="FileSplitter.html">FileSplitter</a></div>
+          <div class="subClasses hiddenContent"><a name="org.freetle.meta.CPSMeta" class="extype" href="meta/CPSMeta.html">CPSMeta</a>, <a name="org.freetle.CPSTranslateModel" class="extype" href="CPSTranslateModel.html">CPSTranslateModel</a>, <a name="org.freetle.CPSXMLModel" class="extype" href="CPSXMLModel.html">CPSXMLModel</a>, <a name="org.freetle.FileSplitter" class="extype" href="FileSplitter.html">FileSplitter</a>, <a name="org.freetle.Sort" class="extype" href="Sort.html">Sort</a></div>
         </div></div>
         
 
@@ -76,7 +76,7 @@ the transformation in bounded memory.</p><p>At runtime, the expression graph is 
       <a id="this:CPSModel[Element, Context]"></a>
       <h4 class="signature">
       <span class="kind">new</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">CPSModel</span>
         
         <span class="params">()</span>
@@ -92,18 +92,18 @@ the transformation in bounded memory.</p><p>At runtime, the expression graph is 
       <a id="AbstractStatefulSelector:AbstractStatefulSelector[State]"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$AbstractStatefulSelector.html"><span class="name">AbstractStatefulSelector</span></a>
         <span class="tparams">[<span name="State">State</span>]</span>
         <span class="result"> extends ContextFreeTransform</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>abstract </dd></dl></div>
+      <p class="comment cmt">an AbstractStatefulSelector performs a selection based on a state.</p>
     </li><li visbl="pub" name="org.freetle.CPSModel.BinaryOperator" data-isabs="true">
       <a id="BinaryOperator:BinaryOperator"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$BinaryOperator.html"><span class="name">BinaryOperator</span></a>
         
         <span class="result"> extends Operator</span>
@@ -115,7 +115,7 @@ the transformation in bounded memory.</p><p>At runtime, the expression graph is 
       <a id="CFilter:CFilter"></a>
       <h4 class="signature">
       <span class="kind">type</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">CFilter</span>
         
         <span class="result"> = (CPSStream, Context) ⇒ CPSStream</span>
@@ -127,7 +127,7 @@ the transformation in bounded memory.</p><p>At runtime, the expression graph is 
       <a id="CFilterIdentity:CFilterIdentity"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$CFilterIdentity.html"><span class="name">CFilterIdentity</span></a>
         
         <span class="result"> extends (CPSStream, Context) ⇒ CPSStream</span>
@@ -138,7 +138,7 @@ the transformation in bounded memory.</p><p>At runtime, the expression graph is 
       <a id="CFilterIdentityWithContext:CFilterIdentityWithContext"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$CFilterIdentityWithContext.html"><span class="name">CFilterIdentityWithContext</span></a>
         
         <span class="result"> extends (CPSStream, Context) ⇒ CPSStream</span>
@@ -149,7 +149,7 @@ the transformation in bounded memory.</p><p>At runtime, the expression graph is 
       <a id="CPSElemMatcher:CPSElemMatcher"></a>
       <h4 class="signature">
       <span class="kind">type</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">CPSElemMatcher</span>
         
         <span class="result"> = (Element) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -160,7 +160,7 @@ the transformation in bounded memory.</p><p>At runtime, the expression graph is 
       <a id="CPSElementOrPositive:CPSElementOrPositive"></a>
       <h4 class="signature">
       <span class="kind">type</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">CPSElementOrPositive</span>
         
         <span class="result"> = <span name="scala.Option" class="extype">Option</span>[Element]</span>
@@ -171,7 +171,7 @@ the transformation in bounded memory.</p><p>At runtime, the expression graph is 
       <a id="CPSStream:CPSStream"></a>
       <h4 class="signature">
       <span class="kind">type</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">CPSStream</span>
         
         <span class="result"> = <span name="scala.collection.immutable.Stream" class="extype">Stream</span>[()]</span>
@@ -186,7 +186,7 @@ the transformation in bounded memory.</p><p>At runtime, the expression graph is 
       <a id="CPSTupleElement:()"></a>
       <h4 class="signature">
       <span class="kind">type</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">CPSTupleElement</span>
         
         <span class="result"> = (CPSElementOrPositive, <span name="scala.Boolean" class="extype">Boolean</span>)</span>
@@ -202,7 +202,7 @@ which indicates whether this Element is a Result (value true) or a Tail
       <a id="CardinalityOperator:CardinalityOperator"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$CardinalityOperator.html"><span class="name">CardinalityOperator</span></a>
         
         <span class="result"> extends UnaryOperator</span>
@@ -213,7 +213,7 @@ which indicates whether this Element is a Result (value true) or a Tail
       <a id="ChainedTransform:ChainedTransform"></a>
       <h4 class="signature">
       <span class="kind">type</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">ChainedTransform</span>
         
         <span class="result"> = (⇒ CFilter, ⇒ CFilter) ⇒ CFilter</span>
@@ -225,10 +225,10 @@ which indicates whether this Element is a Result (value true) or a Tail
       <a id="ChainedTransformRoot:ChainedTransformRoot"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$ChainedTransformRoot.html"><span class="name">ChainedTransformRoot</span></a>
         
-        <span class="result"> extends (⇒ CFilter, ⇒ CFilter) ⇒ CFilter with MetaProcessable with LoggingWithConstructorLocation</span>
+        <span class="result"> extends (⇒ CFilter, ⇒ CFilter) ⇒ CFilter with MetaProcessable</span>
       </span>
       </h4>
       <p class="comment cmt">Abstract class for all transformations.</p>
@@ -236,7 +236,7 @@ which indicates whether this Element is a Result (value true) or a Tail
       <a id="ChoiceOperator:ChoiceOperator"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$ChoiceOperator.html"><span class="name">ChoiceOperator</span></a>
         
         <span class="result"> extends BinaryOperator</span>
@@ -248,7 +248,7 @@ which indicates whether this Element is a Result (value true) or a Tail
       <a id="ComposeOperator:ComposeOperator"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$ComposeOperator.html"><span class="name">ComposeOperator</span></a>
         
         <span class="result"> extends BinaryOperator</span>
@@ -259,20 +259,20 @@ which indicates whether this Element is a Result (value true) or a Tail
       <a id="ContextFreeTransform:ContextFreeTransform"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$ContextFreeTransform.html"><span class="name">ContextFreeTransform</span></a>
         
         <span class="result"> extends TransformBase</span>
       </span>
       </h4>
       <p class="comment cmt">A transform that's context-free
-(Not using the context, either as input or ouput)
+(Not using the context, either as input or output)
 </p>
     </li><li visbl="pub" name="org.freetle.CPSModel.ContextReadingTransform" data-isabs="true">
       <a id="ContextReadingTransform:ContextReadingTransform"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$ContextReadingTransform.html"><span class="name">ContextReadingTransform</span></a>
         
         <span class="result"> extends TransformBase</span>
@@ -283,7 +283,7 @@ which indicates whether this Element is a Result (value true) or a Tail
       <a id="ContextWritingTransform:ContextWritingTransform"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$ContextWritingTransform.html"><span class="name">ContextWritingTransform</span></a>
         
         <span class="result"> extends TransformBase</span>
@@ -294,7 +294,7 @@ which indicates whether this Element is a Result (value true) or a Tail
       <a id="ElementMatcherTaker:ElementMatcherTaker"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$ElementMatcherTaker.html"><span class="name">ElementMatcherTaker</span></a>
         
         <span class="result"> extends ContextFreeTransform</span>
@@ -305,29 +305,51 @@ which indicates whether this Element is a Result (value true) or a Tail
       <a id="FailsCFilter:FailsCFilter"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$FailsCFilter.html"><span class="name">FailsCFilter</span></a>
         
         <span class="result"> extends (CPSStream, Context) ⇒ CPSStream</span>
       </span>
       </h4>
       <p class="comment cmt">Failure CFilter.</p>
+    </li><li visbl="pub" name="org.freetle.CPSModel.InnerSequenceOperator" data-isabs="false">
+      <a id="InnerSequenceOperator:InnerSequenceOperator"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <a href="CPSModel$InnerSequenceOperator.html"><span class="name">InnerSequenceOperator</span></a>
+        
+        <span class="result"> extends (CPSStream, Context) ⇒ CPSStream</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd></dl></div>
     </li><li visbl="pub" name="org.freetle.CPSModel#InstantiateBinaryOperator" data-isabs="false">
       <a id="InstantiateBinaryOperator:InstantiateBinaryOperator"></a>
       <h4 class="signature">
       <span class="kind">type</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">InstantiateBinaryOperator</span>
         
         <span class="result"> = (⇒ <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a>, ⇒ <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a>) ⇒ <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt">A Type that describes a constructor function for a BinaryOperator.</p>
+    </li><li visbl="pub" name="org.freetle.CPSModel#InstantiateMultiOperator" data-isabs="false">
+      <a id="InstantiateMultiOperator:InstantiateMultiOperator"></a>
+      <h4 class="signature">
+      <span class="kind">type</span>
+      <span class="symbol">
+        <span class="name">InstantiateMultiOperator</span>
+        
+        <span class="result"> = (Map[String, () ⇒ <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a>]) ⇒ <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A Type that describes a constructor function for a MultiOperator.</p>
     </li><li visbl="pub" name="org.freetle.CPSModel#InstantiateTransform" data-isabs="false">
       <a id="InstantiateTransform:InstantiateTransform"></a>
       <h4 class="signature">
       <span class="kind">type</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">InstantiateTransform</span>
         
         <span class="result"> = () ⇒ <a name="org.freetle.CPSModel.TransformBase" class="extype" href="CPSModel$TransformBase.html">TransformBase</a></span>
@@ -340,7 +362,7 @@ Used by the MetaProcessor.
       <a id="InstantiateUnaryOperator:InstantiateUnaryOperator"></a>
       <h4 class="signature">
       <span class="kind">type</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">InstantiateUnaryOperator</span>
         
         <span class="result"> = (⇒ <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a>) ⇒ <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>
@@ -351,7 +373,7 @@ Used by the MetaProcessor.
       <a id="MetaProcessable:MetaProcessable"></a>
       <h4 class="signature">
       <span class="kind">trait</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$MetaProcessable.html"><span class="name">MetaProcessable</span></a>
         
         <span class="result"> extends AnyRef</span>
@@ -362,18 +384,42 @@ Used by the MetaProcessor.
       <a id="MetaProcessor:MetaProcessor"></a>
       <h4 class="signature">
       <span class="kind">trait</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$MetaProcessor.html"><span class="name">MetaProcessor</span></a>
         
         <span class="result"> extends AnyRef</span>
       </span>
       </h4>
       <p class="comment cmt">A metaProcessor to metatransform the transformations themselves.</p>
+    </li><li visbl="pub" name="org.freetle.CPSModel.MultiChoiceOperator" data-isabs="true">
+      <a id="MultiChoiceOperator:MultiChoiceOperator"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <a href="CPSModel$MultiChoiceOperator.html"><span class="name">MultiChoiceOperator</span></a>
+        
+        <span class="result"> extends MultiOperator</span>
+      </span>
+      </h4>
+      <p class="comment cmt">MultiChoiceOperator
+</p>
+    </li><li visbl="pub" name="org.freetle.CPSModel.MultiOperator" data-isabs="true">
+      <a id="MultiOperator:MultiOperator"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <a href="CPSModel$MultiOperator.html"><span class="name">MultiOperator</span></a>
+        
+        <span class="result"> extends Operator</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A base class for Binary operators (which combine two different transforms, named left and right)
+</p>
     </li><li visbl="pub" name="org.freetle.CPSModel.OneOrMoreOperator" data-isabs="false">
       <a id="OneOrMoreOperator:OneOrMoreOperator"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$OneOrMoreOperator.html"><span class="name">OneOrMoreOperator</span></a>
         
         <span class="result"> extends CardinalityOperator</span>
@@ -384,7 +430,7 @@ Used by the MetaProcessor.
       <a id="Operator:Operator"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$Operator.html"><span class="name">Operator</span></a>
         
         <span class="result"> extends ChainedTransformRoot</span>
@@ -395,7 +441,7 @@ Used by the MetaProcessor.
       <a id="ParsingFailure:ParsingFailure"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$ParsingFailure.html"><span class="name">ParsingFailure</span></a>
         
         <span class="result"> extends RuntimeException</span>
@@ -406,7 +452,7 @@ Used by the MetaProcessor.
       <a id="PushFromContext:PushFromContext"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$PushFromContext.html"><span class="name">PushFromContext</span></a>
         
         <span class="result"> extends ContextReadingTransform</span>
@@ -417,7 +463,7 @@ Used by the MetaProcessor.
       <a id="SequenceOperator:SequenceOperator"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$SequenceOperator.html"><span class="name">SequenceOperator</span></a>
         
         <span class="result"> extends BinaryOperator</span>
@@ -428,7 +474,7 @@ Used by the MetaProcessor.
       <a id="StatefulSelector:StatefulSelector[State]"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$StatefulSelector.html"><span class="name">StatefulSelector</span></a>
         <span class="tparams">[<span name="State">State</span>]</span>
         <span class="result"> extends AbstractStatefulSelector[State]</span>
@@ -439,7 +485,7 @@ Used by the MetaProcessor.
       <a id="StatefulSelectorUntil:StatefulSelectorUntil[State]"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$StatefulSelectorUntil.html"><span class="name">StatefulSelectorUntil</span></a>
         <span class="tparams">[<span name="State">State</span>]</span>
         <span class="result"> extends AbstractStatefulSelector[State]</span>
@@ -450,7 +496,7 @@ Used by the MetaProcessor.
       <a id="TransformBase:TransformBase"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$TransformBase.html"><span class="name">TransformBase</span></a>
         
         <span class="result"> extends ChainedTransformRoot</span>
@@ -461,7 +507,7 @@ Used by the MetaProcessor.
       <a id="UnaryOperator:UnaryOperator"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$UnaryOperator.html"><span class="name">UnaryOperator</span></a>
         
         <span class="result"> extends Operator</span>
@@ -473,7 +519,7 @@ Used by the MetaProcessor.
       <a id="ZeroOrMoreOperator:ZeroOrMoreOperator"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$ZeroOrMoreOperator.html"><span class="name">ZeroOrMoreOperator</span></a>
         
         <span class="result"> extends CardinalityOperator</span>
@@ -484,7 +530,7 @@ Used by the MetaProcessor.
       <a id="ZeroOrOneOperator:ZeroOrOneOperator"></a>
       <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$ZeroOrOneOperator.html"><span class="name">ZeroOrOneOperator</span></a>
         
         <span class="result"> extends CardinalityOperator</span>
@@ -493,7 +539,7 @@ Used by the MetaProcessor.
       <p class="comment cmt">Cardinality operator 0.</p>
     </li></ol>
             </div>
-        
+
         
 
         <div class="values members" id="values">
@@ -502,7 +548,7 @@ Used by the MetaProcessor.
       <a id="!=(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">!=</span>
         
         <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -513,7 +559,7 @@ Used by the MetaProcessor.
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">!=</span>
         
         <span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -524,7 +570,7 @@ Used by the MetaProcessor.
       <a id="##():Int"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">##</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
@@ -535,7 +581,7 @@ Used by the MetaProcessor.
       <a id="==(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">==</span>
         
         <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -546,7 +592,7 @@ Used by the MetaProcessor.
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">==</span>
         
         <span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -557,7 +603,7 @@ Used by the MetaProcessor.
       <a id="CPSStreamHelperMethods:CPSStreamHelperMethods"></a>
       <h4 class="signature">
       <span class="kind">object</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModelHelperExtension$CPSStreamHelperMethods$.html"><span class="name">CPSStreamHelperMethods</span></a>
         
         <span class="result"> extends AnyRef</span>
@@ -568,7 +614,7 @@ Used by the MetaProcessor.
       <a id="asInstanceOf[T0]:T0"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">asInstanceOf</span>
         <span class="tparams">[<span name="T0">T0</span>]</span>
         <span class="result">: T0</span>
@@ -579,7 +625,7 @@ Used by the MetaProcessor.
       <a id="clone():AnyRef"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">clone</span>
         
         <span class="params">()</span><span class="result">: AnyRef</span>
@@ -593,7 +639,7 @@ Used by the MetaProcessor.
       <a id="drop:drop"></a>
       <h4 class="signature">
       <span class="kind">object</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <a href="CPSModel$drop$.html"><span class="name">drop</span></a>
         
         <span class="result"> extends ContextFreeTransform</span>
@@ -604,7 +650,7 @@ Used by the MetaProcessor.
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">eq</span>
         
         <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -615,7 +661,7 @@ Used by the MetaProcessor.
       <a id="equals(Any):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">equals</span>
         
         <span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -626,7 +672,7 @@ Used by the MetaProcessor.
       <a id="finalize():Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">finalize</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -640,7 +686,7 @@ Used by the MetaProcessor.
       <a id="getClass():java.lang.Class[_]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">getClass</span>
         
         <span class="params">()</span><span class="result">: java.lang.Class[_]</span>
@@ -651,7 +697,7 @@ Used by the MetaProcessor.
       <a id="hashCode():Int"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">hashCode</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
@@ -662,7 +708,7 @@ Used by the MetaProcessor.
       <a id="isInstanceOf[T0]:Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">isInstanceOf</span>
         <span class="tparams">[<span name="T0">T0</span>]</span>
         <span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -673,7 +719,7 @@ Used by the MetaProcessor.
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">ne</span>
         
         <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
@@ -684,7 +730,7 @@ Used by the MetaProcessor.
       <a id="notify():Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">notify</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -695,7 +741,7 @@ Used by the MetaProcessor.
       <a id="notifyAll():Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">notifyAll</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -706,7 +752,7 @@ Used by the MetaProcessor.
       <a id="repeat(ChainedTransformRoot,Int,Int):ChainedTransformRoot"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">repeat</span>
         
         <span class="params">(<span name="transform">transform: <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>, <span name="minOccurs">minOccurs: <span name="scala.Int" class="extype">Int</span></span>, <span name="maxOccurs">maxOccurs: <span name="scala.Int" class="extype">Int</span> = <span class="symbol">1</span></span>)</span><span class="result">: <a name="org.freetle.CPSModel.ChainedTransformRoot" class="extype" href="CPSModel$ChainedTransformRoot.html">ChainedTransformRoot</a></span>
@@ -719,7 +765,7 @@ if maxOccur is less than minOccur then it matches exactly minOccur times.
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">synchronized</span>
         <span class="tparams">[<span name="T0">T0</span>]</span>
         <span class="params">(<span name="arg0">arg0: ⇒ T0</span>)</span><span class="result">: T0</span>
@@ -730,7 +776,7 @@ if maxOccur is less than minOccur then it matches exactly minOccur times.
       <a id="toString():String"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">toString</span>
         
         <span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
@@ -741,7 +787,7 @@ if maxOccur is less than minOccur then it matches exactly minOccur times.
       <a id="wait():Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">wait</span>
         
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -755,7 +801,7 @@ if maxOccur is less than minOccur then it matches exactly minOccur times.
       <a id="wait(Long,Int):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">wait</span>
         
         <span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>, <span name="arg1">arg1: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -769,7 +815,7 @@ if maxOccur is less than minOccur then it matches exactly minOccur times.
       <a id="wait(Long):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
-      <span class="symbol"> 
+      <span class="symbol">
         <span class="name">wait</span>
         
         <span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
@@ -795,8 +841,8 @@ if maxOccur is less than minOccur then it matches exactly minOccur times.
             </div>
 
       </div>
-      
+
       <div id="tooltip"></div>
-      
+
     </body>
       </html>
