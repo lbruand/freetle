@@ -23,6 +23,7 @@ import collection.immutable.TreeMap
  */
 
 trait Sort[Element, Context] extends CPSModel[Element, Context]{
+  private final def generator(keyExtractor : ChainedTransformRoot)(x : CPSStream, context : Context) : (String, CPSStream) = ((keyExtractor(new CFilterIdentity(), new CFilterIdentity())(x, context).mkString) -> x)
   /**
    *
    * @param itemSplitter used to split items before sorting them.
@@ -45,8 +46,7 @@ trait Sort[Element, Context] extends CPSModel[Element, Context]{
     currentStream = null
 
     // Insert all the listBuffer into a TreeMap.
-    val treeMap = TreeMap.empty[String, CPSStream] ++ ((listBuffer map (
-      x => ((keyExtractor(new CFilterIdentity(), new CFilterIdentity())(x, context).mkString) -> x))).toIterator)
+    val treeMap = TreeMap.empty[String, CPSStream] ++ ((listBuffer map (generator(keyExtractor)(_, context))).toIterator)
 
     // get all values then flatten them into an unique stream.
     treeMap.values.flatten.toStream
