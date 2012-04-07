@@ -25,7 +25,7 @@ import collection.immutable.TreeMap
 trait Sort[Element, Context] extends CPSModel[Element, Context]{
   private final def generator(keyExtractor : ChainedTransformRoot)(x : CPSStream, context : Context) : (String, CPSStream) = ((keyExtractor(new CFilterIdentity(), new CFilterIdentity())(x, context).mkString) -> x)
   /**
-   * Sort the inputStream by split into items and sorting them using the keyextractor.
+   * Sort the inputStream by split into items and sorting them using the keyExtractor.
    * @param itemSplitter used to split items before sorting them.
    * @param keyExtractor extract a key out of an item.
    * @param inputStream
