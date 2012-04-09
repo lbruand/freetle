@@ -34,7 +34,9 @@ class SortTest extends CPSXMLModel[TstSortContext]  {
     val t = <("orders") ~ new SortOperator(<("order") ~ </("order"), ((new TakeAttributesToContext(new LocalPartEvStartMatcher("order")) {
       def pushToContext(name: QName, attributes: Map[QName, String], namspaces: Map[String, String], context: TstSortContext) = context.copy(name = attributes.getOrElse(new QName(localPart = "id"), ""))
     } ~ new DeepFilter()) -> drop) ~ >(c => c.name)) ~ </("orders")
-    val result = t(new CFilterIdentity(), new CFilterIdentity())(inStream, new TstSortContext())
+    val result = t(new CFilterIdentity(),
+                  /* Changing this to a FailsCFilter makes the thing go bust... Do something */new CFilterIdentity()
+                  )(inStream, new TstSortContext())
     val writer = new StringWriter()
     assertTrue(!result.isEmpty)
     XMLResultStreamUtils.serializeXMLResultStream(result, writer)
