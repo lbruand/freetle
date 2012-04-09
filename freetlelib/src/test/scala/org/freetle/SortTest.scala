@@ -31,6 +31,5 @@ class SortTest extends CPSModel[Char, TstSortContext]{
     val a = "zyx".toStream.map( x => (Some(x), false))
     val result = new SortOperator(takeAnyChar, takeAnyChar)(new CFilterIdentity(), new FailsCFilter())(a, new TstSortContext())
     assertEquals("xyz", (result map (_._1.get)).mkString)
-    
   }
 }

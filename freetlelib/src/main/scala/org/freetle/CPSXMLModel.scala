@@ -53,7 +53,7 @@ import com.ctc.wstx.stax.WstxOutputFactory
  *  `element` recognizes an opening tag followed by a closing tag.
  *
  */
-class CPSXMLModel[@specialized Context] extends CPSModel[XMLEvent, Context] {
+class CPSXMLModel[@specialized Context] extends CPSModelSerializable[XMLEvent, Context] {
 
   /**
    * Failure CFilter.

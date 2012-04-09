@@ -254,5 +254,14 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
             }
       )
   }
+
+  val takeAnyChar = new ElementMatcherTaker(x => true)
+
+  @Test
+  def testSort() {
+    val a = "zyx".toStream.map( x => (Some(x), false))
+    val result = new SortOperator(takeAnyChar, takeAnyChar)(new CFilterIdentity(), new FailsCFilter())(a, new TstCPSStreamingContext())
+    assertEquals("xyz", (result map (_._1.get)).mkString)
+  }
   
 }
