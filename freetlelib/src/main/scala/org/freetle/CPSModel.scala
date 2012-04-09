@@ -15,6 +15,9 @@
   */
 package org.freetle
 
+import collection.mutable.ListBuffer
+import collection.immutable.TreeMap
+
 
 /**
  * Defines types for the CPSModel.
@@ -610,5 +613,44 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
 
         CPSStreamHelperMethods.appendPositiveStream((generator(context) map ( x => (Some(x), true)))).append(in)
       }
+  }
+
+
+  /**
+   * The Sort Operator is used to :
+   * 1. Tokenize into items using the tokenizer.
+   * 2. Sort according to a key extracted by the keyExtractor.
+   *
+   */
+  class SortOperator(tokenizer : =>ChainedTransformRoot, keyExtractor : =>ChainedTransformRoot) extends BinaryOperator(tokenizer, keyExtractor) {
+    def metaProcess(metaProcessor : MetaProcessor) =
+              metaProcessor.processBinaryOperator(this, new SortOperator(_, _), tokenizer, keyExtractor)
+    lazy val tokenizerRealized : ChainedTransformRoot = tokenizer
+    lazy val keyExtractorRealized : ChainedTransformRoot = keyExtractor
+
+    def apply(success : =>CFilter, failure : =>CFilter) : CFilter = sortInternal(success, failure)
+
+    private def sortInternal(success : =>CFilter, failure : =>CFilter)(inputStream : CPSStream, context : Context) : CPSStream= {
+      var listBuffer = new ListBuffer[CPSStream]()
+      var currentStream = inputStream
+
+      // Split the stream into the listBuffer.
+      while (!currentStream.isEmpty) {
+        val result = tokenizerRealized(new CFilterIdentity(), new CFilterIdentity())(currentStream, context)
+        val (hd, tl) = result.span(p => p._2)
+        currentStream = tl
+        listBuffer.append(hd)
+      }
+      currentStream = null
+
+      // Insert all the listBuffer into a TreeMap.
+      val treeMap = TreeMap.empty[String, CPSStream] ++ ((listBuffer map (generator(keyExtractorRealized)(_, context))).toIterator)
+
+      // get all values then flatten them into an unique stream.
+      val resultStream = treeMap.values.flatten.toStream
+      success(resultStream, context)
+    }
+
+    private final def generator(keyExtractor : ChainedTransformRoot)(x : CPSStream, context : Context) : (String, CPSStream) = ((keyExtractor(new CFilterIdentity(), new CFilterIdentity())(x, context).mkString) -> x)
   }
 }

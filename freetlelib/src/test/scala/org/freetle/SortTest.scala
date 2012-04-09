@@ -22,14 +22,14 @@ import util._
 case class TstSortContext(name :String ="name", totalSum : Int = 0, currentSum : Int = 0)
 
 @Test
-class SortTest extends Sort[Char, TstSortContext]{
+class SortTest extends CPSModel[Char, TstSortContext]{
 
   val takeAnyChar = new ElementMatcherTaker(x => true)
 
   @Test
   def testSort() {
     val a = "zyx".toStream.map( x => (Some(x), false))
-    val result = sort(takeAnyChar, takeAnyChar)(a, new TstSortContext())
+    val result = new SortOperator(takeAnyChar, takeAnyChar)(new CFilterIdentity(), new FailsCFilter())(a, new TstSortContext())
     assertEquals("xyz", (result map (_._1.get)).mkString)
     
   }
