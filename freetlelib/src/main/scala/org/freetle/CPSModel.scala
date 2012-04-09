@@ -635,12 +635,16 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
       var currentStream = inputStream
 
       // Split the stream into the listBuffer.
-      while (!currentStream.isEmpty) {
+      var hd : CPSStream = null
+      var tl : CPSStream = null
+      do  {
         val result = tokenizerRealized(new CFilterIdentity(), new CFilterIdentity())(currentStream, context)
-        val (hd, tl) = result.span(p => p._2)
+        val resTuple = result.span(p => p._2)
+        hd = resTuple._1
+        tl = resTuple._2
         currentStream = tl
         listBuffer.append(hd)
-      }
+      } while (!hd.isEmpty)
       currentStream = null
 
       // Insert all the listBuffer into a TreeMap.

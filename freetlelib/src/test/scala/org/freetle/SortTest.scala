@@ -18,18 +18,26 @@ package org.freetle
 import org.junit._
 import Assert._
 import util._
+import java.io.StringWriter
+import java.lang.String
 
 case class TstSortContext(name :String ="name", totalSum : Int = 0, currentSum : Int = 0)
 
 @Test
-class SortTest extends CPSModel[Char, TstSortContext]{
-
-  val takeAnyChar = new ElementMatcherTaker(x => true)
+class SortTest extends CPSXMLModel[TstSortContext]  {
 
   @Test
   def testSort() {
-    val a = "zyx".toStream.map( x => (Some(x), false))
-    val result = new SortOperator(takeAnyChar, takeAnyChar)(new CFilterIdentity(), new FailsCFilter())(a, new TstSortContext())
-    assertEquals("xyz", (result map (_._1.get)).mkString)
+
+    val a = """<orders><order id="2"/><order id="1"/><order id="3"/></orders>"""
+    val inStream = XMLResultStreamUtils.loadXMLResultStream(a)
+    val t = <("orders") ~ new SortOperator(<("order") ~ </("order"), ((new TakeAttributesToContext(new LocalPartEvStartMatcher("order")) {
+      def pushToContext(name: QName, attributes: Map[QName, String], namspaces: Map[String, String], context: TstSortContext) = context.copy(name = attributes.getOrElse(new QName(localPart = "id"), ""))
+    } ~ new DeepFilter()) -> drop) ~ >(c => c.name)) ~ </("orders")
+    val result = t(new CFilterIdentity(), new CFilterIdentity())(inStream, new TstSortContext())
+    val writer = new StringWriter()
+    assertTrue(!result.isEmpty)
+    XMLResultStreamUtils.serializeXMLResultStream(result, writer)
+    assertEquals("<orders><order id=\"1\"/><order id=\"2\"/><order id=\"3\"/></orders>", writer.toString)
   }
 }
