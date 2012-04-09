@@ -620,7 +620,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
    * The Sort Operator is used to :
    * 1. Tokenize into items using the tokenizer.
    * 2. Sort according to a key extracted by the keyExtractor.
-   *
+   * Everything is done in-memory.
    */
   class SortOperator(tokenizer : =>ChainedTransformRoot, keyExtractor : =>ChainedTransformRoot) extends BinaryOperator(tokenizer, keyExtractor) {
     def metaProcess(metaProcessor : MetaProcessor) =
