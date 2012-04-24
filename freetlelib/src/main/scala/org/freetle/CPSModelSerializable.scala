@@ -37,28 +37,41 @@ class CPSModelSerializable[Element <: java.io.Serializable, Context] extends CPS
     private def sortInternal(success : =>CFilter, failure : =>CFilter)(inputStream : CPSStream, context : Context) : CPSStream= {
       var listBuffer = new ListBuffer[CPSStream]()
       var currentStream = inputStream
+      var currentContext = context
 
       // Split the stream into the listBuffer.
       var hd : CPSStream = null
       var tl : CPSStream = null
       do  {
-        val result = tokenizerRealized(new CFilterIdentity(), new CFilterIdentity())(currentStream, context)
+        val failureCF = new CFilterIdentityWithContext()
+        val successCF = new CFilterIdentityWithContext()
+        val result = tokenizerRealized(successCF, failureCF)(currentStream, currentContext)
+
         val resTuple = result.span(p => p._2)
-        hd = resTuple._1
-        tl = resTuple._2
+        if (failureCF.isApplied) {
+          hd = Stream.Empty
+          tl = currentStream
+        } else {
+          hd = resTuple._1
+          tl = resTuple._2
+          currentContext = successCF.context.get
+        }
         currentStream = tl
-        listBuffer.append(hd)
+        if (!hd.isEmpty) {
+          listBuffer.append(hd)
+        }
       } while (!hd.isEmpty)
       currentStream = null
+      hd = null
 
       // Insert all the listBuffer into a TreeMap.
       val treeMap = TreeMap.empty[String, CPSStream] ++ ((listBuffer map (generator(keyExtractorRealized)(_, context))).toIterator)
 
       // get all values then flatten them into an unique stream.
-      val resultStream = treeMap.values.flatten.toStream
+      val resultStream = treeMap.values.flatten.toStream append tl
       success(resultStream, context)
     }
 
-    private final def generator(keyExtractor : ChainedTransformRoot)(x : CPSStream, context : Context) : (String, CPSStream) = ((keyExtractor(new CFilterIdentity(), new CFilterIdentity())(x, context).mkString) -> x)
+    private final def generator(keyExtractor : ChainedTransformRoot)(x : CPSStream, context : Context) : (String, CPSStream) = ((keyExtractor(new CFilterIdentity(), new CFilterIdentity())(CPSStreamHelperMethods.turnToTail(x), context).mkString) -> x)
   }
 }
