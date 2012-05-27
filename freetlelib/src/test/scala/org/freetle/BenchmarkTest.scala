@@ -40,6 +40,7 @@ abstract class BaseCaseBenchmarkTransform
     def run(catalogSource : String) : String = {
 
       val context = new FreetleCaseBenchmarkContext()
+      // This should not be initialized in the run bit; XSLT and STX do not get initialized there.
       def inStream = XMLResultStreamUtils.loadXMLResultStream(catalogSource)
       def outStream = transform(inStream, context)
       val sb = new StringWriter()
