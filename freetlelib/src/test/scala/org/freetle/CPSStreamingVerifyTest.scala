@@ -29,7 +29,7 @@ case class TstCPSStreamingContext(a : Int = 0)
 @Test
 class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
 
-  final val max = 10000
+  final val max = 100000
   final val filterIdentity = new CFilterIdentity()
 
 
@@ -42,7 +42,6 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
           Stream.continually((Some('b'), false)).take(localMax)
         )
     }
-    val s = createStream
     val t = ((new ElementMatcherTaker(_.equals('a'))*) ~ (new ElementMatcherTaker(_.equals('b')))*) -> drop
     val r = t(filterIdentity, filterIdentity)(createStream, new TstCPSStreamingContext())
     assertTrue(""+r, CPSStreamHelperMethods.isOnlyEmptyPositiveStream(r))
@@ -50,13 +49,12 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
 
   @Test
   def testContextFreeCompose() {
-    val localMax = max.max(1000) // This is to prevent OutOfMemory problems.
+
     def createStream : CPSStream = {
-      Stream.continually((Some('a'), false)).take(localMax).append(
-        Stream.continually((Some('b'), false)).take(localMax)
+      Stream.continually((Some('a'), false)).take(max).append(
+        Stream.continually((Some('b'), false)).take(max)
       )
     }
-    val s = createStream
     val t = ((new ElementMatcherTaker(_.equals('a'))*) ~ (new ElementMatcherTaker(_.equals('b')))*) !-> drop
     val r = t(filterIdentity, filterIdentity)(createStream, new TstCPSStreamingContext())
     assertTrue(""+r, CPSStreamHelperMethods.isOnlyEmptyPositiveStream(r))
