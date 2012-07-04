@@ -257,6 +257,11 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
     final def ->(other : => ChainedTransformRoot) : ChainedTransformRoot = new ComposeOperator(this, other)
 
     /**
+     * A shortcut to ContextFree andThen operator (reverse of context free compose operator).
+     */
+    final def !->(other : => ChainedTransformRoot) : ChainedTransformRoot = new ContextFreeComposeOperator(this, other)
+
+    /**
      * A shortcut to the choice operator.
      */
     final def |(other : => ChainedTransformRoot) : ChainedTransformRoot = new ChoiceOperator(this, other)
@@ -404,7 +409,32 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
     }
 
   }
+  /**
+   * A Composition Operator that does not keep the context
+   * Executes first the left operand.
+   * If the result given by the left operand is positive,
+   * then the right operand is executed on the result by the left operand.
+   * Context is reset.
+   * examples:
+   *
+   *
+   */
 
+  final class ContextFreeComposeOperator(left : =>ChainedTransformRoot, right : =>ChainedTransformRoot) extends BinaryOperator(left, right) {
+    def metaProcess(metaProcessor : MetaProcessor) =
+      metaProcessor.processBinaryOperator(this, new ComposeOperator(_, _), left, right)
+    lazy val leftRealized : ChainedTransformRoot = left
+    lazy val rightRealized : ChainedTransformRoot = right
+
+    def apply(success : =>CFilter, failure : =>CFilter) : CFilter = {
+      (tl : CPSStream, c : Context) => {
+        val identitySuccess = new CFilterIdentity()
+        val result = leftRealized(identitySuccess, failure)(tl, c)
+        rightRealized(success, failure)(result, c)
+      }
+    }
+
+  }
   /**
    * Choice Operator
    */
