@@ -99,7 +99,7 @@ class CPSXMLModelTest extends CPSXMLModel[TstXMLContext]
     val r = t(cfilterIdentityWithContextSuccess, cfilterIdentityWithContextFailure)(s, c)
     r.force
 
-    assertEquals("after", cfilterIdentityWithContextSuccess.context.get.name)
+    assertEquals("after", cfilterIdentityWithContextSuccess.currentContext.get.name)
   }
 
   @Test
@@ -274,7 +274,7 @@ class CPSXMLModelTest extends CPSXMLModel[TstXMLContext]
     val cfilterIdentityWithContextFailure = new CFilterIdentityWithContext()
     val result = (tmeta)(cfilterIdentityWithContextSuccess, cfilterIdentityWithContextFailure)(evStream, c)
     result.force
-    (cfilterIdentityWithContextSuccess.context, cfilterIdentityWithContextFailure.context, result)
+    (cfilterIdentityWithContextSuccess.currentContext, cfilterIdentityWithContextFailure.currentContext, result)
   }
 
   @Test
@@ -317,7 +317,7 @@ class CPSXMLModelTest extends CPSXMLModel[TstXMLContext]
     val cfilterIdentityWithContextFailure = new CFilterIdentityWithContext()    
     val r = (tmeta)(cfilterIdentityWithContextSuccess, cfilterIdentityWithContextFailure)(evStream, c)
     assertAllResult(r)
-    val cout = cfilterIdentityWithContextSuccess.context.get
+    val cout = cfilterIdentityWithContextSuccess.currentContext.get
     assertEquals(20030, cout.totalSum)
     assertEquals(20030, cout.currentSum)
   }

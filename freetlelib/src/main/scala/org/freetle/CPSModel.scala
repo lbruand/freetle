@@ -371,10 +371,10 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
    * An Identity CFilter that keeps that context in reference.
    */
   final class CFilterIdentityWithContext extends CFilter {
-    var context : Option[Context] = None
-    def isApplied : Boolean = !(None.equals(context))
+    var currentContext : Option[Context] = None
+    def isApplied : Boolean = !(None.equals(currentContext))
     def apply(inputStream : CPSStream, context : Context) : CPSStream = {
-      context = Some(context)
+      currentContext = Some(context)
       inputStream
     }
   }
@@ -409,7 +409,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
                      // But it is suboptimal in term of memory usage.
                      // We need identitySuccess to be instantiated so that we can pass further on the context.
         if (identitySuccess.isApplied) {
-          rightRealized(success, failure)(result, identitySuccess.context.get)
+          rightRealized(success, failure)(result, identitySuccess.currentContext.get)
         } else {
           failure(inputStream, context)
         }
@@ -699,7 +699,7 @@ class CPSModel[@specialized Element, @specialized Context] extends CPSModelHelpe
         } else {
           headPart = resultTuple._1
           tailPart = resultTuple._2
-          currentContext = successCF.context.get
+          currentContext = successCF.currentContext.get
         }
         currentStream = tailPart
         if (!headPart.isEmpty) {

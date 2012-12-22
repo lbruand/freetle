@@ -224,7 +224,7 @@ class CPSStreamingVerifyTest extends CPSModel[Char, TstCPSStreamingContext] {
 
     val filterIdentityWithContext = new CFilterIdentityWithContext();
     t(filterIdentityWithContext, filterIdentityWithContext)(createStream, new TstCPSStreamingContext(a = 0)).foreach(x => assertTrue(true))
-    assertEquals(Some(TstCPSStreamingContext(a = max)), filterIdentityWithContext.context)
+    assertEquals(Some(TstCPSStreamingContext(a = max)), filterIdentityWithContext.currentContext)
 
   }
 

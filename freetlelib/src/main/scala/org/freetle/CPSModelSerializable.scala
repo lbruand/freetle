@@ -54,7 +54,7 @@ class CPSModelSerializable[Element <: java.io.Serializable, Context] extends CPS
         } else {
           hd = resTuple._1
           tl = resTuple._2
-          currentContext = successCF.context.get
+          currentContext = successCF.currentContext.get
         }
         currentStream = tl
         if (!hd.isEmpty) {
