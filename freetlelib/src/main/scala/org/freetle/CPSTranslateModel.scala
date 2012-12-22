@@ -30,12 +30,12 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
   /**
    * An implicit used to convert any char to a Element
    */
-  implicit def convert(c : Char) : Either[Char, XMLEvent] = Left(c)
+  implicit def convert(char : Char) : Either[Char, XMLEvent] = Left(char)
 
   /**
    * An implicit used to convert any XMLEvent to a Element
    */
-  implicit def convert(c : XMLEvent) : Either[Char, XMLEvent] = Right(c)
+  implicit def convert(xmlEvent : XMLEvent) : Either[Char, XMLEvent] = Right(xmlEvent)
 
   /**
    * Recognizes any char value.
@@ -57,9 +57,9 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
   /**
    * Recognizes a char.
    */
-  class CharElementMatcher(val input : Char) extends CPSElemMatcher {
+  class CharElementMatcher(val charInput : Char) extends CPSElemMatcher {
     def apply(x: Either[Char, XMLEvent] ) : Boolean = x match {
-            case Left(`input`) => true
+            case Left(`charInput`) => true
             case _ => false
           }
   }
@@ -67,15 +67,15 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
   /**
    * Recognizes a constant Char.
    */
-  private def constChar(input:Char) : ChainedTransformRoot =
-                    new ElementMatcherTaker(new CharElementMatcher(input))
+  private def constChar(constantChar:Char) : ChainedTransformRoot =
+                    new ElementMatcherTaker(new CharElementMatcher(constantChar))
 
 
   /**
    * Recognizes a constant String.
    */
-  def const(s :String) : ChainedTransformRoot = {
-    s map (constChar(_)) reduce (
+  def const(constantString :String) : ChainedTransformRoot = {
+    constantString map (constChar(_)) reduce (
         (x : ChainedTransformRoot, y : ChainedTransformRoot) => new SequenceOperator(x,  y) )
   }
 
@@ -106,12 +106,12 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
   abstract class TakeResultToContext extends ContextWritingTransform {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
 
-    @inline def apply(stream : CPSStream, context : Context) : (CPSStream, Context) = {
-      if (stream.isEmpty)
-        (stream, context)
+    @inline def apply(inputStream : CPSStream, context : Context) : (CPSStream, Context) = {
+      if (inputStream.isEmpty)
+        (inputStream, context)
       else {
         //val sr = CPSStreamHelperMethods.removeAllEmptyPositive(stream)
-        val (shead, stail) = stream span (x => x._2)
+        val (shead, stail) = inputStream span (x => x._2)
         val sr = CPSStreamHelperMethods.removeAllEmptyPositive(shead)
         val result : String = (sr map ( (x :(Option[Either[Char, XMLEvent]], Boolean)) => x match {
             case (Some(Left(c)), true) => c
@@ -168,10 +168,10 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
       ((nodeSeq map( serializeNodeXML(_))).toStream.flatten)
     }
 
-    private def createAttributes(elem : scala.xml.Elem) : Map[QName, String] = {
-      if (elem != null && elem.attributes != null) {
-        Map.empty ++ (elem.attributes map (x => x match {
-          case p:PrefixedAttribute => QName(namespaceURI = p.getNamespace(elem), localPart = p.key, prefix = p.pre) -> p.value.mkString
+    private def createAttributes(element : scala.xml.Elem) : Map[QName, String] = {
+      if (element != null && element.attributes != null) {
+        Map.empty ++ (element.attributes map (x => x match {
+          case p:PrefixedAttribute => QName(namespaceURI = p.getNamespace(element), localPart = p.key, prefix = p.pre) -> p.value.mkString
           case u:UnprefixedAttribute => QName(localPart = u.key) -> u.value.mkString
         }))
       } else {
@@ -218,25 +218,25 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
    */
   object ResultStreamUtils {
 
-    def convertCharToCPSStream(input : Iterator[Char]) : CPSStream =
-        (input map ((x :Char) => (Some(Left(x)), false))).toStream
+    def convertCharToCPSStream(inputIter : Iterator[Char]) : CPSStream =
+        (inputIter map ((x :Char) => (Some(Left(x)), false))).toStream
     /**
      * Load a XMLResultStream from an InputStream
      */
-    def loadXMLResultStream(in : InputStream) : CPSStream =
-        convertCharToCPSStream(Source.fromInputStream(in))
+    def loadXMLResultStream(inputStream : InputStream) : CPSStream =
+        convertCharToCPSStream(Source.fromInputStream(inputStream))
 
     /**
      * Load a XMLResultStream from a String.
      */
-    def loadXMLResultStream(str : String) : CPSStream =
-        loadXMLResultStream(new ByteArrayInputStream(str.getBytes))
+    def loadXMLResultStream(charStream : String) : CPSStream =
+        loadXMLResultStream(new ByteArrayInputStream(charStream.getBytes))
 
     /**
      * Load a XMLResultStream from a String.
      */
-    def loadXMLResultStream(str : =>Stream[Char]) : CPSStream =
-        convertCharToCPSStream(str.iterator)
+    def loadXMLResultStream(charStream : =>Stream[Char]) : CPSStream =
+        convertCharToCPSStream(charStream.iterator)
 
     /**
      * Serialise a XMLResultStream into a XML form.
@@ -262,10 +262,10 @@ class CPSTranslateModel[Context] extends CPSModel[Either[Char, XMLEvent], Contex
     /**
      * Rehydrate from an objectInputStream serialized/binary XMLEvent.
      */
-    def rehydrate(in : ObjectInputStream) : CPSStream = {
-      val read = in.readObject
+    def rehydrate(inputStream : ObjectInputStream) : CPSStream = {
+      val read = inputStream.readObject
       if (read != null) {
-        Stream.cons( (Some((read).asInstanceOf[XMLEvent]), false), rehydrate(in))
+        Stream.cons( (Some((read).asInstanceOf[XMLEvent]), false), rehydrate(inputStream))
       } else {
         Stream.Empty
       }

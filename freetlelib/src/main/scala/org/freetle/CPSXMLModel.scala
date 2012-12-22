@@ -60,12 +60,12 @@ class CPSXMLModel[@specialized Context] extends CPSModelSerializable[XMLEvent, C
    * @throws ParsingFailure raised whenever parsing fails and this continuation is called.
    */
   class FailsCFilter extends CFilter {
-    def apply(s : CPSStream, c : Context) : CPSStream = {
-      val str = CPSStreamHelperMethods.removeWhileEmptyPositive(s)
-      val failure = if (str.isEmpty) {
+    def apply(inputStream : CPSStream, context : Context) : CPSStream = {
+      val inputStreamNoEmptyPositive = CPSStreamHelperMethods.removeWhileEmptyPositive(inputStream)
+      val failure = if (inputStreamNoEmptyPositive.isEmpty) {
         new ParsingFailure("Parsing failed")
       } else {
-        str.head._1 match {
+        inputStreamNoEmptyPositive.head._1 match {
           case Some(x) => new ParsingFailure("Parsing failed offset [" +
                                              x.location.getCharacterOffset +
                                             "] (" + x.location.getColumnNumber +
@@ -118,11 +118,11 @@ class CPSXMLModel[@specialized Context] extends CPSModelSerializable[XMLEvent, C
   abstract class TakeTextToContext extends ContextWritingTransform {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
     
-    @inline def apply(stream : CPSStream, context : Context) : (CPSStream, Context) = {
-      if (stream.isEmpty)
-        (stream, context)
+    @inline def apply(inputStream : CPSStream, context : Context) : (CPSStream, Context) = {
+      if (inputStream.isEmpty)
+        (inputStream, context)
       else {
-        val sr = CPSStreamHelperMethods.removeWhileEmptyPositive(stream)
+        val sr = CPSStreamHelperMethods.removeWhileEmptyPositive(inputStream)
         (sr.head._1.get) match {
           case EvText(txt) =>
             (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(txt, context))
@@ -140,24 +140,24 @@ class CPSXMLModel[@specialized Context] extends CPSModelSerializable[XMLEvent, C
   abstract class TakeAttributesToContext(matcher : EvStartMatcher) extends ContextWritingTransform {
     def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
 
-    @inline def apply(stream : CPSStream, context : Context) : (CPSStream, Context) = {
-      if (stream.isEmpty)
-        (stream, context)
+    @inline def apply(inputStream : CPSStream, context : Context) : (CPSStream, Context) = {
+      if (inputStream.isEmpty)
+        (inputStream, context)
       else {
-        val sr = CPSStreamHelperMethods.removeWhileEmptyPositive(stream)
-        val elem = sr.head._1.get
+        val inputStreamNoEmptyPositive = CPSStreamHelperMethods.removeWhileEmptyPositive(inputStream)
+        val elem = inputStreamNoEmptyPositive.head._1.get
         if (matcher(elem)) {
           (elem) match {
             case EvElemStart(name, attributes, namespaces)  =>
-              (Stream.cons( (sr.head._1, true), sr.tail), pushToContext(name, attributes, namespaces, context))
-            case _ => (stream, context)
+              (Stream.cons( (inputStreamNoEmptyPositive.head._1, true), inputStreamNoEmptyPositive.tail), pushToContext(name, attributes, namespaces, context))
+            case _ => (inputStream, context)
           }
         } else {
-          (stream, context)
+          (inputStream, context)
         }
       }
     }
-    def pushToContext(name : QName, attributes : Map[QName, String], namspaces : Map[String, String], context : Context) : Context
+    def pushToContext(name : QName, attributes : Map[QName, String], namespaces : Map[String, String], context : Context) : Context
   }
 
   /**
@@ -170,10 +170,10 @@ class CPSXMLModel[@specialized Context] extends CPSModelSerializable[XMLEvent, C
       ((nodeSeq map( serializeNodeXML(_))).toStream.flatten)
     }
 
-    private def createAttributes(elem : scala.xml.Elem) : Map[QName, String] = {
-      if (elem != null && elem.attributes != null) {
-        Map.empty ++ (elem.attributes map (x => x match {
-          case p:PrefixedAttribute => QName(namespaceURI = p.getNamespace(elem), localPart = p.key, prefix = p.pre) -> p.value.mkString
+    private def createAttributes(element : scala.xml.Elem) : Map[QName, String] = {
+      if (element != null && element.attributes != null) {
+        Map.empty ++ (element.attributes map (x => x match {
+          case p:PrefixedAttribute => QName(namespaceURI = p.getNamespace(element), localPart = p.key, prefix = p.pre) -> p.value.mkString
           case u:UnprefixedAttribute => QName(localPart = u.key) -> u.value.mkString
         }))
       } else {
@@ -181,20 +181,20 @@ class CPSXMLModel[@specialized Context] extends CPSModelSerializable[XMLEvent, C
       }
     }
 
-    private def buildQName(elem: Elem): QName = {
-      if (elem.prefix == null || elem.prefix.isEmpty)
-        new QName(elem.scope.getURI(null), elem.label)
+    private def buildQName(element: Elem): QName = {
+      if (element.prefix == null || element.prefix.isEmpty)
+        new QName(element.scope.getURI(null), element.label)
       else
-        new QName(elem.scope.getURI(elem.prefix), elem.label, elem.prefix)
+        new QName(element.scope.getURI(element.prefix), element.label, element.prefix)
     }
 
     def serializeNodeXML(node : Node) : Stream[XMLEvent] =
       node match {
-      case elem :  scala.xml.Elem //(prefix, label, attributes, scope, children)
+      case element :  scala.xml.Elem //(prefix, label, attributes, scope, children)
             => {
-                  val qName: QName = buildQName(elem)
-                  Stream.cons( new EvElemStart(qName,  createAttributes(elem)),
-                          Stream.concat(serializeXML(elem.child),
+                  val qName: QName = buildQName(element)
+                  Stream.cons( new EvElemStart(qName,  createAttributes(element)),
+                          Stream.concat(serializeXML(element.child),
                             Stream(new EvElemEnd(qName))))
                 }
       case text : scala.xml.Text => Stream(new EvText(text.text))
@@ -210,7 +210,7 @@ class CPSXMLModel[@specialized Context] extends CPSModelSerializable[XMLEvent, C
    */
   @SerialVersionUID(599494944949L + 10 *19L)
   class PushNode(nodeSeq: Option[Context] => NodeSeq) extends PushFromContext(
-      ((x :Context) => Some(x)) andThen nodeSeq andThen PushNode.serializeXML
+      ((context :Context) => Some(context)) andThen nodeSeq andThen PushNode.serializeXML
   ) {
     override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
   }
@@ -219,7 +219,7 @@ class CPSXMLModel[@specialized Context] extends CPSModelSerializable[XMLEvent, C
    * Push Formatted text from the context down to output stream.
    */
   class PushFormattedText(formatter: Context => String) extends PushFromContext(
-    formatter andThen ((x:String) => Stream(new EvText(x)))
+    formatter andThen ((text:String) => Stream(new EvText(text)))
   ) {
     override def metaProcess(metaProcessor: MetaProcessor) = metaProcessor.processTransform(this, () => { this })
   }
@@ -236,9 +236,9 @@ class CPSXMLModel[@specialized Context] extends CPSModelSerializable[XMLEvent, C
       new PushText(text = text)
     }
 
-    def apply(event : XMLEvent) : PushFromContext = new PushFromContext(c => Stream(event))
+    def apply(event : XMLEvent) : PushFromContext = new PushFromContext(context => Stream(event))
 
-    def apply(events :Stream[XMLEvent]) : PushFromContext = new PushFromContext(c => events)
+    def apply(events :Stream[XMLEvent]) : PushFromContext = new PushFromContext(context => events)
   }
 
   /**
@@ -257,7 +257,7 @@ class CPSXMLModel[@specialized Context] extends CPSModelSerializable[XMLEvent, C
    * This implicit NamespaceMatcher does no check at all on the namespace's qualified name.
    */
   implicit object DefaultNamespaceMatcher extends NameSpaceMatcher {
-    def apply(v1: QName) : Boolean = true
+    def apply(name: QName) : Boolean = true
   }
 
   /**
@@ -312,7 +312,7 @@ class CPSXMLModel[@specialized Context] extends CPSModelSerializable[XMLEvent, C
   /**
    * This allows for automatic conversion toward an EvStartMatcher from a String.
    */
-  implicit def string2EvStartMatcher(s : String)(implicit nameSpaceMatcher :NameSpaceMatcher) : EvStartMatcher = new LocalPartEvStartMatcher(s)(nameSpaceMatcher)
+  implicit def string2EvStartMatcher(text : String)(implicit nameSpaceMatcher :NameSpaceMatcher) : EvStartMatcher = new LocalPartEvStartMatcher(text)(nameSpaceMatcher)
   /**
    * Matches an EvElemEnd
    */
@@ -370,20 +370,20 @@ class CPSXMLModel[@specialized Context] extends CPSModelSerializable[XMLEvent, C
     /**
      * Load a XMLResultStream from an InputStream
      */
-    def loadXMLResultStream(in : InputStream, xsdURL : String = null) : CPSStream =
-        convertToCPSStream(new XMLEventStream(in, xsdURL))
+    def loadXMLResultStream(inputStream : InputStream, xsdURL : String = null) : CPSStream =
+        convertToCPSStream(new XMLEventStream(inputStream, xsdURL))
 
     /**
      * Load a XMLResultStream from a String.
      */
-    def loadXMLResultStream(str : String) : CPSStream =
-        loadXMLResultStream(new ByteArrayInputStream(str.getBytes))
+    def loadXMLResultStream(xmlString : String) : CPSStream =
+        loadXMLResultStream(new ByteArrayInputStream(xmlString.getBytes))
 
     /**
-     * Load a XMLResultStream from a String.
+     * Load a XMLResultStream from a Stream of char.
      */
-    def loadXMLResultStream(str : =>Stream[Char]) : CPSStream =
-        convertToCPSStream(new XMLEventStream(str))
+    def loadXMLResultStream(charStream : =>Stream[Char]) : CPSStream =
+        convertToCPSStream(new XMLEventStream(charStream))
 
     val CANNOTPARSE: String = "Could not parse the whole input."
 
@@ -404,12 +404,12 @@ class CPSXMLModel[@specialized Context] extends CPSModelSerializable[XMLEvent, C
      */
     def serializeXMLResultStreamToXMLStreamWriter(evStream : =>CPSStream, writer : XMLStreamWriter) {
       evStream foreach (_ match {
-                case (Some(x : XMLEvent), true) => x.appendTo(writer)
+                case (Some(xmlEvent : XMLEvent), true) => xmlEvent.appendTo(writer)
                 case (None, true) => (new EvComment("EmptyPositive")).appendTo(writer)
-                case (Some(x : XMLEvent), false) => if (x.location != null)
-                                        throw new ParsingFailure(CANNOTPARSE + " [" + x.location.getColumnNumber +
-                                                                                ":" + x.location.getLineNumber +
-                                                                                "/" + x.location.getCharacterOffset +
+                case (Some(xmlEvent : XMLEvent), false) => if (xmlEvent.location != null)
+                                        throw new ParsingFailure(CANNOTPARSE + " [" + xmlEvent.location.getColumnNumber +
+                                                                                ":" + xmlEvent.location.getLineNumber +
+                                                                                "/" + xmlEvent.location.getCharacterOffset +
                                                                                 "]")
                                       else
                                         throw new ParsingFailure(CANNOTPARSE)
@@ -420,10 +420,10 @@ class CPSXMLModel[@specialized Context] extends CPSModelSerializable[XMLEvent, C
     /**
      * Deserialize from an objectInputStream serialized/binary XMLEvent. 
      */
-    def rehydrate(in : ObjectInputStream) : CPSStream = {
-      val read = in.readObject
+    def rehydrate(objectInputStream : ObjectInputStream) : CPSStream = {
+      val read = objectInputStream.readObject
       if (read != null) {
-        Stream.cons( (Some((read).asInstanceOf[XMLEvent]), false), rehydrate(in))
+        Stream.cons( (Some((read).asInstanceOf[XMLEvent]), false), rehydrate(objectInputStream))
       } else {
         Stream.Empty
       }

@@ -40,48 +40,48 @@ trait FileSplitter[Context] extends CPSXMLModel[Context] {
                                context : Context) {
 
     // TODO in the event of an exception the current writer is not closed.
-    val trans = fileMatcher(new CFilterIdentity(), new CFilterIdentity())
-    var that = evStream
-    var myOcc = occurrence
+    val transformation = fileMatcher(new CFilterIdentity(), new CFilterIdentity())
+    var currentStream = evStream
+    var index = occurrence
     var carryOnWhileLoop = true
-    var writer : Writer = writerInput
+    var outWriter : Writer = writerInput
 
     while (carryOnWhileLoop) {
-      that = trans(CPSStreamHelperMethods.turnToTail(that), context)
+      currentStream = transformation(CPSStreamHelperMethods.turnToTail(currentStream), context)
 
       var read: Boolean = false
       try {
-        writer = writerConstructor(myOcc, writer)
+        outWriter = writerConstructor(index, outWriter)
         val outputFactory : WstxOutputFactory = new WstxOutputFactory()
         outputFactory.configureForSpeed()
-        val xmlStreamWriter : XMLStreamWriter = outputFactory.createXMLStreamWriter(writer)
-        while (!that.isEmpty && that.head._2) {
+        val xmlStreamWriter : XMLStreamWriter = outputFactory.createXMLStreamWriter(outWriter)
+        while (!currentStream.isEmpty && currentStream.head._2) {
 
-          that.head._1 match {
+          currentStream.head._1 match {
             case Some(x: XMLEvent) => {
               read = true
               x.appendTo(xmlStreamWriter)
             }
             case None => ()
           }
-          that = that.tail
+          currentStream = currentStream.tail
         }
         if (read) {
           xmlStreamWriter.close()
         }
-        writer.flush()
+        outWriter.flush()
       }
       catch {
         case e => {
-          if (writer != null) {
-            writer.close()
+          if (outWriter != null) {
+            outWriter.close()
           }
           throw e
         }
       }
-      carryOnWhileLoop = (!that.isEmpty && read)
+      carryOnWhileLoop = (!currentStream.isEmpty && read)
       if (carryOnWhileLoop) { // Go ahead
-        myOcc += 1
+        index += 1
       }
     }
 
