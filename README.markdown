@@ -39,5 +39,5 @@ While bringing in major new ideas from the functional programming world :
 
 # Where to go next ?
 
-* [Discover the library itself](./freetle/tree/master/freetlelib/)
-* [Discover A sample transformation](./freetle/tree/master/freetle-sample/)
+* [Discover the library itself](./freetlelib/)
+* [Discover A sample transformation](./freetle-sample/)
