@@ -72,7 +72,7 @@ trait FileSplitter[Context] extends CPSXMLModel[Context] {
         outWriter.flush()
       }
       catch {
-        case e => {
+        case e : Throwable => {
           if (outWriter != null) {
             outWriter.close()
           }

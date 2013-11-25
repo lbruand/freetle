@@ -33,7 +33,7 @@ class AlwaysMatcher extends XMLEventMatcher {
  * This can not be used directly because of type erasure.
  */
 trait TypeMatcher[+ParamEvent <: XMLEvent] extends XMLEventMatcher {
-  def apply(event : XMLEvent) : Boolean = event.isInstanceOf[ParamEvent]
+  def apply(event : XMLEvent) : Boolean = true //event.isInstanceOf[ParamEvent]
 }
 class EvElemStartTypeMatcher extends TypeMatcher[EvElemStart] {
   override def apply(event : XMLEvent) : Boolean = event.isInstanceOf[EvElemStart]

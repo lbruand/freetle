@@ -15,7 +15,7 @@
   <url>https://github.com/lbruand/freetle/tree/master/freetlelib/</url>
   <inceptionYear>2010</inceptionYear>
   <properties>
-    <scala.version>2.9.1-1</scala.version>
+    <scala.version>2.10.3</scala.version>
   </properties>
 
   <dependencies>
@@ -29,17 +29,6 @@
           <artifactId>msv</artifactId>
           <version>20050913</version>
       </dependency>
-    <dependency>
-      <groupId>org.scala-tools.sbinary</groupId>
-      <artifactId>sbinary_2.9.0</artifactId>
-      <version>0.4.0</version>
-        <exclusions>
-            <exclusion>
-                <groupId>org.scala-lang</groupId>
-                <artifactId>scala-library</artifactId>
-            </exclusion>
-        </exclusions>
-    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
