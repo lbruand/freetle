@@ -22,7 +22,6 @@ import util._
 import javax.xml.transform.TransformerFactory
 import javax.xml.transform.stream.{StreamResult, StreamSource}
 import java.io.{StringWriter, StringReader}
-import testing.Benchmark
 import compat.Platform
 import net.sf.joost.trax.TransformerFactoryImpl
 

@@ -15,7 +15,7 @@
   <url>https://github.com/lbruand/freetle/tree/master/freetlelib/</url>
   <inceptionYear>2010</inceptionYear>
   <properties>
-    <scala.version>2.10.3</scala.version>
+    <scala.version>2.11.4</scala.version>
   </properties>
 
   <dependencies>
@@ -24,7 +24,12 @@
       <artifactId>scala-library</artifactId>
       <version>${scala.version}</version>
     </dependency>
-      <dependency>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-xml</artifactId>
+      <version>2.11.0-M4</version>
+    </dependency>
+    <dependency>
           <groupId>msv</groupId>
           <artifactId>msv</artifactId>
           <version>20050913</version>
@@ -49,7 +54,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.6.1</version>
+      <version>1.7.9</version>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
@@ -82,9 +87,9 @@
         </executions>
         <configuration>
           <scalaVersion>${scala.version}</scalaVersion>
-          <args>
+          <!--args>
             <arg>-target:jvm-1.5</arg>
-          </args>
+          </args-->
         </configuration>
       </plugin>
       <!-- TODO Eclipse plugin conf needs to be improved. I cannot run scala application with the scala IDE this way! -->
